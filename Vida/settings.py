@@ -67,6 +67,10 @@ TEMPLATES = [
     },
 ]
 
+TEMPLATE_DIRS = (
+    '/Vida/templates',
+)
+
 WSGI_APPLICATION = 'Vida.wsgi.application'
 
 
