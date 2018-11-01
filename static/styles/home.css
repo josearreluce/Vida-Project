@@ -26,6 +26,26 @@
     color: white;
 }
 
+html,
 body {
     background-color: blue;
+    width: 100%;
+}
+
+.graph-box {
+    background-color: green;
+    display: inline-block;
+    height: 500px;
+    width: 74%;
+}
+.login-box {
+    background-color: red;
+    display: inline-block;
+    height: 500px;
+    width: 25%;
+}
+
+.vid {
+    height: 100%;
+    width: 100%;
 }
