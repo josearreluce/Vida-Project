@@ -37,10 +37,29 @@ body {
     background-color: red;
     display: inline-block;
     height: 500px;
+    position: relative;
     width: 25%;
 }
 
 .vid {
     height: 100%;
     width: 100%;
+}
+
+.login-box__form {
+    border: 2px solid black;
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.login-box__form fieldset {
+    border: 0px;
+    display: block;
+    margin-bottom: 1em;
+}
+
+main {
+    display: flex;
 }
