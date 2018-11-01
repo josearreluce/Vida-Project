@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'vidahome',
 ]
 
 MIDDLEWARE = [
@@ -67,8 +68,9 @@ TEMPLATES = [
     },
 ]
 
+DIRNAME = os.path.abspath(os.path.dirname(__file__))
 TEMPLATE_DIRS = (
-    '/Vida/templates',
+    os.path.join(DIRNAME, 'templates/'),
 )
 
 WSGI_APPLICATION = 'Vida.wsgi.application'
