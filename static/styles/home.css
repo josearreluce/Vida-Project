@@ -1,0 +1,65 @@
+.nav {
+    background-color: darkgrey;
+    overflow: hidden;
+    text-align:right;
+    z-index:1;
+}
+
+.nav a {
+    float: left;
+    font-family: Geneva;
+    color: black;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+}
+
+.nav a:hover {
+    background-color: sienna;
+    color: black;
+}
+
+
+html,
+body {
+    background-color: ghostwhite;
+    width: 100%;
+}
+
+.graph-box {
+    background-color: green;
+    display: inline-block;
+    height: 500px;
+    width: 74%;
+}
+.login-box {
+    background-color: red;
+    display: inline-block;
+    height: 500px;
+    position: relative;
+    width: 25%;
+}
+
+.vid {
+    height: 100%;
+    width: 100%;
+}
+
+.login-box__form {
+    border: 2px solid black;
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.login-box__form fieldset {
+    border: 0px;
+    display: block;
+    margin-bottom: 1em;
+}
+
+main {
+    display: flex;
+}
