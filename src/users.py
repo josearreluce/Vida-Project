@@ -33,3 +33,39 @@ class User(object):
     def logout(self):
         # TODO
         return 0
+
+    def getName(self):
+        return self.name
+
+    def getId(self):
+        return self.id
+
+    def getDateOfBirth(self):
+        return self.date_of_birth
+
+    def getHeight(self):
+        return self.height
+
+    def getWeight(self):
+        return self.weight
+
+    def getPreExistingConditions(self):
+        return self.preexisting_conditions
+
+    def setName(self, name):
+        self.name = name
+
+    def setId(self, id):
+        self.id = id
+
+    def setDateOfBirth(self, date_of_birth):
+        self.date_of_birth = date_of_birth
+
+    def setHeight(self, height):
+        self.height = height
+
+    def setWeight(self, weight):
+        self.weight = weight
+
+    def addPreExistingCondition(self, condition):
+        self.preexisting_conditions.append(condition)
