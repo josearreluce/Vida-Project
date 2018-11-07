@@ -31,5 +31,10 @@ class TestUserInterfaceClass(unittest.TestCase):
         cls.driver.quit()
 
     """
-    Test 
+    Homepage Test
+    
+    - Check that "Username" string exists
+    - Check that "Password" string exists
+    - Check that Two Inputs exists
+    - Check that login button exists
     """
