@@ -12,17 +12,19 @@ from selenium.webdriver.support import expected_conditions as ec
 class TestUserInterfaceClass(unittest.TestCase):
 
     def setUp(self):
+        options = webdriver.ChromeOptions()
+        options.add_argument('--disable-gpu')
+        options.add_argument('--headless')
+
+        self.homepage = 'http://127.0.0.1:5000'
 
         try:
             dir = os.path.dirname(os.path.abspath(__file__))
-            self.driver = webdriver.Chrome(executable_path=dir + '/chromedriver')
+            self.driver = webdriver.Chrome(executable_path=dir + '/chromedriver', options=options)
         except Exception as issue:
             logging.warning('Could not start Chrome Webdriver. Is chromedriver.exe in the test directory?\n Caught Exception: %s', issue)
+            exit(1)
 
-        self.options = webdriver.ChromeOptions()
-        #cls.options.add_argument('--disable-gpu')
-        #cls.options.add_argument('--headless')
-        self.homepage = 'http://127.0.0.1:5000'
         try:
             logging.info('Connecting to ')
             self.driver.get(self.homepage)
@@ -30,13 +32,27 @@ class TestUserInterfaceClass(unittest.TestCase):
             logging.warning('Could not connect to UI. Did you start the app?\n Caught Exception: %s', issue)
             exit(1)
 
-    def output_errors(self):
-        for error_location in self.error_logs:
-            print('%s error encountered: %s', error_location, self.error_logs[error_location])
+    def __check_page(self):
+        self.assertNotEqual('404 Not Found', self.driver.title)
+        self.driver.execute_script("window.history.go(-1)")
 
-    def test_login_page(self):
-        pass
+    def __check_navigation_bar(self):
+        home = self.driver.find_element_by_link_text("Home")
+        about = self.driver.find_element_by_link_text("About")
+        profile = self.driver.find_element_by_link_text("Profile")
+        start_assessment = self.driver.find_element_by_link_text("Start Assessment")
 
+        home.click()
+        self.__check_page()
+
+        about.click()
+        self.__check_page()
+
+        profile.click()
+        self.__check_page()
+
+        start_assessment.click()
+        self.__check_page()
 
     """
     Homepage Test
@@ -46,7 +62,13 @@ class TestUserInterfaceClass(unittest.TestCase):
     - Check that Two Inputs exists
     - Check that login button exists
     """
+    def test_homepage_nav_bar(self):
+        # Navigate to assessment page
+        self.driver.get(self.homepage)
+        self.__check_navigation_bar()
 
+    def test_login(self):
+        pass
 
     """
     Assessment Test
@@ -57,19 +79,20 @@ class TestUserInterfaceClass(unittest.TestCase):
     - Check response
     -  
     """
-    def test_assessment_page(self):
-        self.driver.get(self.homepage)
-        pass
+    def test_assessment_page_nav_bar(self):
+        # Navigate to assessment page
+        assessment_page = self.homepage + "/Start%20Assessment"
+        self.driver.get(assessment_page)
+        self.__check_navigation_bar()
 
-    def test_navigation_bar(self):
-        self.driver.get(self.homepage)
-        self.driver.find_element_by_link_text("Home").click()
-        self.driver.find_element_by_link_text("About").click()
-        self.driver.find_element_by_link_text("Profile").click()
+    def test_assessment(self):
+        pass
+        #self.driver.get(self.homepage)
 
     def tearDown(self):
         # close the browser window
         self.driver.quit()
+
 
 if __name__ == '__main__':
     unittest.main()
