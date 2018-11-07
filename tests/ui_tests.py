@@ -2,6 +2,7 @@ import unittest
 import logging
 import os
 from selenium import webdriver
+import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support.ui import WebDriverWait
@@ -12,26 +13,19 @@ class TestUserInterfaceClass(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        # create a new Firefox session
-        dir = os.path.dirname(os.path.abspath(__file__))
-        cls.driver = webdriver.Chrome(executable_path=dir + '/chromedriver')
-        # navigate to the application home page
-        cls.driver.get("http://www.google.com/")
-        cls.driver.title
-
-    def setUp(self):
         try:
             dir = os.path.dirname(os.path.abspath(__file__))
-            self.driver = webdriver.Chrome(executable_path=dir + '/chromedriver')
+            cls.driver = webdriver.Chrome(executable_path=dir + '/chromedriver')
         except Exception as issue:
             logging.warning('Could not start Chrome Webdriver. Is chromedriver.exe in the test directory?\n Caught Exception: %s', issue)
-        self.options = webdriver.ChromeOptions()
-        self.options.add('--disable-gpu')
-        self.options.add('--headless')
+
+        cls.options = webdriver.ChromeOptions()
+        #cls.options.add_argument('--disable-gpu')
+        #cls.options.add_argument('--headless')
 
         try:
             logging.info('Connecting to ')
-            self.driver.get('http://127.0.0.1:5000')
+            cls.driver.get('http://127.0.0.1:5000')
         except Exception as issue:
             logging.warning('Could not connect to UI. Did you start the app? \n Caught Exception: %s', issue)
             exit(1)
@@ -42,6 +36,7 @@ class TestUserInterfaceClass(unittest.TestCase):
         cls.driver.quit()
 
     def test_login_page(self):
+
         pass
 
 
