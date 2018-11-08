@@ -2,11 +2,11 @@
 
 Clone and run pip install -r requirements.txt 
 
-** Clarity of submission location, etc [4 points] **
+**Clarity of submission location, etc [4 points]**
 
 github repo: Vida-Project/tests
 
-** Unit test cases for first iteration development [28 points in total] **
+**Unit test cases for first iteration development [28 points in total]**
 
  Unit test framework [2 points]
  
