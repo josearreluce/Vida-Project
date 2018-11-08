@@ -7,39 +7,24 @@ from condition import Condition
 from symptom import Symptom
 from users import User #users.py is pluralized because just user is another existing module.
 
-
-# This is just test case, remove later
-class TestUM(unittest.TestCase):
-
-    def setUp(self):
-        pass
-
-    def test_numbers_3_4(self):
-        self.assertEqual( multiply(3,4), 12)
-
-    def test_strings_a_3(self):
-        self.assertEqual( multiply('a',3), 'aaa')
-
-    def test_add_3_4(self):
-        self.assertEqual(add(3,4), 7)
-
-    def test_add_a_b(self):
-        self.assertEqual(add("a","b"), "ab")
-
-
-
 class TestConditionClass(unittest.TestCase):
 
     def setUp(self):
         self.condition = Condition("Description", [], "name", -1, 0)
 
+    #Retrieve list of symptoms
     def test_get_symptoms(self):
         self.assertEqual(self.condition.getSymptoms(), [])
+
+    # Generate next question in diagnosis
+    def test_get_question(self):
+        self.assertEqual(self.condition.getNextQuestion(), "question")
 
 
 
 class TestUserClass(unittest.TestCase):
 
+    # User Information
     def setUp(self):
         self.user = User("username", "password", 1, 18)
 
@@ -69,12 +54,19 @@ class TestUserClass(unittest.TestCase):
         self.user.setWeight(200)
         self.assertEqual(200, self.user.getWeight())
 
+     def test_set_gender(self):
+        self.user.setGender(180)
+        self.assertEqual(180, self.user.getGender())
+
     def test_add_preexisting_condition(self):
         cond = Condition("Runny nose and sneezing", [], "flu", 19283, 0)
         self.assertEqual([], self.user.getPreExistingConditions())
         self.user.addPreExistingCondition(cond)
         self.assertEqual(cond, self.user.getPreExistingConditions()[0])
 
+    # See assessment history
+    def test_get_history(self):
+        self.assertEqual([], self.user.getHistory())
 
 
 class TestSymptomClass(unittest.TestCase):
@@ -91,8 +83,8 @@ class TestSymptomClass(unittest.TestCase):
     def test_get_desc(self):
         self.assertEqual(self.symptom.getDesc(), "description")
 
-
-
+    def test_get_desc(self):
+        self.assertEqual(self.symptom.getDesc(), "description")
 
 
 
