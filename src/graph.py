@@ -13,11 +13,11 @@ import condition
 ### Error Functions: Optional for validity checking ###
 
 def noSymptom(): #Symptoms doesn't exist
-    print("Error. Nonexistant symptom found.")
+    print("Error. Nonexistent symptom found.")
     return 0
 
 def noCondition(): #Conditions doesn't exist
-    print("Error. Nonexistant condition found.")
+    print("Error. Nonexistent condition found.")
     return 0
 ###                 ###
 
