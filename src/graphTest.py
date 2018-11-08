@@ -11,9 +11,9 @@ import graph as g
 #nothing when the function is called, one involves a simple case with one edge + two nodes, and the last test is a complex test using a
 #graph with multiple nodes and edges.
 
-#NOTE(!): Ideally, we should check for equality between nodes instead of "number of neighbors", however adding Symptoms/Condition edges is very
-#simple, and it is impossible to add the wrong nodes/edges between nodes. Rather, if there is a mistake, the number of neighbors will 
-#simply be off - otherwise, we have added exactly what we require.
+#NOTE(!): Ideally, we should check for equality between nodes instead of "number of neighbors" or "length of graph" to ensure correctness.
+#however adding Symptoms/Condition edges is very simple, and it is almost impossible to add wrong nodes/edges.
+#If there is a mistake, the number of neighbors will simply be off - otherwise, we have added exactly what we require.
 
 #Furthermore, we are *writing test cases* - in order to check for exact equality of nodes, we require a lot more involved implementation.
 #When we execute testing, we may test for exact nodes/edges, instead of number of neighbors, but we will use these test cases.
