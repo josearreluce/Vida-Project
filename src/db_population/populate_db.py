@@ -19,7 +19,7 @@ def get_and_order_symptoms(df):
 	for symptom in symptom_list:
 		sympt_id[symptom] = "sympt_"+str(id_key)
 		id_key += 1
-	
+
 	numeric_symptoms = []
 	for cond in symptom_list_main:
 		sympt_ids = []
@@ -44,26 +44,36 @@ def create_binary_cond_df(sympt_dict, cond_df):
 	return main_cond_df
 
 def create_binary_sympt_df(sympt_dict, cond_df):
-	sympt_df_dict = {'sympt_id'=[], 'name'=[]}
+	sympt_df_dict = {'sympt_id':[], 'name':[]}
 	for symptom in sympt_dict:
-		sympt_df_dict['sympt_id'] = sympt_dict[symptom]
-		sympt_df_dict['name'] = symptom
+		sympt_df_dict['sympt_id'].append(sympt_dict[symptom])
+		sympt_df_dict['name'].append(symptom)
 	sympt_df = pd.DataFrame.from_dict(sympt_df_dict)
 	sympt_df = sympt_df.sort_values(by=['sympt_id'])
+	
 	cond_id = cond_df['cond_id']
+	i = 0
 	for id in cond_id:
 		sympt_df[id] = 0
-	
+		for sympt_id in sympt_df['sympt_id']:
+			if cond_df.loc[cond_df['cond_id']==id, sympt_id].item() == 1:
+				sympt_df.at[sympt_df['sympt_id']==sympt_id, id] = 1
+	return sympt_df
+
+
 
 
 def write_to_db(tbl_name, df):
 	engine = create_engine("postgresql://pv_admin:CMSC22001@ec2-13-59-75-157.us-east-2.compute.amazonaws.com:5432/pv_db")
 	df.to_sql(tbl_name, con=engine, if_exists='replace', index=False)
 
-conditions = conditions_df('Conditions_and_symptoms.xlsx')
-sympt_id, conditions = get_and_order_symptoms(conditions)
-conditions = create_binary_cond_df(sympt_id, conditions)
+def main():
+	conditions = conditions_df('Conditions_and_symptoms.xlsx')
+	sympt_id, conditions = get_and_order_symptoms(conditions)
+	conditions = create_binary_cond_df(sympt_id, conditions)
+	symptoms = create_binary_sympt_df(sympt_id, conditions)
 
+	write_to_db('conditions', conditions)
+	write_to_db('symptoms', symptoms)
 
-write_to_db('conditions', conditions)
-
+main()
