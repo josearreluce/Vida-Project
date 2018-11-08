@@ -7,12 +7,11 @@ import symptom as s
 
 import graph as g
 
-#Tests: First tests for each function are very simple "sanity" tests. Last test is more involved and rigorous.
+#Test Commposition : First tests for each function are very simple "sanity" tests: One involves a graph that will return
+#nothing when the function is called, one involves a simple case with one edge + two nodes, and the last test is a complex test using a
+#graph with multiple nodes and edges.
 
-#The last test, using the "Complex graph" (declared below) examines exactly the number of neighbors of nodes, ensuring that the 
-#graph created is correct.
-
-#NOTE(!: Ideally, we should check for equality between nodes instead of "number of neighbors", however adding Symptoms/Condition edges is very
+#NOTE(!): Ideally, we should check for equality between nodes instead of "number of neighbors", however adding Symptoms/Condition edges is very
 #simple, and it is impossible to add the wrong nodes/edges between nodes. Rather, if there is a mistake, the number of neighbors will 
 #simply be off - otherwise, we have added exactly what we require.
 
