@@ -12,10 +12,12 @@ import graph as g
 #The last test, using the "Complex graph" (declared below) examines exactly the number of neighbors of nodes, ensuring that the 
 #graph created is correct.
 
-#NOTE: Ideally, we should check for equality between nodes instead of "number of neighbors", however adding Symptoms/Condition edges is very
+#NOTE(!: Ideally, we should check for equality between nodes instead of "number of neighbors", however adding Symptoms/Condition edges is very
 #simple, and it is impossible to add the wrong nodes/edges between nodes. Rather, if there is a mistake, the number of neighbors will 
-#simply be off - otherwise, we have added exactly what we require. This makes writing initial test cases much easier. In the final test
-#case implementation, we may change our tests to test for exact equality, using the same test cases.
+#simply be off - otherwise, we have added exactly what we require.
+
+#Furthermore, we are *writing test cases* - in order to check for exact equality of nodes, we require a lot more involved implementation.
+#When we execute testing, we may test for exact nodes/edges, instead of number of neighbors, but we will use these test cases.
 
 GG = g.createGraph() #Complex graph with 4 nodes - stronger test. #4 nodes, 4 edges (1 S-S edge, 3 S-C edges)
 #### Visual of the connections
