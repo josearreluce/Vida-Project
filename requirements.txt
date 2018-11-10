@@ -2,3 +2,4 @@ Flask
 pytest
 selenium
 Flask-login
+flask_wtf
