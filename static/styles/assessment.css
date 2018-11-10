@@ -1,0 +1,26 @@
+html,
+body {
+    height: 100%;
+    width: 100%;
+}
+
+.main {
+    display: flex;
+    justify-content: center;
+}
+
+.symptom-container {
+    border: 2px solid black;
+}
+
+.symptom-container fieldset {
+    border-width: 0px;
+}
+
+.question {
+    display: block;
+}
+
+.answer {
+    display: block;
+}
