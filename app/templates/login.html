@@ -5,31 +5,13 @@
     <div class="graph-box"></div>
     <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/login.css') }}">
     <form class="login__form">
-        <fieldset>
-            <label for="user-login">  {{ form.username.label }} </label>
-            <input type="text" id="user-signup" />
-            <br/>
-            <label for="pass-login">  {{ form.password.label }} </label>
-            <input type="pass" id="pass-login" />
-            <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
-            <p>{{ form.submit() }}</p>
-        </fieldset>
-
+        <title>Login </title>
+        <p> {{ form.username.label }} {{ form.username(size=32) }}</p>
+        <br/>
+        <p>  {{ form.password.label }} {{ form.password(size=32) }}</p>
+        <br/>
+        <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
+        <p>{{ form.submit() }}</p>
     </form>
-
-<!---
-    <form class="login__form">
-        <fieldset>
-            <label for="user-login"> Username </label>
-            <input type="text" id="user-login" />
-        </fieldset>
-        <fieldset>
-            <label for="pass"> Password </label>
-            <input type="password" id="pass" />
-        </fieldset>
-
-        <button class="button" type="submit"> Login </button>
-    </form>
--->
 </div>
 {% endblock %}

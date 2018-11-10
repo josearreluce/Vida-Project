@@ -1,11 +1,5 @@
-html,
-body {
-    background-color: ghostwhite;
-    width: 100%;
-}
-
 .graph-box {
-    background-color: green;
+    background-color: darkgray;
     display: inline-block;
     height: 500px;
     width: 74%;
@@ -13,30 +7,20 @@ body {
 
 .login {
     display: flex;
+    width: 100%;
 }
 
-
-.login-box {
-    background-color: red;
-    display: inline-block;
-    height: 500px;
-    position: relative;
-    width: 25%;
-
+.login__form {
+    padding: 0.2em 0.2em 0.2em 2.2em
+}
+.login__form title {
+    display: block;
+    font-weight: bold;
 }
 
-.login-box__form {
-    border: 2px solid black;
-    left: 50%;
-    position: absolute;
-    top: 50%;
-    transform: translate(-50%, -50%);
-}
-
-.login-box__form fieldset {
+.login__form p {
     border: 0px;
     display: block;
-    margin-bottom: 1em;
 }
 
 main {
