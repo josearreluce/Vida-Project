@@ -2,6 +2,8 @@
 
 Clone and run pip install -r requirements.txt 
 
+Start the dev server with: python -m flask run
+
 **Clarity of submission location, etc [4 points]**
 
 github repo: Vida-Project/tests
