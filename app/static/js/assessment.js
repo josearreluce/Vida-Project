@@ -1,13 +1,22 @@
 const example_symptoms = ['Headache', 'Cough', 'Sneeze', 'Backpain', 'Pain', 'Fever', 'Chills'];
 
 let query = '';
-$('.input').keydown((e) => {
+$('.input').keyup((e) => {
     // Update the query for search only if alphabetic character
-    if (e.which >= 65 && e.which <=90) {
-        query += String.fromCharCode(e.which);
-    }
+    let query = $(".input").val();
+    console.log(query);
 
-    if (e.which === 8) {
-        query = query.slice(0, -1);
-    }
+    let results = [];
+    example_symptoms.forEach((symptom) => {
+       if (symptom.startsWith(query)) {
+           results.push(symptom);
+       }
+    });
+
+    $('.symptom-results').empty();
+    results.forEach((res) => {
+        $('.symptom-results').append(
+            "<li class='symptom-result'>" + res + "<\li>"
+        );
+    });
 });
