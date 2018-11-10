@@ -5,16 +5,25 @@ body {
 }
 
 .main {
+    align-items: center;
     display: flex;
+    flex-direction: column;
     justify-content: center;
 }
 
 .symptom-container {
     border: 2px solid black;
+    text-align: center;
+    width: 50%;
 }
 
 .symptom-container fieldset {
     border-width: 0px;
+}
+
+.symptom-results {
+    display: flex;
+    flex-direction: column;
 }
 
 .question {
@@ -23,4 +32,19 @@ body {
 
 .answer {
     display: block;
+}
+
+/* Symptom Search Results styles */
+.symptom-results {
+    width: 100%;
+}
+
+.symptom-result {
+    border-top: 1px solid gray;
+    padding: 0.5em 0;
+}
+
+.symptom-result:hover {
+    background-color: aqua;
+    color: white;
 }
