@@ -5,6 +5,16 @@ function handleSymptomSearch(res) {
     $('.symptom-box-container').removeClass('hidden');
     $('.symptom-box').append("<p class='question'> What is your symptom? </p>");
     $('.symptom-box').append("<p class='answer'>" + res.text + "</p>");
+    $('.symptom-box').append("<p class='question'> Do you have any other symptoms? </p>");
+    $('.symptom-box').append("<input type='text' class='chat-input'>");
+
+    $.post('/assessment', {
+        text: 'Hello Server'
+    }).done((res) => {
+        console.log(res.text);
+    }).fail(() => {
+        console.log("Failure");
+    });
 }
 
 let query = '';
