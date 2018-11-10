@@ -10,17 +10,19 @@ body {
     height: 500px;
     width: 74%;
 }
+
+.login {
+    display: flex;
+}
+
+
 .login-box {
     background-color: red;
     display: inline-block;
     height: 500px;
     position: relative;
     width: 25%;
-}
 
-.vid {
-    height: 100%;
-    width: 100%;
 }
 
 .login-box__form {

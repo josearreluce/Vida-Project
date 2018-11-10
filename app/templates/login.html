@@ -2,24 +2,22 @@
 
 {% block content %}
 <div class="login">
-    <form class="login__initial">
-        <button class="button" id="login-button"> Login </button>
-        <button class="button" id="signup-button"> Signup </button>
-    </form>
-
-    <form class="signup__form">
+    <div class="graph-box"></div>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/login.css') }}">
+    <form class="login__form">
         <fieldset>
-            <label for="user-signup">  {{ form.username.label }} </label>
+            <label for="user-login">  {{ form.username.label }} </label>
             <input type="text" id="user-signup" />
-        </fieldset>
-        <fieldset>
-            <label for="pass-signup">  {{ form.password.label }} </label>
-            <input type="pass" id="pass-signup" />
+            <br/>
+            <label for="pass-login">  {{ form.password.label }} </label>
+            <input type="pass" id="pass-login" />
+            <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
+            <p>{{ form.submit() }}</p>
         </fieldset>
 
-        <button class="button" type="submit"> Signup </button>
     </form>
 
+<!---
     <form class="login__form">
         <fieldset>
             <label for="user-login"> Username </label>
@@ -32,5 +30,6 @@
 
         <button class="button" type="submit"> Login </button>
     </form>
+-->
 </div>
 {% endblock %}
