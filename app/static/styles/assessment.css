@@ -48,3 +48,24 @@ body {
     background-color: aqua;
     color: white;
 }
+
+/* Symptom Assessment 'Chat-box' Styling */
+.symptom-box-container {
+    display: flex;
+    width: 100%;
+}
+
+.symptom-box-container.hidden {
+    border: 2px solid black;
+    display: none;
+}
+
+.symptom-vis {
+    background-color: aqua;
+    border: 2px solid black;
+    width: 70%;
+}
+
+.symptom-box {
+    width: 30%;
+}
