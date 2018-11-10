@@ -32,11 +32,18 @@ $('.input').keyup((e) => {
     $('.symptom-results').empty();
     results.forEach((res) => {
         $('.symptom-results').append(
-            "<a class='symptom-result'>" + res + "<\a>"
+            "<a id='" + res + "' class='symptom-result'>" + res + "<\a>"
         );
     });
 
     $('.symptom-result').click((e) => {
         handleSymptomSearch(e.target);
     });
+
+    if (e.which === 13) {
+        if (results.length > 0) {
+            const res = document.getElementById(results[0]);
+            handleSymptomSearch(res);
+        }
+    }
 });
