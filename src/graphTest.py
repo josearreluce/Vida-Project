@@ -153,10 +153,10 @@ def getSomeRelatedSymptomsC():
     res1 = (len(related) == 1)
     return res1
   
- def getSomeRelatedSymptomsCComplex():
-   related = g.getRelatedConditionsC(GG,C1)
-   res1 = (len(related) == 1)
-   return res1
+def getSomeRelatedSymptomsCComplex():
+    related = g.getRelatedConditionsC(GG,C1)
+    res1 = (len(related) == 1)
+    return res1
 
 #getRelatedSymptomsS test
 def getNoRelatedSymptomsS():
@@ -179,7 +179,7 @@ def getSomeRelatedSymptomsS():
     res1 = (len(related) == 1)
     return res1
   
- def get SomeRelatedSymptomsSComplex():
+def getSomeRelatedSymptomsSComplex():
     related = g.getRelatedSymptomsS(GG,S1)
     res1 = (len(related) == 1)
     related = g.getRelatedSymptomsS(GG,S2)
