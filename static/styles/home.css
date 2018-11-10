@@ -1,26 +1,45 @@
-.nav {
+nav {
     background-color: darkgrey;
     overflow: hidden;
-    text-align:right;
+    width: 100%;
     z-index:1;
 }
 
-.nav a {
+ul {
+    margin:0;
+    padding: 0;
+    overflow: hidden;
+    list-style-type: none;
+}
+
+li {
+    list-style: none;
     float: left;
     font-family: Geneva;
     color: black;
     text-align: center;
-    padding: 14px 16px;
     text-decoration: none;
-    font-size: 17px;
 }
 
-.nav a:hover {
-    background-color: sienna;
+li a {
+    padding: 0.4em 0.4em;
+    line-height: 33px;
+    float: left;
+    font-family: Geneva;
     color: black;
+    text-align: center;
+    text-decoration: none;
 }
 
+li a:hover {
+    background-color: sienna;
+}
 
+#logo {
+    padding: 0.4em 0.4em;
+    line-height: 33px;
+
+}
 html,
 body {
     background-color: ghostwhite;
