@@ -3,16 +3,7 @@
         <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/home.css') }}">
     </head>
     <body>
-        <header>
-            <nav>
-                <ul>
-                    <li id=logo> Vida Project </li>
-                    <li> <a href="#"> Home </a></li>
-                    <li> <a href="#"> Start Assessment </a></li>
-                    <li> <a href="#"> Profile </a></li>
-                </ul>
-            </nav>
-        </header>
+        {% include 'nav.html' %}
         <div class="login">
             <form class="login__initial">
                 <button class="button" id="login-button"> Login </button>
