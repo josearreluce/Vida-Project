@@ -15,7 +15,6 @@ ul {
 li {
     list-style: none;
     float: left;
-    font-family: Geneva;
     color: black;
     text-align: center;
     text-decoration: none;
@@ -25,7 +24,6 @@ li a {
     padding: 0.4em 0.4em;
     line-height: 33px;
     float: left;
-    font-family: Geneva;
     color: black;
     text-align: center;
     text-decoration: none;

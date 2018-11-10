@@ -1,31 +1,26 @@
-<html>
-    <head>
-        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/assessment.css') }}">
-    </head>
-    <body>
-        {% include 'nav.html' %}
-        <main class="main">
-            <div class="symptom-container">
-                <form>
-                    <fieldset>
-                        <label class="question" for="symptom-search"> What is your symptom? </label>
-                        <input class="input" id="symptom-search" type="text" />
-                    </fieldset>
-                </form>
-                <div class="symptom-results">
-                </div>
-            </div>
-            <div class="symptom-box-container hidden">
-                <div class="symptom-vis"></div>
-                <div class="symptom-box"></div>
-            </div>
-        </main>
-        <footer>
+{% extends "page.html" %}
 
-        </footer>
-    </body>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-            integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
-            crossorigin="anonymous"></script>
-    <script src="{{ url_for('static', filename='js/assessment.js') }}" type="text/javascript"></script>
-</html>
+{% block content %}
+<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/assessment.css') }}">
+<main class="main">
+    <div class="symptom-container">
+        <form>
+            <fieldset>
+                <label class="start_question" for="symptom-search"> What is your symptom? </label>
+                <input class="input" id="symptom-search" type="text" />
+            </fieldset>
+        </form>
+        <div class="symptom-results">
+        </div>
+    </div>
+    <div class="symptom-box-container hidden">
+        <div class="symptom-vis"></div>
+        <div class="symptom-box"></div>
+    </div>
+</main>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
+        crossorigin="anonymous"></script>
+<script src="{{ url_for('static', filename='js/assessment.js') }}" type="text/javascript"></script>
+
+{% endblock %}
