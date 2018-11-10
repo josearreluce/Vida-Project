@@ -1,0 +1,28 @@
+.graph-box {
+    background-color: darkgray;
+    display: inline-block;
+    height: 500px;
+    width: 74%;
+}
+
+.login {
+    display: flex;
+    width: 100%;
+}
+
+.login__form {
+    padding: 0.2em 0.2em 0.2em 2.2em
+}
+.login__form title {
+    display: block;
+    font-weight: bold;
+}
+
+.login__form p {
+    border: 0px;
+    display: block;
+}
+
+main {
+    display: flex;
+}

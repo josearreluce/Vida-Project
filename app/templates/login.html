@@ -1,0 +1,17 @@
+{% extends "page.html" %}
+
+{% block content %}
+<div class="login">
+    <div class="graph-box"></div>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/login.css') }}">
+    <form class="login__form">
+        <title>Login </title>
+        <p> {{ form.username.label }} {{ form.username(size=32) }}</p>
+        <br/>
+        <p>  {{ form.password.label }} {{ form.password(size=32) }}</p>
+        <br/>
+        <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
+        <p>{{ form.submit() }}</p>
+    </form>
+</div>
+{% endblock %}
