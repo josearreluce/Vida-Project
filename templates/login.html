@@ -1,0 +1,51 @@
+<html>
+    <head>
+        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/home.css') }}">
+    </head>
+    <body>
+        <header>
+            <nav>
+                <ul>
+                    <li> Vida Project </li>
+                </ul>
+            </nav>
+        </header>
+        <div class="login">
+            <div class="login__initial">
+                <button class="button" id="login-button"> Login </button>
+                <button class="button" id="signup-button"> Signup </button>
+            </div>
+
+            <form class="signup__form">
+                <fieldset>
+                    <label for="user-signup"> Username </label>
+                    <input type="text" id="user-signup" />
+                </fieldset>
+                <fieldset>
+                    <label for="pass-signup"> Password </label>
+                    <input type="pass" id="pass-signup" />
+                </fieldset>
+
+                <button class="button" type="submit"> Signup </button>
+            </form>
+
+            <form class="login__form">
+                <fieldset>
+                    <label for="user-login"> Username </label>
+                    <input type="text" id="user-login" />
+                </fieldset>
+                <fieldset>
+                    <label for="pass"> Password </label>
+                    <input type="password" id="pass" />
+                </fieldset>
+
+                <button class="button" type="submit"> Login </button>
+            </form>
+        </div>
+    </body>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
+            crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='scripts/login.js')}}"></script>
+
+</html>
