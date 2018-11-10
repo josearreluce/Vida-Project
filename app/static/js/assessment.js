@@ -1,5 +1,9 @@
 const example_symptoms = ['Headache', 'Cough', 'Sneeze', 'Backpain', 'Pain', 'Fever', 'Chills'];
 
+function handleSymptomSearch(res) {
+    console.log(res);
+}
+
 let query = '';
 $('.input').keyup((e) => {
     // Update the query for search only if alphabetic character
@@ -16,7 +20,11 @@ $('.input').keyup((e) => {
     $('.symptom-results').empty();
     results.forEach((res) => {
         $('.symptom-results').append(
-            "<li class='symptom-result'>" + res + "<\li>"
+            "<a class='symptom-result'>" + res + "<\a>"
         );
+    });
+
+    $('.symptom-result').click((e) => {
+        handleSymptomSearch(e.target);
     });
 });
