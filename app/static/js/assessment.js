@@ -18,15 +18,16 @@ function handleSymptomSearch(res) {
 }
 
 let query = '';
-$('.input').keyup((e) => {
+$('#symptom-search').keyup((e) => {
     // Update the query for search only if alphabetic character
-    let query = $(".input").val();
+    let query = $("#symptom-search").val().toLowerCase();
 
     let results = [];
     example_symptoms.forEach((symptom) => {
-       if (symptom.startsWith(query)) {
-           results.push(symptom);
-       }
+        const curr_symptom = symptom.toLowerCase();
+        if (curr_symptom.startsWith(query)) {
+            results.push(symptom);
+        }
     });
 
     $('.symptom-results').empty();
