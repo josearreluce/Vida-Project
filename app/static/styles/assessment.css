@@ -1,9 +1,12 @@
 .main {
-    align-items: center;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     height: 100%;
+}
+
+.main.initial-assessment {
+    align-items: center;
+    justify-content: center;
 }
 
 .symptom-container {
