@@ -66,6 +66,32 @@
     width: 70%;
 }
 
+/* Chat Box Styles */
 .symptom-box {
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
     width: 30%;
+}
+
+.question {
+    background-color: lightgray;
+    border: 2px solid lightgray;
+    border-radius: 100px;
+    margin: 0;
+    padding: 0.4em;
+    width: 50%;
+}
+
+.answer {
+    width: 50%;
+    border-radius: 100px;
+    border: 2px solid #007AFF;
+    float: right;
+    white-space: nowrap;
+    align-self: end;
+    background-color: #007AFF;
+    color: white;
+    padding: 0.4em;
+    margin: 0;
 }
