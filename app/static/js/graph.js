@@ -1,7 +1,8 @@
 var colors = d3.scaleOrdinal(d3.schemeCategory10);
+    const original_box = document.getElementsByClassName("graph-box")[0];
     const graph_box = d3.select(".graph-box");
-    const width = graph_box.attr("width");
-    const height = graph_box.attr("height");
+    const width = original_box.offsetWidth;
+    const height = original_box.offsetHeight;
     var svg = d3.select(".graph-svg")
         .attr("height", height)
         .attr("width", width);
@@ -25,7 +26,7 @@ var colors = d3.scaleOrdinal(d3.schemeCategory10);
     var simulation = d3.forceSimulation()
         .force("link", d3.forceLink().id(function (d) {return d.id;}).distance(100).strength(1))
         .force("charge", d3.forceManyBody())
-        .force("center", d3.forceCenter(width / 2, height / 2));
+        .force("center", d3.forceCenter(Number(width) / 2, Number(height) / 2));
 
     d3.json("static/js/test.json", function (error, graph) {
         if (error) throw error;
