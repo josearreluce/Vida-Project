@@ -1,7 +1,11 @@
 .main {
-    align-items: center;
     display: flex;
     flex-direction: column;
+    height: 100%;
+}
+
+.main.initial-assessment {
+    align-items: center;
     justify-content: center;
 }
 
@@ -9,6 +13,11 @@
     margin-top:1em;
     background-color: #5051DB;;
     text-align: center;
+    left: 50%;
+    top: 30%;
+    padding: 2em 0;
+    position: absolute;
+    transform: translate(-50%, -50%);
     width: 50%;
 }
 
@@ -23,10 +32,12 @@
 }
 
 .start_question {
-    margin-top:0.2em;
     display: block;
     color: ghostwhite;
+    font-size: 1.2em;
     font-weight: bold;
+    margin-bottom: 1.2em;
+    margin-top:0.2em;
 }
 
 .input {
