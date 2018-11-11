@@ -7,7 +7,7 @@
 
 .symptom-container {
     margin-top:1em;
-    background-color: darkgray;
+    background-color: #5051DB;;
     text-align: center;
     width: 50%;
 }
@@ -19,11 +19,14 @@
 .symptom-results {
     display: flex;
     flex-direction: column;
+    color: ghostwhite;
 }
 
 .start_question {
     margin-top:0.2em;
     display: block;
+    color: ghostwhite;
+    font-weight: bold;
 }
 
 .input {
@@ -45,8 +48,8 @@
 }
 
 .symptom-result:hover {
-    background-color: sienna;
-    color: white;
+    background-color: #26277C;
+    color: ghostwhite;
 }
 
 /* Symptom Assessment 'Chat-box' Styling */
@@ -61,7 +64,7 @@
 }
 
 .symptom-vis {
-    background-color: sienna;
+    background-color: #5051DB;
     border: 2px solid darkgray;
     width: 70%;
 }
@@ -86,11 +89,11 @@
 .answer {
     width: 50%;
     border-radius: 100px;
-    border: 2px solid #007AFF;
+    border: 2px solid #5051DB;
     float: right;
     white-space: nowrap;
     align-self: end;
-    background-color: #007AFF;
+    background-color: #5051DB;
     color: white;
     padding: 0.4em;
     margin: 0;

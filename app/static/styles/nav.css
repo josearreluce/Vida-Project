@@ -1,5 +1,5 @@
 nav {
-    background-color: darkgrey;
+    background-color: ghostwhite;
     overflow: hidden;
     width: 100%;
     z-index:1;
@@ -30,7 +30,7 @@ li a {
 }
 
 li a:hover {
-    background-color: sienna;
+    background-color: #5051DB;
 }
 
 #logo {
