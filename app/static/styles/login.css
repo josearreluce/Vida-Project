@@ -11,7 +11,12 @@
 }
 
 .login__form {
-    padding: 0.2em 0.2em 0.2em 2.2em
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    margin: 0;
+    padding: 0.2em 0.2em 0.2em 2.2em;
+    width: 24%;
 }
 .login__form title {
     display: block;
