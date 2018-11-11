@@ -73,7 +73,7 @@
 .symptom-box {
     overflow-y: scroll;
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
     width: 30%;
 }
 
@@ -97,4 +97,9 @@
     color: white;
     padding: 0.4em;
     margin: 0;
+    margin-left: 50%;
+}
+
+.chat-input {
+    width: 100%;
 }
