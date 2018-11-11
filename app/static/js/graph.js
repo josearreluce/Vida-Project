@@ -1,4 +1,4 @@
-var colors = d3.scaleOrdinal(d3.schemeCategory10);
+var color = d3.rgb("#5051DB")
     const original_box = document.getElementsByClassName("graph-box")[0];
     const graph_box = d3.select(".graph-box");
     const width = original_box.offsetWidth;
@@ -87,15 +87,15 @@ var colors = d3.scaleOrdinal(d3.schemeCategory10);
             );
 
         node.append("circle")
-            .attr("r", 5)
-            .style("fill", function (d, i) {return colors(i);})
+            .attr("r", 15)
+            .style("fill", function (d, i) {return color;})
 
         node.append("title")
             .text(function (d) {return d.id;});
 
         node.append("text")
             .attr("dy", -3)
-            .text(function (d) {return d.name+":"+d.label;});
+            .text(function (d) {return d.name;});
 
         simulation
             .nodes(nodes)
@@ -106,6 +106,7 @@ var colors = d3.scaleOrdinal(d3.schemeCategory10);
     }
 
     function ticked() {
+        //console.log("a")
         link
             .attr("x1", function (d) {return d.source.x;})
             .attr("y1", function (d) {return d.source.y;})
