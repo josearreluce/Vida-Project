@@ -31,3 +31,16 @@
 main {
     display: flex;
 }
+
+/* Sign In Button styles */
+#submit {
+    background-color: #5051DB;
+    color: white;
+    font-size: 1em;
+    padding: 0.5em 0;
+    width: 100%;
+}
+
+#submit:hover {
+    background-color: #26277C;
+}
