@@ -3,7 +3,8 @@
 {% block content %}
 <div class="login">
     <div class="graph-box"><svg class="graph-svg"></svg></div>
-    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/login.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/login.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/graph.css') }}">
     <form class="login__form">
         <div class="login__form-container">
             <h3>Login </h3>
