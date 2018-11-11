@@ -19,6 +19,16 @@
       "name": "Nausea",
       "label": "",
       "id": 4
+    },
+    {
+      "name": "Vomitting",
+      "label": "",
+      "id": 5
+    },
+    {
+      "name": "Headache",
+      "label": "",
+      "id": 6
     }
   ],
   "links": [
@@ -42,6 +52,18 @@
       "source": 3,
       "target": 4,
       "type": "Symptom"
+    },
+    {
+      "source": 1,
+      "target": 5,
+      "type": "Symptom",
+      "since": 2010
+    },
+    {
+      "source": 1,
+      "target": 6,
+      "type": "Symptom",
+      "since": 2010
     }
   ]
 }
