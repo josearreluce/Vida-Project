@@ -24,7 +24,7 @@ var color = d3.rgb("#5051DB")
         .style('stroke','none');
 
     var simulation = d3.forceSimulation()
-        .force("link", d3.forceLink().id(function (d) {return d.id;}).distance(100).strength(1))
+        .force("link", d3.forceLink().id(function (d) {return d.id;}).distance(200).strength(1))
         .force("charge", d3.forceManyBody())
         .force("center", d3.forceCenter(Number(width) / 2, Number(height) / 2));
 
@@ -50,8 +50,8 @@ var color = d3.rgb("#5051DB")
             .append('path')
             .attrs({
                 'class': 'edgepath',
-                'fill-opacity': 0,
-                'stroke-opacity': 0,
+                'fill-opacity': 1,
+                'stroke-opacity': 1,
                 'id': function (d, i) {return 'edgepath' + i}
             })
             .style("pointer-events", "none");
@@ -95,7 +95,7 @@ var color = d3.rgb("#5051DB")
 
         node.append("text")
             .attr("dy", -3)
-            .text(function (d) {return d.name;});
+            .text(function (d) {return ""}); // d.name
 
         simulation
             .nodes(nodes)
