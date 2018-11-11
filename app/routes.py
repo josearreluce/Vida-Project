@@ -11,7 +11,7 @@ def handle_assessment():
 def symptom_assessment():
     return render_template("assessment.html")
 
-@app.route("/")
+@app.route("/", methods=["GET","POST"])
 def login():
     form = LoginForm()
     return render_template('login.html', title='Sign In', form=form)
