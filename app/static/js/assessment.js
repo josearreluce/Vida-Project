@@ -1,11 +1,12 @@
 const example_symptoms = ['Headache', 'Cough', 'Sneeze', 'Backpain', 'Pain', 'Fever', 'Chills'];
 
 function handleSymptomSearch(res) {
-    $('.symptom-container').hide();
-    $('.symptom-box-container').removeClass('hidden');
+    //$('.symptom-container').hide();
+    //$('.symptom-box-container').removeClass('hidden');
     $("main").removeClass("initial-assessment");
 
     const symptom_box = $('.symptom-box');
+    symptom_box.empty();
     symptom_box.append("<p class='question'> What is your symptom? </p>");
     symptom_box.append("<p class='answer'>" + res.text + "</p>");
     symptom_box.append("<p class='question'> Do you have any other symptoms? </p>");

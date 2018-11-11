@@ -9,7 +9,16 @@
     justify-content: center;
 }
 
-.symptom-container {
+main.initial-assessment .symptom-vis {
+    display: none;
+}
+
+main.initial-assessment .symptom-box {
+    display: block;
+    width: 100%;
+}
+
+main.initial-assessment .symptom-container {
     margin-top:1em;
     background-color: #5051DB;;
     text-align: center;
@@ -19,6 +28,12 @@
     position: absolute;
     transform: translate(-50%, -50%);
     width: 50%;
+}
+
+.symptom-container {
+    background-color: ghostwhite;
+    display: flex;
+    width: 100%;
 }
 
 .symptom-container fieldset {
@@ -64,16 +79,6 @@
 }
 
 /* Symptom Assessment 'Chat-box' Styling */
-.symptom-box-container {
-    display: flex;
-    width: 100%;
-}
-
-.symptom-box-container.hidden {
-    border: 2px solid darkgray;
-    display: none;
-}
-
 .symptom-vis {
     background-color: #5051DB;
     border: 2px solid darkgray;
