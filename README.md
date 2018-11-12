@@ -33,6 +33,7 @@ Reflection of design goals and planned implementation (from milestone 1 and 2) [
  2. The symptom to condition generation process is as accurate as possible
  3. The user information is stored correctly. <br />
  We have the database set-up in an AWS instance, and the initial app infrasctructure running as a Flask application. We are currently setting up the graph and will connect the graph to user input of symptoms and diagnoses. In milestone 2 we want to connect the functionality and create an initial clickable prototype where the user can enter a symptom and receive a diagnosis. We will then work on refining the graph algorithm so that diagnoses are accurate. <br />
- Our tests reflect the design decisions above. We write tests to cover the three main design points, to make sure that the basic functionality of our application (symptom diagnosis) is available to the user.
+<br />
+Our tests reflect the design decisions above. We write tests to cover the three main design points, to make sure that the basic functionality of our application (symptom diagnosis) is available to the user.
 
  code is easy to read and understand [4 points]
