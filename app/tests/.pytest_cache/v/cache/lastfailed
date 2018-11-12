@@ -1,0 +1,9 @@
+{
+  "test_backend.py::TestConditionClass": true,
+  "test_backend.py::TestConditionClass::test_get_question": true,
+  "test_backend.py::TestSymptomClass": true,
+  "test_backend.py::TestUserClass": true,
+  "test_backend.py::TestUserClass::test_get_history": true,
+  "test_backend.py::TestUserClass::test_set_gender": true,
+  "test_ex.py": true
+}
