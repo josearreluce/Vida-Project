@@ -20,9 +20,10 @@ github repo: Vida-Project/tests
 implementation: coverage of important features (thoroughness) [12 points]
  
  We implement tests based on feature coverage:
- 1. db_tests.py: tests about the database, where we store health information for the user and symptoms and conditions information, we check that the correct information is stored in the format we want. Specifically, we break this down into two test cases: one to ensure that only the credentials that can connect to the database are the correct ones, and another to ensure that syntactically correct queries with real values are returning correct results.
- 2. ui_tests.py: tests about the UI, tests if the app launches successfully
- 3. tests.py: tests about the backend, symptom condition diagnosis and user profile set up
+ 1. test_db.py: tests about the database, where we store health information for the user and symptoms and conditions information, we check that the correct information is stored in the format we want. Specifically, we break this down into two test cases: one to ensure that only the credentials that can connect to the database are the correct ones, and another to ensure that syntactically correct queries with real values are returning correct results.
+ 3. test_backend.py: tests about the backend, symptom condition diagnosis and user profile set up
+ 4. test_graph.py: tests about the graph used for the symptom condition diagnosis
+ 
 
 implementation: lack of redundancy (concision) [6 points]
 
