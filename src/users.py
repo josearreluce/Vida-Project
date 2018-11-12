@@ -1,71 +1,118 @@
-class User(object):
+class AccountInfo(object):
 
-    # comprehensive initialization.
-    def __init__(self, username, password, name, id, sex, date_of_birth, age, height, weight, preexisting_conditions):
+    def __init__(username, password):
         self.username = username
         self.password = password
+
+    def getUsername(self):
+        return self.username
+
+    def setUsername(self, username):
+        self.username = username
+
+    def getPassword(self):
+        return self.password
+
+    def setPassword(self, password):
+        self.password = self.password
+
+class BasicInfo(object):
+
+    def __init__(name, dob, sex):
         self.name = name
-        self.id = id
+        self.dob = dob
         self.sex = sex
-        self.date_of_birth = date_of_birth
-        self.age = age
-        self.height = height
-        self.weight = weight
-        self.preexisting_conditions = preexisting_conditions
-
-    # Bare minimum initialization
-    def __init__(self, username, password, sex, age):
-        self.username = username
-        self.password = password
-        self.sex = sex
-        self.age = age
-        self.name = ""
-        self.id = -1
-        self.date_of_birth = -1
-        self.height = -1
-        self.weight = -1
-        self.preexisting_conditions = []
-
-    def startAssessment(self):
-        # TODO
-        return 0
-
-    def logout(self):
-        # TODO
-        return 0
 
     def getName(self):
         return self.name
 
-    def getId(self):
-        return self.id
+    def setName(self, name):
+        self.name = name
 
-    def getDateOfBirth(self):
-        return self.date_of_birth
+    def getDOB(self):
+        return self.dob
+
+    def setDOB(self, dob):
+        self.dob = dob
+
+    def getSex(self):
+        return self.sex
+
+    def setSex(self, sex):
+        self.sex = sex
+
+class PersonalInfo(object):
+
+    def __init__(height, weight):
+        self.height = height
+        self.weight = weight
 
     def getHeight(self):
         return self.height
 
-    def getWeight(self):
-        return self.weight
-
-    def getPreExistingConditions(self):
-        return self.preexisting_conditions
-
-    def setName(self, name):
-        self.name = name
-
-    def setId(self, id):
-        self.id = id
-
-    def setDateOfBirth(self, date_of_birth):
-        self.date_of_birth = date_of_birth
-
     def setHeight(self, height):
         self.height = height
+
+    def getWeight(self):
+        return self.weight
 
     def setWeight(self, weight):
         self.weight = weight
 
-    def addPreExistingCondition(self, condition):
-        self.preexisting_conditions.append(condition)
+class HealthBackground(object):
+
+    def __init__(smoker, blood_pressure, diabetes):
+        self.smoker = smoker
+        self.blood_pressure = blood_pressure
+        self.diabetes = diabetes
+
+    def getSmoker(self):
+        return self.smoker
+
+    def setSmoker(self, smoker):
+        self.smoker = smoker
+
+    def getBloodPressure(self):
+        return self.blood_pressure
+
+    def setBloodPressure(self, smoker):
+        self.smoker = smoker
+
+    def getDiabetes(self):
+        self.diabetes = diabetes
+
+    def setDiabetes(self, diabetes):
+        return self.diabetes
+
+class User(object):
+
+    # comprehensive initialization.
+    def __init__(account_info, basic_info, personal_info, health_background):
+        self.account_info = account_info
+        self.basic_info = basic_info
+        self.personal_info = personal_info
+        self.health_background = health_background
+
+    def getAccountInfo(self):
+        return self.account_info
+
+    def getBasicInfo(self):
+        return self.basic_info
+
+    def getPersonalInfo(self):
+        return self.personal_info
+
+    def getHealthBackground(self):
+        return self.health_background
+
+    def setAccountInfo(self, account_info):
+        self.account_info = account_info
+
+    def setBasicInfo(self, basic_info):
+        self.basic_info = basic_info
+
+    def setPersonalInfo(self, personal_info):
+        self.personal_info = personal_info
+
+    def setHealthBackground(self, health_background):
+        self.health_background = health_background
