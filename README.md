@@ -2,7 +2,8 @@
 
 Clone and run pip install -r requirements.txt 
 
-Start the dev server with: python -m flask run
+1. Set environment variable: EXPORT FLASK_APP=app
+2. Start the dev server with: python -m flask run
 
 **Clarity of submission location, etc [4 points]**
 

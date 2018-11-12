@@ -2,7 +2,6 @@ import unittest
 import sys
 sys.path.append('../src') # gets into proper file path
 
-from testthis import multiply,add
 from condition import Condition
 from symptom import Symptom
 from users import User #users.py is pluralized because just user is another existing module.
@@ -54,7 +53,7 @@ class TestUserClass(unittest.TestCase):
         self.user.setWeight(200)
         self.assertEqual(200, self.user.getWeight())
 
-     def test_set_gender(self):
+    def test_set_gender(self):
         self.user.setGender(180)
         self.assertEqual(180, self.user.getGender())
 
