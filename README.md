@@ -14,6 +14,8 @@ github repo: Vida-Project/tests
  Unit test framework [2 points]
  
  - pytest framework
+ 
+ To run the tests, use the command: pytest [file_name]
 
 implementation: coverage of important features (thoroughness) [12 points]
  
