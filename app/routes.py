@@ -29,7 +29,6 @@ def signup():
     form = SignUpForm(request.form)
     username = form.username.data
     password = form.password.data
-    confirm_password = form.password2.data
 
     if form.validate_on_submit():
         engine = sqlalchemy.create_engine("postgresql://pv_admin:CMSC22001@ec2-13-59-75-157.us-east-2.compute.amazonaws.com:5432/pv_db")
@@ -43,10 +42,6 @@ def signup():
             if form.errors:
                 form.errors.pop()
             form.errors.append('Username "{}" Already In Use!'.format(username))
-        elif password != confirm_password:
-            if form.errors:
-                form.errors.pop()
-            form.errors.append('Passwords Do Not Match!')
         else:
             flash('Welcome to Vida!')
             db.add(user_info)

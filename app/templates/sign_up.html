@@ -10,8 +10,6 @@
             <br/>
             <p>  {{ form.password.label }} {{ form.password(size=32) }}</p>
             <br/>
-            <p>  {{ form.password2.label }} {{ form.password(size=32) }}</p>
-            <br/>
             {% if form.errors %}
                 <ul class=errors>
                     <li>{{ form.errors[-1] }}</li>
