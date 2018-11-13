@@ -43,6 +43,8 @@ def create_binary_cond_df(sympt_dict, cond_df):
 	main_cond_df=main_cond_df.drop(labels=['symptoms', 'symptom_ids'], axis=1)
 	return main_cond_df
 
+
+
 def create_binary_sympt_df(sympt_dict, cond_df):
 	sympt_df_dict = {'sympt_id':[], 'name':[]}
 	for symptom in sympt_dict:
@@ -60,6 +62,29 @@ def create_binary_sympt_df(sympt_dict, cond_df):
 				sympt_df.at[sympt_df['sympt_id']==sympt_id, id] = 1
 	return sympt_df
 
+def create_related_sympt_df(symptom_df, cond_df):
+	sympt_df = symptom_df
+	sympt_ids = sympt_df['sympt_id']
+	related_sympt = {}
+	for sympt in sympt_ids:
+		sympt_df[sympt] = 0
+		related_symptoms = []
+		for cond in cond_df['cond_id']:
+			if sympt_df.loc[sympt_df['sympt_id']==sympt, cond].item() == 1:
+				symptoms = list(sympt_df['sympt_id'][sympt_df[cond]==1])
+				related_symptoms += symptoms
+		related_symptoms = set(related_symptoms)
+		related_symptoms = list(related_symptoms)
+		related_symptoms.remove(sympt)
+		related_sympt[sympt] = related_symptoms
+	print(related_sympt)
+	for sympt_id in related_sympt:
+		for sympt in related_sympt[sympt_id]:
+			sympt_df.at[sympt_df['sympt_id']==sympt_id, sympt] = 1
+
+	for cond in cond_df['cond_id']:
+		sympt_df = sympt_df.drop(labels=[cond], axis=1)
+	return sympt_df
 
 
 
@@ -72,8 +97,9 @@ def main():
 	sympt_id, conditions = get_and_order_symptoms(conditions)
 	conditions = create_binary_cond_df(sympt_id, conditions)
 	symptoms = create_binary_sympt_df(sympt_id, conditions)
-
+	#related_symptoms = create_related_sympt_df(symptoms, conditions)
 	write_to_db('conditions', conditions)
 	write_to_db('symptoms', symptoms)
+	#write_to_db('related_symptoms', related_symptoms)
 
 main()
