@@ -36,16 +36,17 @@ def signup():
         engine = sqlalchemy.create_engine("postgresql://pv_admin:CMSC22001@ec2-13-59-75-157.us-east-2.compute.amazonaws.com:5432/pv_db")
         Session = sessionmaker()
         Session.configure(bind=engine)
-        print(type(username))
         db = Session()
         user_info = User(username=username, pswd=password)
         check_user = db.query(User).filter_by(username='test').all()
         print(check_user)
         if check_user:
         	return redirect('/sign_up')
-        db.add(user_info)
-        db.commit()
-        return redirect('/assessment')
+        else:
+	        db.add(user_info)
+	        db.commit()
+	        return redirect('/assessment')
+
     return render_template('sign_up.html', title='Sign Up', form=form)
 
 
