@@ -8,8 +8,6 @@ var color = d3.rgb("#5051DB")
         .attr("width", width);
     var node;
     var link;
-    console.log(height);
-    console.log(width);
 
     svg.append('defs').append('marker')
         .attrs({'id':'arrowhead',
