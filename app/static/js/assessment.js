@@ -65,11 +65,16 @@ function handleSuccessors(successors) {
 
 
 function handleSymptomSearch(res) {
-    $('.symptom-container').hide();
-    $('.symptom-box-container').removeClass('hidden');
+    const symptom_container = $(".symptom-container");
+    symptom_container.removeClass("initial-assessment");
+    symptom_container.addClass("final-assessment");
+    $('.symptom-assessment__initial').hide();
+    //$('.symptom-assessment__final').removeClass('hidden');
     $("main").removeClass("initial-assessment");
+    $('.symptom-assessment').removeClass('initial');
+    $('.symptom-assessment').addClass('final');
 
-    const symptom_box = $('.symptom-box');
+    const symptom_box = $('.symptom-assessment__final');
     symptom_box.append("<p class='question'> What is your symptom? </p>");
     symptom_box.append("<p class='answer'>" + res.text + "</p>");
     symptom_box.append("<input type='text' class='chat-input' id='symptom-input' />");

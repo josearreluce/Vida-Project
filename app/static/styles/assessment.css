@@ -10,6 +10,12 @@
 }
 
 .symptom-container {
+    display: flex;
+    width: 100%;
+}
+
+/*.symptom-container { */
+.symptom-assessment.initial {
     margin-top:1em;
     background-color: #5051DB;;
     text-align: center;
@@ -21,7 +27,35 @@
     width: 50%;
 }
 
-.symptom-container fieldset {
+.symptom-assessment.final {
+    background-color: indigo;
+    overflow-y: scroll;
+    display: flex;
+    flex-wrap: wrap;
+    width: 30%;
+}
+
+.symptom-assessment__final {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.initial-assessment .symptom-visualization {
+    height: 100vh;
+    width: 100vw;
+    background-color:blue;
+}
+
+.final-assessment .symptom-visualization {
+    height: 100vh;
+    width: 70%;
+    background-color: red;
+}
+
+/* .symptom-container fieldset */
+.symptom-assessment fieldset {
     border-width: 0px;
 }
 
