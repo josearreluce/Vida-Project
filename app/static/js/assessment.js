@@ -48,17 +48,17 @@ function handleSuccessors(successors) {
             }
 
             if (is_good_answer) {
-                const newElem2 = "<p class='answer'>" + answer + "</p>";
-                const newElem3 = "<p class='question'> Do you have " + successors[i] + "?</p>";
-                //symptom_box.append("<p class='answer'>" + answer + "</p>");
-                //symptom_box.append("<p class='question'> Do you have " + successors[i] + "?</p>");
-                $(newElem2).insertBefore(symptom_input);
-                $(newElem3).insertBefore(symptom_input);
-                i += 1;
+                const new_answer = "<p class='answer'>" + answer + "</p>";
+                $(new_answer).insertBefore(symptom_input);
 
-                if (i > successors.length) {
-                    sendSuccessors(answers);
+                if (i + 1 > successors.length) {
+                    successors(answers);
+                } else {
+                    const new_question = "<p class='question'> Do you have " + successors[i] + "?</p>";
+                    $(new_question).insertBefore(symptom_input);
                 }
+
+                i += 1;
             }
         }
     });
