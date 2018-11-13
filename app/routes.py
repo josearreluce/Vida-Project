@@ -38,7 +38,7 @@ def signup():
         Session.configure(bind=engine)
         db = Session()
         user_info = User(username=username, pswd=password)
-        check_user = db.query(User).filter_by(username='test').all()
+        check_user = db.query(User).filter_by(username=username).all()
         print(check_user)
         if check_user:
         	return redirect('/sign_up')
