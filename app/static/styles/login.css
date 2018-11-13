@@ -49,3 +49,8 @@ main {
 #submit:hover {
     background-color: #26277C;
 }
+
+.errors li {
+    font-size: 0.8em;
+    color: red;
+}

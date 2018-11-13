@@ -1,5 +1,5 @@
 from app import app
-from flask import render_template, jsonify
+from flask import render_template, jsonify, redirect, flash
 from flask_login import login_required
 from app.forms import LoginForm, SignUpForm
 import sqlalchemy as sqlalchemy
@@ -29,8 +29,7 @@ def signup():
     form = SignUpForm(request.form)
     username = form.username.data
     password = form.password.data
-
-    print(form.validate_on_submit())
+    confirm_password = form.password2.data
 
     if form.validate_on_submit():
         engine = sqlalchemy.create_engine("postgresql://pv_admin:CMSC22001@ec2-13-59-75-157.us-east-2.compute.amazonaws.com:5432/pv_db")
@@ -39,13 +38,22 @@ def signup():
         db = Session()
         user_info = User(username=username, pswd=password)
         check_user = db.query(User).filter_by(username=username).all()
-        print(check_user)
+
         if check_user:
-        	return redirect('/sign_up')
+            if form.errors:
+                form.errors.pop()
+            form.errors.append('Username "{}" Already In Use!'.format(username))
+        elif password != confirm_password:
+            if form.errors:
+                form.errors.pop()
+            form.errors.append('Passwords Do Not Match!')
         else:
-	        db.add(user_info)
-	        db.commit()
-	        return redirect('/assessment')
+            flash('Welcome to Vida!')
+            db.add(user_info)
+            db.commit()
+            if form.errors:
+                form.errors.pop()
+            return redirect('/assessment')
 
     return render_template('sign_up.html', title='Sign Up', form=form)
 
