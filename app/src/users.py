@@ -1,6 +1,6 @@
-class AccountInfo(object):
+class AccountInfo():
 
-    def __init__(username, password):
+    def __init__(self, username, password):
         self.username = username
         self.password = password
 
@@ -18,7 +18,7 @@ class AccountInfo(object):
 
 class BasicInfo(object):
 
-    def __init__(name, dob, sex):
+    def __init__(self, name, dob, sex):
         self.name = name
         self.dob = dob
         self.sex = sex
@@ -43,7 +43,7 @@ class BasicInfo(object):
 
 class PersonalInfo(object):
 
-    def __init__(height, weight):
+    def __init__(self, height, weight):
         self.height = height
         self.weight = weight
 
@@ -61,7 +61,7 @@ class PersonalInfo(object):
 
 class HealthBackground(object):
 
-    def __init__(smoker, blood_pressure, diabetes):
+    def __init__(self, smoker, blood_pressure, diabetes):
         self.smoker = smoker
         self.blood_pressure = blood_pressure
         self.diabetes = diabetes
@@ -87,7 +87,7 @@ class HealthBackground(object):
 class User(object):
 
     # comprehensive initialization.
-    def __init__(account_info, basic_info, personal_info, health_background):
+    def __init__(self, account_info, basic_info, personal_info, health_background):
         self.account_info = account_info
         self.basic_info = basic_info
         self.personal_info = personal_info
