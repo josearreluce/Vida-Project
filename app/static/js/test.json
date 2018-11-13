@@ -1,4 +1,5 @@
 {
+  "_comment": "A hard coded graph for graph.js visualization to use",
   "nodes": [
     {
       "name": "Cough",
