@@ -2,20 +2,48 @@ from .graph import *
 import networkx as nx
 import pylab as plt
 from pgmpy.inference import VariableElimination
+from pgmpy.estimators import BayesianEstimator
 import re
+from sqlalchemy import create_engine
+import pandas as pd
+import numpy as np
 
+# def tbl_to_df():
+# 	engine = create_engine("postgresql://pv_admin:CMSC22001@ec2-13-59-75-157.us-east-2.compute.amazonaws.com:5432/pv_db")
+# 	conditions = pd.read_sql("select * from conditions", engine)
+# 	related_symptoms = pd.read_sql("select * from related_symptoms", engine)
+# 	return conditions, related_symptoms
 # print(state_network.get_cpds())
 
 # network visual
+# set structure -- defining relationships
+state_network2 = BayesianModel([("Symptom_1", "Sub1_symptom_1"),
+                               ("Symptom_1", "Sub2_symptom_1"),
+                              ("Symptom_2", "Sub1_symptom_2"),
+                               ("Symptom_2", "Sub2_symptom_2"),
+                              ("Sub1_symptom_1", "Condition_1"),
+                                ("Sub2_symptom_1", "Condition_2"),
+                              ("Sub1_symptom_2", "Condition_1"),
+                              ("Sub2_symptom_2", "Condition_2")])
 
+values = pd.DataFrame(np.random.randint(low=0, high=2, size=(1000, 8)),
+                   columns=['Symptom_1', 'Symptom_2', 'Sub1_symptom_1', 'Sub1_symptom_2' ,'Sub2_symptom_1', 'Sub2_symptom_2', 'Condition_1', 'Condition_2'])
+# print(values)
+estimator = BayesianEstimator(state_network2, values)
+x = estimator.get_parameters(prior_type='BDeu', equivalent_sample_size=5)
+for i,cpd in enumerate(x):
+    print(i, cpd.values)
+    state_network2.add_cpds(cpd)
+
+print(estimator.estimate_cpd('Condition_2', prior_type="dirichlet", pseudo_counts=[1,2]))
 # inference on graph
-network_infer = VariableElimination(state_network)
+network_infer = VariableElimination(state_network2)
 
 # given symptom and all possible condiitons, outputs list of
 # conditions with some degree of connection to this symptom
 def select_relevant_cond(symptom, list_cond):
     relevant_cond = []
-    trail_dic = state_network.active_trail_nodes(symptom)
+    trail_dic = state_network2.active_trail_nodes(symptom)
     trail_list = list(trail_dic[symptom])
     length = len(list_cond)
     for i in range(length):
@@ -46,7 +74,7 @@ def select_relevant_symptoms(graph, condition):
 # 0 -- no, 1 -- yes
 # what happens when user mystypes symptom
 def start_assessment(symptom_init):
-    successors = list(state_network.successors(symptom_init))
+    successors = list(state_network2.successors(symptom_init))
 
     return successors
 
@@ -88,7 +116,7 @@ def evaluate(symptom_init, successors, user_sub_answers):
     condition_val_tuples = sorted(condition_val_tuples, key=lambda x: x[1], reverse=True)
     print(condition_val_tuples)
 
-    rel_symptoms = select_relevant_symptoms(state_network, condition_val_tuples[0][0])
+    rel_symptoms = select_relevant_symptoms(state_network2, condition_val_tuples[0][0])
     print(rel_symptoms)
     # for condition,val in condition_val_tuples:
     #     for symptoms in condition.symptoms:
