@@ -39,12 +39,17 @@ class TestQuery(unittest.TestCase):
 		self.conn = pg2.connect('host=ec2-13-59-75-157.us-east-2.compute.amazonaws.com dbname=pv_db user=pv_admin password=CMSC22001')
 		self.cur = self.conn.cursor()
 		self.good_query = "select * from conditions"
-		self.no_column = "select * from doctors"
+		self.no_table = "select * from doctors"
+		self.no_column = "select doctors from conditions"
 		self.wrong_syntax = "* select from conditions"
 		self.no_value = "select * from conditions where sex=100"
+		self.right_value = "select name from conditions where cond_id='cond_1'"
 
 	def test_right_query(self):
 		self.assertRaises(AssertionError, self.assertRaises, pg2.ProgrammingError, self.cur.execute, self.good_query)
+
+	def test_no_table(self):
+		self.assertRaises(pg2.ProgrammingError, self.cur.execute, self.no_table)
 
 	def test_no_column(self):
 		self.assertRaises(pg2.ProgrammingError, self.cur.execute, self.no_column)
@@ -54,4 +59,9 @@ class TestQuery(unittest.TestCase):
 
 	def test_no_return_value(self):
 		self.assertIsNone(self.cur.execute(self.no_value))
+
+	def test_right_value(self):
+		self.cur.execute(self.right_value)
+		value = self.cur.fetchall()[0][0]
+		self.assertEqual(value, 'apendicitis')
 		
