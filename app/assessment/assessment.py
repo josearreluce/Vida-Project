@@ -1,4 +1,4 @@
-from graph import *
+from .graph import *
 import networkx as nx
 import pylab as plt
 from pgmpy.inference import VariableElimination
@@ -7,8 +7,6 @@ import re
 # print(state_network.get_cpds())
 
 # network visual
-nx.draw(state_network, with_labels=True)
-plt.show()
 
 # inference on graph
 network_infer = VariableElimination(state_network)
@@ -47,7 +45,7 @@ def select_relevant_symptoms(graph, condition):
 
 # 0 -- yes, 1 -- no
 # what happens when user mystypes symptom
-def assessment():
+def start_assessment():
     #starts with 'yes' for initial symptom
     while (True):
         symptom_init = input("What symptom is bothering you the most   ")
@@ -105,6 +103,3 @@ def assessment():
 
     
     print(top_cond_candidate, score_top)
-           
-
-assessment() 
