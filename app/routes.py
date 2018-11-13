@@ -5,6 +5,8 @@ from app.forms import LoginForm, SignUpForm
 import sqlalchemy as sqlalchemy
 from sqlalchemy.orm import sessionmaker
 from app.src.db_user import User
+from flask import request
+from flask import redirect
 
 @app.route("/assessment", methods=["POST"])
 def handle_assessment():
@@ -24,28 +26,25 @@ def login():
 
 @app.route("/sign_up", methods=["GET","POST"])
 def signup():
-    form = SignUpForm()
-    username = form.username
-    password = form.password
-    print(form.username)
-    print(password)
-    username = "test"
-    password = "test"
-    engine = sqlalchemy.create_engine("postgresql://pv_admin:CMSC22001@ec2-13-59-75-157.us-east-2.compute.amazonaws.com:5432/pv_db")
-    Session = sessionmaker()
-    Session.configure(bind=engine)
-    print(type(username))
-    db = Session()
-    user_info = User(username=username, pswd=password)
-    # db.query(User).filter_by(username='test').all()
-    db.add(user_info)
-    db.commit()
+    form = SignUpForm(request.form)
+    username = form.username.data
+    password = form.password.data
 
     print(form.validate_on_submit())
 
     if form.validate_on_submit():
-        # flash('username={}, password={}'.format(
-        #     form.username.data, form.password.data))
+        engine = sqlalchemy.create_engine("postgresql://pv_admin:CMSC22001@ec2-13-59-75-157.us-east-2.compute.amazonaws.com:5432/pv_db")
+        Session = sessionmaker()
+        Session.configure(bind=engine)
+        print(type(username))
+        db = Session()
+        user_info = User(username=username, pswd=password)
+        check_user = db.query(User).filter_by(username='test').all()
+        print(check_user)
+        if check_user:
+        	return redirect('/sign_up')
+        db.add(user_info)
+        db.commit()
         return redirect('/assessment')
     return render_template('sign_up.html', title='Sign Up', form=form)
 

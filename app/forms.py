@@ -10,8 +10,8 @@ class LoginForm(FlaskForm):
     #db = sqlalchemy.create_engine("postgresql://pv_admin:CMSC22001@ec2-13-59-75-157.us-east-2.compute.amazonaws.com:5432/pv_db")
 
 class SignUpForm(FlaskForm):
-    username = StringField('Username', validators=[])
-    password = StringField('Password', validators=[])
+    username = StringField('Username', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Sign Up')
 
     
