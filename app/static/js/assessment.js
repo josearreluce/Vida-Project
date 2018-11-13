@@ -1,24 +1,10 @@
 const example_symptoms = ['Symptom_2', 'Symptom_1'];
 
-//var i = 0;
-
 function sendSuccessors(answers) {
     console.log("Sending Successors");
     $("#symptom-input").off('keyup');
     console.log(answers);
-    /*
-    $.ajax({
-        type: "POST",
-        url: "/successors",
-        data: answers,
-        success: function(data){
-            console.log("SUCCEED");
-        },
-        failure: function(data) {
-            console.log("FAILURE");
-        }
-    }); */
-    //var data = {"name":"John Doe","age":"21"};
+
     const data = {"answers": answers};
     $.ajax({
         type: 'POST',
@@ -32,15 +18,6 @@ function sendSuccessors(answers) {
             console.log("ERROR");
         }
     });
-    /*
-    $.post('/successors', {
-        data: {'answers': answers}
-    }).done((res) => {
-       console.log(res.conditions);
-    }).fail(() => {
-        console.log("Failure");
-    });
-    */
 }
 
 function handleSuccessors(successors) {
@@ -78,17 +55,6 @@ function handleSuccessors(successors) {
             }
         }
     });
-
-    /*
-    const interval = setInterval(() => {
-        if (i >= successors.length) {
-            $("#symptom-input").off("keyup");
-            console.log("Turn off event listener");
-        }
-
-        console.log(i);
-    }, 500);
-    */
 }
 
 
