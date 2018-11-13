@@ -108,6 +108,12 @@
     display: none;
 }
 
+/* Graph Visualization styles for Assessment page */
+.symptom-visualization .graph-box {
+    height: 100%;
+    width: 100%;
+}
+
 .symptom-vis {
     background-color: #5051DB;
     border: 2px solid darkgray;
