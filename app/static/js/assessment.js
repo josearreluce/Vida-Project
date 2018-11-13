@@ -49,7 +49,10 @@ function handleSuccessors(successors) {
 
     var i = 0;
     let answers = [];
-    symptom_box.append("<p class='question'> Do you have " + successors[i] + "?</p>");
+
+    //symptom_box.append("<p class='question'> Do you have " + successors[i] + "?</p>");
+    const newElem = "<p class='question'> Do you have " + successors[i] + "?</p>";
+    $(newElem).insertBefore(symptom_input);
     i += 1;
 
     symptom_input.on("keyup", (e) => {
@@ -68,8 +71,12 @@ function handleSuccessors(successors) {
             }
 
             if (is_good_answer) {
-                symptom_box.append("<p class='answer'>" + answer + "</p>");
-                symptom_box.append("<p class='question'> Do you have " + successors[i] + "?</p>");
+                const newElem2 = "<p class='answer'>" + answer + "</p>";
+                const newElem3 = "<p class='question'> Do you have " + successors[i] + "?</p>";
+                //symptom_box.append("<p class='answer'>" + answer + "</p>");
+                //symptom_box.append("<p class='question'> Do you have " + successors[i] + "?</p>");
+                $(newElem2).insertBefore(symptom_input);
+                $(newElem3).insertBefore(symptom_input);
                 i += 1;
 
                 if (i > successors.length) {
