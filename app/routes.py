@@ -7,6 +7,11 @@ from .assessment import assessment
 curr_user = 0
 users = {curr_user: {}}
 
+@app.route("/successors", methods=["POST"])
+def handle_successors():
+    print("HANDLING SUCCESSORS")
+    return jsonify({'text': 'Hello World 2'})
+
 @app.route("/assessment", methods=["POST"])
 def handle_assessment():
     print("Handling Assessment")
@@ -15,6 +20,7 @@ def handle_assessment():
     print("Symptom returned " + symptom)
     successors = assessment.start_assessment(symptom)
     users[curr_user]['successors'] = successors
+    print(jsonify(successors))
     return jsonify({'text': 'Hello World', 'successors': successors})
 
 @app.route("/assessment")

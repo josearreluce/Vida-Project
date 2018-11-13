@@ -1,28 +1,66 @@
 const example_symptoms = ['Symptom_2', 'Symptom_1'];
 
+//var i = 0;
+
+function sendSuccessors(answers) {
+    console.log("Sending Successors");
+    $("#symptom-input").off('keyup');
+
+    $.post('/successors', {
+        data: answers
+    }).done((res) => {
+        console.log("SUCCESS");
+    }).fail(() => {
+        console.log("Failure");
+    });
+}
+
 function handleSuccessors(successors) {
     const symptom_box = $('.symptom-box');
     const symptom_input = $('#symptom-input');
 
-    let i = 0;
+    var i = 0;
     let answers = [];
     symptom_box.append("<p class='question'> Do you have " + successors[i] + "?</p>");
     i += 1;
 
-    symptom_input.keyup((e) => {
+    symptom_input.on("keyup", (e) => {
         const query = symptom_input.val().toLowerCase();
         if (e.which === 13) {
+            let is_good_answer = false;
+            let answer = '';
             if (query === "yes") {
+                answer = "Yes";
+                is_good_answer = true;
                 answers.push(1);
-                symptom_box.append("<p class='answer'> Yes </p>");
-                symptom_box.append("<p class='question'> Do you have " + successors[i] + "?</p>");
             } else if (query === "no") {
+                answer = "No";
+                is_good_answer = true;
                 answers.push(0);
-                symptom_box.append("<p class='answer'> No </p>");
+            }
+
+            if (is_good_answer) {
+                symptom_box.append("<p class='answer'>" + answer + "</p>");
                 symptom_box.append("<p class='question'> Do you have " + successors[i] + "?</p>");
+                i += 1;
+
+                if (i > successors.length) {
+                    sendSuccessors(answers);
+                }
             }
         }
     });
+
+    /*
+    const interval = setInterval(() => {
+        if (i >= successors.length) {
+            $("#symptom-input").off("keyup");
+            console.log("Turn off event listener");
+        }
+
+        console.log(i);
+    }, 500);
+    */
 }
 
 
