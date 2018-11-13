@@ -3,17 +3,17 @@
  * representation based on graph defined in static/js/test.json
  */
 
-var color = d3.rgb('#5051DB')
-var graph_box_dims = d3.select('.graph-box').node().getBoundingClientRect();
-var height = graph_box_dims.height;
-var width = graph_box_dims.width;
-var svg = d3.select('.graph-svg');
+const color = d3.rgb('#5051DB')
+const graph_box_dims = d3.select('.graph-box').node().getBoundingClientRect();
+const height = graph_box_dims.height;
+const width = graph_box_dims.width;
+const svg = d3.select('.graph-svg');
 
 // An offset value for determining node placement in the graph
 var dist_offset = Math.sqrt((height * width)) / 10;
 
 var simulation = d3.forceSimulation()
-    .force('link', d3.forceLink().id(function (d) {return d.id;}).distance(dist_offset).strength(0.5))
+    .force('link', d3.forceLink().id(function (d) {return d.id;}).distance(dist_offset - 10).strength(0.5))
     .force('charge', d3.forceManyBody())
     .force('center', d3.forceCenter(width / 2, height / 2))
     .force('collision', d3.forceCollide().radius(dist_offset));
@@ -30,7 +30,7 @@ function create_ui_graph(links, nodes) {
         .append('line')
         .attr('class', 'link')
         .attr('stroke', color)
-        .attr('stroke-width','3');
+        .attr('stroke-width','4');
 
     link.append('title')
         .text(function (d) {return d.type;});
@@ -62,7 +62,7 @@ function create_ui_graph(links, nodes) {
 
     // Draw 'Node'
     node.append('circle')
-        .attr('r', 15)
+        .attr('r', 18)
         .style('fill', function (d, i) {return color;})
 
     node.append('title')
