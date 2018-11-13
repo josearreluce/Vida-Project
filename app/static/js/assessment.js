@@ -14,6 +14,8 @@ function sendSuccessors(answers) {
         data : JSON.stringify(data),
         success : function(result) {
             console.log(result);
+            const condition_elem = $("<p class='question'> Congratulations! You have " + result.conditions[0][0] + "</p>");
+            $(condition_elem).insertBefore($("#symptom-input"));
         },error : function(result){
             console.log("ERROR");
         }
@@ -49,7 +51,7 @@ function handleSuccessors(successors) {
                 $(new_answer).insertBefore(symptom_input);
 
                 if (i + 1 > successors.length) {
-                    successors(answers);
+                    sendSuccessors(answers);
                 } else {
                     const new_question = "<p class='question'> Do you have " + successors[i] + "?</p>";
                     $(new_question).insertBefore(symptom_input);
