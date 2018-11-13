@@ -35,16 +35,13 @@ function handleSuccessors(successors) {
     symptom_input.on("keyup", (e) => {
         const query = symptom_input.val().toLowerCase();
         if (e.which === 13) {
+            symptom_input.val('');
             let is_good_answer = false;
             let answer = '';
-            if (query === "yes") {
-                answer = "Yes";
+            if (query === "yes" || query === "no") {
+                answer = query;
+                answers.push(query === "yes");
                 is_good_answer = true;
-                answers.push(1);
-            } else if (query === "no") {
-                answer = "No";
-                is_good_answer = true;
-                answers.push(0);
             }
 
             if (is_good_answer) {
