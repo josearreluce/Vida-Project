@@ -2,9 +2,11 @@ from .graph import *
 import networkx as nx
 import pylab as plt
 from pgmpy.inference import VariableElimination
+from pgmpy.estimators import BayesianEstimator
 import re
 from sqlalchemy import create_engine
 import pandas as pd
+import numpy as np
 
 # def tbl_to_df():
 # 	engine = create_engine("postgresql://pv_admin:CMSC22001@ec2-13-59-75-157.us-east-2.compute.amazonaws.com:5432/pv_db")
