@@ -1,4 +1,4 @@
-const example_symptoms = ['Headache', 'Cough', 'Sneeze', 'Backpain', 'Pain', 'Fever', 'Chills'];
+const example_symptoms = ['Symptom_2', 'Symptom_1'];
 
 function handleSymptomSearch(res) {
     $('.symptom-container').hide();
@@ -10,9 +10,18 @@ function handleSymptomSearch(res) {
     symptom_box.append("<p class='answer'>" + res.text + "</p>");
     symptom_box.append("<p class='question'> Do you have any other symptoms? </p>");
     symptom_box.append("<input type='text' class='chat-input'>");
+/*
+    $.ajax({
+        url:"/assessment",
+        type: 'POST',
+        data: data,
+        success: function(msg){
+            alert(msg);
+        }
+    });*/
 
     $.post('/assessment', {
-        text: 'Hello Server'
+        data: res.text
     }).done((res) => {
         console.log(res.text);
     }).fail(() => {
