@@ -37,3 +37,11 @@ main {
 #submit:hover {
     background-color: #26277C;
 }
+<<<<<<< HEAD
+=======
+
+.errors li {
+    font-size: 0.8em;
+    color: red;
+}
+>>>>>>> user
