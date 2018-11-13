@@ -3,6 +3,7 @@
 {% block content %}
 <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/assessment.css') }}">
 <main class="main initial-assessment">
+    <!--
     <div class="symptom-container">
         <div>
             <fieldset>
@@ -16,6 +17,23 @@
     <div class="symptom-box-container hidden">
         <div class="symptom-vis"></div>
         <div class="symptom-box"></div>
+    </div>
+    -->
+    <div class="symptom-container initial-assessment">
+        <div class="symptom-visualization">{% include 'graph.html' %}</div>
+        <div class="symptom-assessment initial">
+            <div class="symptom-assessment__initial">
+                <div class="symptom-assessment__initial-question">
+                    <fieldset>
+                        <label class="start_question" for="symptom-search"> What is your symptom? </label>
+                        <input class="input" id="symptom-search" type="text" />
+                    </fieldset>
+                </div>
+                <div class="symptom-results"></div>
+            </div>
+            <div class="symptom-assessment__final">
+            </div>
+        </div>
     </div>
 </main>
 

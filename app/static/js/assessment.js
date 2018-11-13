@@ -1,9 +1,14 @@
 const example_symptoms = ['Symptom_2', 'Symptom_1'];
 
+/**
+ * Turns off the event listener on the symptom input box and sends an ajax request
+ * to the server with the user's answers to whether or not they have each of the successor
+ * symptoms. Expects a list of conditions organized by probability from the server/back-end.
+ *
+ * @param answers
+ */
 function sendSuccessors(answers) {
-    console.log("Sending Successors");
     $("#symptom-input").off('keyup');
-    console.log(answers);
 
     const data = {"answers": answers};
     $.ajax({
@@ -12,24 +17,29 @@ function sendSuccessors(answers) {
         url: '/successors',
         dataType : 'json',
         data : JSON.stringify(data),
-        success : function(result) {
-            console.log(result);
-            const condition_elem = $("<p class='question'> Congratulations! You have " + result.conditions[0][0] + "</p>");
+        success : (res) => {
+            const condition_elem = $(
+                "<p class='question'> Congratulations! You have " +
+                res.conditions[0][0] +
+                "</p>");
+
             $(condition_elem).insertBefore($("#symptom-input"));
-        },error : function(result){
+        },error : (res) => {
             console.log("ERROR");
         }
     });
 }
 
+/**
+ *
+ * @param successors
+ */
 function handleSuccessors(successors) {
-    const symptom_box = $('.symptom-box');
     const symptom_input = $('#symptom-input');
 
     var i = 0;
     let answers = [];
 
-    //symptom_box.append("<p class='question'> Do you have " + successors[i] + "?</p>");
     const newElem = "<p class='question'> Do you have " + successors[i] + "?</p>";
     $(newElem).insertBefore(symptom_input);
     i += 1;
@@ -56,20 +66,30 @@ function handleSuccessors(successors) {
                     const new_question = "<p class='question'> Do you have " + successors[i] + "?</p>";
                     $(new_question).insertBefore(symptom_input);
                 }
-
                 i += 1;
             }
         }
     });
 }
 
-
+/**
+ *
+ * @param res
+ */
 function handleSymptomSearch(res) {
-    $('.symptom-container').hide();
-    $('.symptom-box-container').removeClass('hidden');
+    $('.symptom-assessment__initial').hide();
     $("main").removeClass("initial-assessment");
 
-    const symptom_box = $('.symptom-box');
+    const symptom_container = $(".symptom-container");
+    const symptom_assessment = $('.symptom-assessment');
+
+    symptom_container.removeClass("initial-assessment");
+    symptom_container.addClass("final-assessment");
+
+    symptom_assessment.removeClass('initial');
+    symptom_assessment.addClass('final');
+
+    const symptom_box = $('.symptom-assessment__final');
     symptom_box.append("<p class='question'> What is your symptom? </p>");
     symptom_box.append("<p class='answer'>" + res.text + "</p>");
     symptom_box.append("<input type='text' class='chat-input' id='symptom-input' />");
@@ -77,18 +97,18 @@ function handleSymptomSearch(res) {
     $.post('/assessment', {
         data: res.text
     }).done((res) => {
-        console.log("SUCCESS 1");
         handleSuccessors(res.successors);
+        draw();
     }).fail(() => {
         console.log("Failure");
     });
 }
 
-let query = '';
 $('#symptom-search').keyup((e) => {
-    // Update the query for search only if alphabetic character
+    // Get the current value of the user input and save as query.
     let query = $("#symptom-search").val().toLowerCase();
 
+    // Get all symptoms that match/begin with input query
     let results = [];
     example_symptoms.forEach((symptom) => {
         const curr_symptom = symptom.toLowerCase();
@@ -97,17 +117,20 @@ $('#symptom-search').keyup((e) => {
         }
     });
 
+    // Update symptom-results div to contain the matching symptoms
     $('.symptom-results').empty();
     results.forEach((res) => {
         $('.symptom-results').append(
-            "<a id='" + res + "' class='symptom-result'>" + res + "<\a>"
+            createSymptomResult(res)
         );
     });
 
+    // Add event listener for click event to all symptom results.
     $('.symptom-result').click((e) => {
         handleSymptomSearch(e.target);
     });
 
+    // If user presses enter button, if there are matching symptoms for input, send symptom to back-end.
     if (e.which === 13) {
         if (results.length > 0) {
             const res = document.getElementById(results[0]);
@@ -115,3 +138,7 @@ $('#symptom-search').keyup((e) => {
         }
     }
 });
+
+function createSymptomResult(symptom_name) {
+    return "<a id='" + symptom_name + "' class='symptom-result'>" + symptom_name + "<\a>"
+}
