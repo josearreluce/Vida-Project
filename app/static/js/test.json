@@ -49,6 +49,26 @@
       "name": "Tumor",
       "label": "",
       "id": 10
+    },
+    {
+      "name": "Pregnant",
+      "label": "",
+      "id": 11
+    },
+    {
+      "name": "Abdominal Pain",
+      "label": "",
+      "id": 12
+    },
+    {
+      "name": "Malnourished",
+      "label": "",
+      "id": 13
+    },
+    {
+      "name": "Brain Death",
+      "label": "",
+      "id": 14
     }
   ],
   "links": [
@@ -106,6 +126,26 @@
     {
       "source": 7,
       "target": 6,
+      "type": "Symptom"
+    },
+    {
+      "source": 14,
+      "target": 10,
+      "type": "Symptom"
+    },
+    {
+      "source": 13,
+      "target": 5,
+      "type": "Symptom"
+    },
+    {
+      "source": 11,
+      "target": 6,
+      "type": "Symptom"
+    },
+    {
+      "source": 2,
+      "target": 12,
       "type": "Symptom"
     }
   ]

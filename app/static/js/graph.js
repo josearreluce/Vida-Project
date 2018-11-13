@@ -25,9 +25,10 @@ var color = d3.rgb("#5051DB")
         .attr('fill', '#999');
 
     var simulation = d3.forceSimulation()
-        .force("link", d3.forceLink().id(function (d) {return d.id;}).distance(300).strength(1))
+        .force("link", d3.forceLink().id(function (d) {return d.id;}).distance(150).strength(1))
         .force("charge", d3.forceManyBody())
-        .force("center", d3.forceCenter(Number(width) / 2, Number(height) / 2));
+        .force("center", d3.forceCenter(Number(width) / 2, Number(height) / 2))
+        .force('collision', d3.forceCollide().radius(60));
 
     d3.json("static/js/test.json", function (error, graph) {
         if (error) throw error;
@@ -40,7 +41,6 @@ var color = d3.rgb("#5051DB")
             .enter()
             .append("line")
             .attr("class", "link")
-            //.attr('marker-end','url(#arrowhead)')
             .attr('stroke','#5051DB')
             .attr('stroke-width','2');
 
@@ -71,13 +71,14 @@ var color = d3.rgb("#5051DB")
                 'fill': '#aaa'
             });
 
+        /*
         edgelabels.append('textPath')
             .attr('xlink:href', function (d, i) {return '#edgepath' + i})
             .style("text-anchor", "middle")
             .style("pointer-events", "none")
             .attr("startOffset", "50%")
             .text(function (d) {return d.type});
-
+        */
         node = svg.selectAll(".node")
             .data(nodes)
             .enter()
@@ -96,10 +97,12 @@ var color = d3.rgb("#5051DB")
         node.append("title")
             .text(function (d) {return d.id;});
 
+        // Title
+        /*
         node.append("text")
             .attr("dy", -3)
-            .text(function (d) {return ""}); // d.name
-
+            .text(function (d) {return d.name});
+        */
         simulation
             .nodes(nodes)
             .on("tick", ticked);
