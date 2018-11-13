@@ -1,4 +1,5 @@
-from graph import *
+from pgmpy.factors.discrete import TabularCPD
+from pgmpy.models import BayesianModel
 import networkx as nx
 import pylab as plt
 from pgmpy.inference import VariableElimination
