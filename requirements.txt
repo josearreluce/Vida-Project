@@ -4,3 +4,5 @@ selenium
 Flask-login
 flask_wtf
 pgmpy
+sqlalchemy
+wrapt
