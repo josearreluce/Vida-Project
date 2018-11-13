@@ -5,14 +5,42 @@ const example_symptoms = ['Symptom_2', 'Symptom_1'];
 function sendSuccessors(answers) {
     console.log("Sending Successors");
     $("#symptom-input").off('keyup');
-
+    console.log(answers);
+    /*
+    $.ajax({
+        type: "POST",
+        url: "/successors",
+        data: answers,
+        success: function(data){
+            console.log("SUCCEED");
+        },
+        failure: function(data) {
+            console.log("FAILURE");
+        }
+    }); */
+    //var data = {"name":"John Doe","age":"21"};
+    const data = {"answers": answers};
+    $.ajax({
+        type: 'POST',
+        contentType: 'application/json',
+        url: '/successors',
+        dataType : 'json',
+        data : JSON.stringify(data),
+        success : function(result) {
+            console.log(result);
+        },error : function(result){
+            console.log("ERROR");
+        }
+    });
+    /*
     $.post('/successors', {
-        data: answers
+        data: {'answers': answers}
     }).done((res) => {
-        console.log("SUCCESS");
+       console.log(res.conditions);
     }).fail(() => {
         console.log("Failure");
     });
+    */
 }
 
 function handleSuccessors(successors) {
@@ -77,6 +105,7 @@ function handleSymptomSearch(res) {
     $.post('/assessment', {
         data: res.text
     }).done((res) => {
+        console.log("SUCCESS 1");
         handleSuccessors(res.successors);
     }).fail(() => {
         console.log("Failure");
