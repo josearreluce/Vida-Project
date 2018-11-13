@@ -66,7 +66,6 @@ function handleSuccessors(successors) {
                     const new_question = "<p class='question'> Do you have " + successors[i] + "?</p>";
                     $(new_question).insertBefore(symptom_input);
                 }
-
                 i += 1;
             }
         }
@@ -78,7 +77,6 @@ function handleSuccessors(successors) {
  * @param res
  */
 function handleSymptomSearch(res) {
-    //
     $('.symptom-assessment__initial').hide();
     $("main").removeClass("initial-assessment");
 
@@ -100,6 +98,7 @@ function handleSymptomSearch(res) {
         data: res.text
     }).done((res) => {
         handleSuccessors(res.successors);
+        draw();
     }).fail(() => {
         console.log("Failure");
     });
