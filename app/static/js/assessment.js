@@ -1,24 +1,10 @@
 const example_symptoms = ['Symptom_2', 'Symptom_1'];
 
-//var i = 0;
-
 function sendSuccessors(answers) {
     console.log("Sending Successors");
     $("#symptom-input").off('keyup');
     console.log(answers);
-    /*
-    $.ajax({
-        type: "POST",
-        url: "/successors",
-        data: answers,
-        success: function(data){
-            console.log("SUCCEED");
-        },
-        failure: function(data) {
-            console.log("FAILURE");
-        }
-    }); */
-    //var data = {"name":"John Doe","age":"21"};
+
     const data = {"answers": answers};
     $.ajax({
         type: 'POST',
@@ -28,19 +14,12 @@ function sendSuccessors(answers) {
         data : JSON.stringify(data),
         success : function(result) {
             console.log(result);
+            const condition_elem = $("<p class='question'> Congratulations! You have " + result.conditions[0][0] + "</p>");
+            $(condition_elem).insertBefore($("#symptom-input"));
         },error : function(result){
             console.log("ERROR");
         }
     });
-    /*
-    $.post('/successors', {
-        data: {'answers': answers}
-    }).done((res) => {
-       console.log(res.conditions);
-    }).fail(() => {
-        console.log("Failure");
-    });
-    */
 }
 
 function handleSuccessors(successors) {
@@ -49,46 +28,39 @@ function handleSuccessors(successors) {
 
     var i = 0;
     let answers = [];
-    symptom_box.append("<p class='question'> Do you have " + successors[i] + "?</p>");
+
+    //symptom_box.append("<p class='question'> Do you have " + successors[i] + "?</p>");
+    const newElem = "<p class='question'> Do you have " + successors[i] + "?</p>";
+    $(newElem).insertBefore(symptom_input);
     i += 1;
 
     symptom_input.on("keyup", (e) => {
         const query = symptom_input.val().toLowerCase();
         if (e.which === 13) {
+            symptom_input.val('');
             let is_good_answer = false;
             let answer = '';
-            if (query === "yes") {
-                answer = "Yes";
+            if (query === "yes" || query === "no") {
+                answer = query;
+                answers.push(query === "yes");
                 is_good_answer = true;
-                answers.push(1);
-            } else if (query === "no") {
-                answer = "No";
-                is_good_answer = true;
-                answers.push(0);
             }
 
             if (is_good_answer) {
-                symptom_box.append("<p class='answer'>" + answer + "</p>");
-                symptom_box.append("<p class='question'> Do you have " + successors[i] + "?</p>");
-                i += 1;
+                const new_answer = "<p class='answer'>" + answer + "</p>";
+                $(new_answer).insertBefore(symptom_input);
 
-                if (i > successors.length) {
+                if (i + 1 > successors.length) {
                     sendSuccessors(answers);
+                } else {
+                    const new_question = "<p class='question'> Do you have " + successors[i] + "?</p>";
+                    $(new_question).insertBefore(symptom_input);
                 }
+
+                i += 1;
             }
         }
     });
-
-    /*
-    const interval = setInterval(() => {
-        if (i >= successors.length) {
-            $("#symptom-input").off("keyup");
-            console.log("Turn off event listener");
-        }
-
-        console.log(i);
-    }, 500);
-    */
 }
 
 
