@@ -29,7 +29,7 @@ def select_relevant_symptoms(graph, condition):
     ind = graph.local_independencies(condition)
     mystr = str(ind)
     wordList = mystr.replace("(","").replace(")","").replace(",","").split(" ")
-    
+
     wordList.reverse()
     rel_symp = []
     for sub_symp in wordList:
@@ -38,59 +38,63 @@ def select_relevant_symptoms(graph, condition):
         ind = graph.local_independencies(sub_symp)
         symp = str(ind).replace(",", "").replace(")","").split(" ")[-1]
         rel_symp.append(symp)
-    
+
     return rel_symp
 
 
 
-# 0 -- yes, 1 -- no
+# 0 -- no, 1 -- yes
 # what happens when user mystypes symptom
 def start_assessment(symptom_init):
     successors = list(state_network.successors(symptom_init))
-    for i in range(len(successors)):
-        sub_s = successors[i]
+
     return successors
 
-    #
-    #     x = input("Do you have, {}   ".format(sub_s))
-    #     if x == 'yes':
-    #         symp_list_val.append(0)
-    #         symp_list_name.append(successors[i])
-    #     else:
-    #         symp_list_val.append(1)
-    #         symp_list_name.append(successors[i])
-    #
-    # #all condiitons to compare
-    # relev_conds = select_relevant_cond(symptom_init, condition_list)
-    # llen = len(symp_list_val)
-    # #creade evidence dict
-    # # e.g. {symptom:yes}
-    # evidencee = {}
-    # cond_scores_list = []
-    # for k in range(llen):
-    #     evidencee.update({symp_list_name[k]:symp_list_val[k]})
-    # len_rev_cond = len(relev_conds)
-    # condition_val_tuples = []
-    # for j in range(len_rev_cond):
-    #     cond_prob = network_infer.query(variables = [relev_conds[j]],
-    #                                 evidence = evidencee)
-    #     val_yes = cond_prob[relev_conds[j]].values[0]
-    #     condition_val_tuples.append([relev_conds[j], val_yes])
-    #     cond_scores_list.append(val_yes)
-    #
-    # index_max_prob = cond_scores_list.index(max(cond_scores_list))
-    # top_cond_candidate = relev_conds[index_max_prob]
-    # score_top = cond_scores_list[index_max_prob]
-    #
-    # condition_val_tuples = sorted(condition_val_tuples, key=lambda x: x[1], reverse=True)
-    # print(condition_val_tuples)
-    #
-    # rel_symptoms = select_relevant_symptoms(state_network, condition_val_tuples[0][0])
-    # print(rel_symptoms)
-    # # for condition,val in condition_val_tuples:
-    # #     for symptoms in condition.symptoms:
-    #
-    #
-    #
-    #
-    # print(top_cond_candidate, score_top)
+
+def evaluate(symptom_init, successors, user_sub_answers):
+    #starts with 'yes' for initial symptom
+    symp_list_val = [1]
+    symp_list_name = [symptom_init]
+    for i,answer in enumerate(user_sub_answers):
+        if answer == 'yes':
+            symp_list_val.append(1)
+            symp_list_name.append(successors[i])
+        else:
+            symp_list_val.append(0)
+            symp_list_name.append(successors[i])
+
+    #all condiitons to compare
+    relev_conds = select_relevant_cond(symptom_init, condition_list) # condition_list is a global in graph.py
+    llen = len(symp_list_val)
+    #creade evidence dict
+    # e.g. {symptom:yes}
+    evidencee = {}
+    cond_scores_list = []
+    for k in range(llen):
+        evidencee.update({symp_list_name[k]:symp_list_val[k]})
+    len_rev_cond = len(relev_conds)
+    condition_val_tuples = []
+    for j in range(len_rev_cond):
+        cond_prob = network_infer.query(variables = [relev_conds[j]],
+                                    evidence = evidencee)
+        val_yes = cond_prob[relev_conds[j]].values[1]
+        condition_val_tuples.append([relev_conds[j], val_yes])
+        cond_scores_list.append(val_yes)
+
+    index_max_prob = cond_scores_list.index(max(cond_scores_list))
+    top_cond_candidate = relev_conds[index_max_prob]
+    score_top = cond_scores_list[index_max_prob]
+
+    condition_val_tuples = sorted(condition_val_tuples, key=lambda x: x[1], reverse=True)
+    print(condition_val_tuples)
+
+    rel_symptoms = select_relevant_symptoms(state_network, condition_val_tuples[0][0])
+    print(rel_symptoms)
+    # for condition,val in condition_val_tuples:
+    #     for symptoms in condition.symptoms:
+
+
+
+
+    print(top_cond_candidate, score_top)
+    return condition_val_tuples
