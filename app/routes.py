@@ -17,24 +17,29 @@ def symptom_assessment():
 @app.route("/", methods=["GET","POST"])
 def login():
     form = LoginForm()
+    username = form.username
+    password = form.password
+    print(form.username)
     return render_template('login.html', title='Sign In', form=form)
 
 @app.route("/sign_up", methods=["GET","POST"])
 def signup():
     form = SignUpForm()
-    print(form)
     username = form.username
     password = form.password
-    print(username)
+    print(form.username)
     print(password)
+    username = "test"
+    password = "test"
     engine = sqlalchemy.create_engine("postgresql://pv_admin:CMSC22001@ec2-13-59-75-157.us-east-2.compute.amazonaws.com:5432/pv_db")
     Session = sessionmaker()
     Session.configure(bind=engine)
     print(type(username))
     db = Session()
-    user_info = User(username=username, password=password)
-    # db.add(user_info)
-    # db.commit()
+    user_info = User(username=username, pswd=password)
+    # db.query(User).filter_by(username='test').all()
+    db.add(user_info)
+    db.commit()
 
     print(form.validate_on_submit())
 
