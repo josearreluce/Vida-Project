@@ -20,13 +20,12 @@ var color = d3.rgb("#5051DB")
             'markerWidth':13,
             'markerHeight':13,
             'xoverflow':'visible'})
-        .append('svg:path')
+        .append('path')
         .attr('d', 'M 0,-5 L 10 ,0 L 0,5')
-        .attr('fill', '#999')
-        .style('stroke','none');
+        .attr('fill', '#999');
 
     var simulation = d3.forceSimulation()
-        .force("link", d3.forceLink().id(function (d) {return d.id;}).distance(200).strength(1))
+        .force("link", d3.forceLink().id(function (d) {return d.id;}).distance(300).strength(1))
         .force("charge", d3.forceManyBody())
         .force("center", d3.forceCenter(Number(width) / 2, Number(height) / 2));
 
@@ -41,7 +40,9 @@ var color = d3.rgb("#5051DB")
             .enter()
             .append("line")
             .attr("class", "link")
-            .attr('marker-end','url(#arrowhead)')
+            //.attr('marker-end','url(#arrowhead)')
+            .attr('stroke','#5051DB')
+            .attr('stroke-width','2');
 
         link.append("title")
             .text(function (d) {return d.type;});

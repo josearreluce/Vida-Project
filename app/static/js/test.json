@@ -21,14 +21,34 @@
       "id": 4
     },
     {
-      "name": "Vomitting",
+      "name": "Vomiting",
       "label": "",
       "id": 5
     },
     {
-      "name": "Headache",
+      "name": "Chills",
       "label": "",
       "id": 6
+    },
+    {
+      "name": "Sore Throat",
+      "label": "",
+      "id": 7
+    },
+    {
+      "name": "Muscle Aches",
+      "label": "",
+      "id": 8
+    },
+    {
+      "name": "Necrosis",
+      "label": "",
+      "id": 9
+    },
+    {
+      "name": "Tumor",
+      "label": "",
+      "id": 10
     }
   ],
   "links": [
@@ -56,14 +76,37 @@
     {
       "source": 1,
       "target": 5,
-      "type": "Symptom",
-      "since": 2010
+      "type": "Symptom"
     },
     {
       "source": 1,
       "target": 6,
-      "type": "Symptom",
-      "since": 2010
+      "type": "Symptom"
+    },
+    {
+      "source": 1,
+      "target": 10,
+      "type": "Symptom"
+    },
+    {
+      "source": 10,
+      "target": 9,
+      "type": "Symptom"
+    },
+    {
+      "source": 3,
+      "target": 8,
+      "type": "Symptom"
+    },
+    {
+      "source": 3,
+      "target": 7,
+      "type": "Symptom"
+    },
+    {
+      "source": 7,
+      "target": 6,
+      "type": "Symptom"
     }
   ]
 }
