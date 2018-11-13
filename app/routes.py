@@ -4,12 +4,18 @@ from flask_login import login_required
 from app.forms import LoginForm
 from .assessment import assessment
 
+curr_user = 0
+users = {curr_user: {}}
+
 @app.route("/assessment", methods=["POST"])
 def handle_assessment():
+    print("Handling Assessment")
     symptom = request.form.get('data')
+    users[curr_user]['symptom'] = symptom
+    print("Symptom returned " + symptom)
     successors = assessment.start_assessment(symptom)
-    print(successors)
-    return jsonify({'text': 'Hello World'})
+    users[curr_user]['successors'] = successors
+    return jsonify({'text': 'Hello World', 'successors': successors})
 
 @app.route("/assessment")
 def symptom_assessment():

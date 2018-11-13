@@ -1,5 +1,31 @@
 const example_symptoms = ['Symptom_2', 'Symptom_1'];
 
+function handleSuccessors(successors) {
+    const symptom_box = $('.symptom-box');
+    const symptom_input = $('#symptom-input');
+
+    let i = 0;
+    let answers = [];
+    symptom_box.append("<p class='question'> Do you have " + successors[i] + "?</p>");
+    i += 1;
+
+    symptom_input.keyup((e) => {
+        const query = symptom_input.val().toLowerCase();
+        if (e.which === 13) {
+            if (query === "yes") {
+                answers.push(1);
+                symptom_box.append("<p class='answer'> Yes </p>");
+                symptom_box.append("<p class='question'> Do you have " + successors[i] + "?</p>");
+            } else if (query === "no") {
+                answers.push(0);
+                symptom_box.append("<p class='answer'> No </p>");
+                symptom_box.append("<p class='question'> Do you have " + successors[i] + "?</p>");
+            }
+        }
+    });
+}
+
+
 function handleSymptomSearch(res) {
     $('.symptom-container').hide();
     $('.symptom-box-container').removeClass('hidden');
@@ -8,22 +34,12 @@ function handleSymptomSearch(res) {
     const symptom_box = $('.symptom-box');
     symptom_box.append("<p class='question'> What is your symptom? </p>");
     symptom_box.append("<p class='answer'>" + res.text + "</p>");
-    symptom_box.append("<p class='question'> Do you have any other symptoms? </p>");
-    symptom_box.append("<input type='text' class='chat-input'>");
-/*
-    $.ajax({
-        url:"/assessment",
-        type: 'POST',
-        data: data,
-        success: function(msg){
-            alert(msg);
-        }
-    });*/
+    symptom_box.append("<input type='text' class='chat-input' id='symptom-input' />");
 
     $.post('/assessment', {
         data: res.text
     }).done((res) => {
-        console.log(res.text);
+        handleSuccessors(res.successors);
     }).fail(() => {
         console.log("Failure");
     });
