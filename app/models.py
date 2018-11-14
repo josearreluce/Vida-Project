@@ -10,17 +10,25 @@ class DatabaseConnection():
         self.db = None
         self.uri = app.config['SQLALCHEMY_DATABASE_URI']
 
-    def __enter__(self):
+    def open(self):
         engine = sqlalchemy.create_engine(self.uri)
-        Session = sessionmaker()
-        Session.configure(bind=engine)
-        self.db = Session()
+        session = sessionmaker()
+        session.configure(bind=engine)
+        self.db = session()
+
+    def __enter__(self):
+        self.open()
         return self.db
+
+    def close(self):
+        if not self.db:
+            raise Exception('DatabaseConnection was not created properly')
+        self.db.close()
 
     def __exit__(self, exception_type, value, traceback):
         if not self.db:
             raise Exception('DatabaseConnection was not created properly')
-        self.db.close()
+        self.close()
 
 Base = declarative_base()
 

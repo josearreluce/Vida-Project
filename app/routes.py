@@ -39,28 +39,33 @@ def symptom_assessment():
 def login():
     form = LoginForm()
 
-    username = form.username.data
-    password = form.password.data
-
     if form.validate_on_submit():
+        username = form.username.data
+        password = form.password.data
+        if username == '' or password == '':
+            if form.log_errors:
+                form.log_errors.pop()
+            form.log_errors.append('Username and Password Must Be Filed In')
+            return redirect('/')
 
         with DatabaseConnection() as db:
             user_info = User(username=username, pswd=password)
             check_user = db.query(User).filter_by(username=username, pswd=password).count()
 
         if check_user < 1:
-            if form.errors:
-                form.errors.pop()
-            form.errors.append('Invalid Username or Password')
+            if form.log_errors:
+                form.log_errors.pop()
+            flash('Failed login!')
+            form.log_errors.append('Invalid Username or Password')
             return redirect('/')
         elif check_user > 1:
-            if form.errors:
-                form.errors.pop()
-            form.errors.append('DATABASE ERROR PLEASE CONTACT ADMINS')
+            if form.log_errors:
+                form.log_errors.pop()
+            form.log_errors.append('DATABASE ERROR PLEASE CONTACT ADMINS')
             return redirect('/')
         else:
-            if form.errors:
-                form.errors.pop()
+            if form.log_errors:
+                form.log_errors.pop()
             return redirect('/assessment')
 
     return render_template('login.html', title='Log In', form=form)
@@ -79,15 +84,15 @@ def signup():
             check_user = db.query(User).filter_by(username=username).all()
 
         if check_user:
-            if form.errors:
-                form.errors.pop()
-            form.errors.append('Username "{}" Already In Use!'.format(username))
+            if form.log_errors:
+                form.log_errors.pop()
+            form.log_errors.append('Username "{}" Already In Use!'.format(username))
         else:
             flash('Welcome to Vida!')
             db.add(user_info)
             db.commit()
-            if form.errors:
-                form.errors.pop()
+            if form.log_errors:
+                form.log_errors.pop()
             return redirect('/assessment')
 
     return render_template('sign_up.html', title='Sign Up', form=form)
