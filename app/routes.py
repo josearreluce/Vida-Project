@@ -1,7 +1,10 @@
 from app import app
-from flask import render_template, jsonify, request, json
-from flask_login import login_required
 from app.forms import LoginForm
+from flask import render_template, jsonify, redirect, flash
+from app.forms import LoginForm, SignUpForm
+from flask import request
+from flask import redirect
+from app.models import DatabaseConnection, User
 from .assessment import assessment
 
 curr_user = 0

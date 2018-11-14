@@ -28,7 +28,6 @@
 }
 
 .symptom-assessment.final {
-    background-color: indigo;
     overflow-y: scroll;
     display: flex;
     flex-wrap: wrap;
@@ -51,7 +50,6 @@
 .final-assessment .symptom-visualization {
     height: 100vh;
     width: 70%;
-    background-color: red;
 }
 
 /* .symptom-container fieldset */
@@ -153,4 +151,13 @@
 
 .chat-input {
     width: 100%;
+}
+
+/* A bit of styling to make the chat box look nicer */
+.symptom-assessment__final {
+    padding: 1em;
+}
+
+#symptom-input {
+    margin-top: 2em;
 }
