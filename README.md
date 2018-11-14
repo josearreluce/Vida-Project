@@ -28,7 +28,10 @@ Then navigate to the specified port in your browser
 ---------------------------------------------------------------------------------------------------
 
 (3) how to run the unit test cases
-From within the tests directory run
+First download a chrome webdriver from http://chromedriver.chromium.org/downloads
+The UI Tests require downloading this webdriver.
+
+Then from within the tests directory run
 $ pytest
 
 ---------------------------------------------------------------------------------------------------
