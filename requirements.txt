@@ -7,3 +7,5 @@ pgmpy
 sqlalchemy
 wrapt
 pandas
+matplotlib
+psycopg2

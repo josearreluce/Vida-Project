@@ -1,39 +1,95 @@
 # Vida-Project
+# Authors: Jose Arreluce, Will Darling, Max Demers, Miles Grogger, Andy Ham, 
+           Bruno Jacob, Thomas Jacobs, Qi Jin
+# Original repo: "https://github.com/josearreluce/Vida-Project.git"
 
-Clone and run pip install -r requirements.txt 
+# Preface
+Vida attempts to solve the problem of online health condition diagnosis. The web
+application begins by first asking the user for their most notable symptoms, then
+continuing to ask further follow-up and clarifying questions about their condition
+and potentially relevant, recent behavior and actions (i.e. starting a new medicine,
+trying new food, etc.). In combination with baseline health information supplied by
+the user (weight, diet, etc.) Vida provides a more specific and accurate diagnosis
+than a quick search on Google or WebMD.
 
-1. Set environment variable: EXPORT FLASK_APP=app
-2. Start the dev server with: python -m flask run
+# Course specified entries 
 
-**Clarity of submission location, etc [4 points]**
+(1) how to compile
+$ git clone https://github.com/josearreluce/Vida-Project.git
+$ pip3 install -r requirements.txt 
 
-github repo: Vida-Project/tests
+---------------------------------------------------------------------------------------------------
 
-**Unit test cases for first iteration development [28 points in total]**
+(2) how to run your code
+From within the Vida-Project directory run:
+$ python3 -m flask run
+Then navigate to the specified port in your browser
 
- Unit test framework [2 points]
- 
- - pytest framework
- 
- To run the tests, use the command: pytest [file_name]
+---------------------------------------------------------------------------------------------------
 
-implementation: coverage of important features (thoroughness) [12 points]
- 
- We implement tests based on feature coverage:
- 1. test_db.py: tests about the database, where we store health information for the user and symptoms and conditions information, we check that the correct information is stored in the format we want. Specifically, we break this down into two test cases: one to ensure that only the credentials that can connect to the database are the correct ones, and another to ensure that syntactically correct queries with real values are returning correct results.
- 3. test_backend.py: tests about the backend, symptom condition diagnosis and user profile set up
- 4. test_graph.py: tests about the graph used for the symptom condition diagnosis
- 
+(3) how to run the unit test cases
+From within the tests directory run
+$ pytest
 
-implementation: lack of redundancy (concision) [6 points]
+---------------------------------------------------------------------------------------------------
 
-Reflection of design goals and planned implementation (from milestone 1 and 2) [4 points]
- We based our design on a MVP that will give users an easy to use interface. Our design priorities are
- 1. UI is intuitive and accessible
- 2. The symptom to condition generation process is as accurate as possible
- 3. The user information is stored correctly. <br />
- We have the database set-up in an AWS instance, and the initial app infrasctructure running as a Flask application. We are currently setting up the graph and will connect the graph to user input of symptoms and diagnoses. In milestone 2 we want to connect the functionality and create an initial clickable prototype where the user can enter a symptom and receive a diagnosis. We will then work on refining the graph algorithm so that diagnoses are accurate. <br />
- 
-Our tests reflect the design decisions above. We write tests to cover the three main design points, to make sure that the basic functionality of our application (symptom diagnosis) is available to the user.
+(4) please suggest some acceptance tests for the TA to try (i.e., what inputs to use,
+    and what outputs are expected)
+As iteration 1 deals only with the high-level design and process of our application, 
+we have yet to populate our database (and thus our graph) with valid symptoms and conditions.
+However, you can still create a username and password, login, and begin the questioning
+process with our placeholder symptoms and conditions.
 
-code is easy to read and understand [4 points]
+---------------------------------------------------------------------------------------------------
+
+(5) text description of what is implemented. You can refer to the use cases and user stories 
+    in your design document.
+In this iteration we tackled the most basic instance of start_assessment. We also built the 
+first draft of our front end, created the framework for our database, and built an early version
+of Vida's Baysian graph modeling
+
+---------------------------------------------------------------------------------------------------
+
+(6) who did what: who paired with who; which part is implemented by which pair
+Baysian graph logic: Andy, Bruno, Qi
+Database: Alex, Miles
+Front end: Jose, Max, Will
+
+---------------------------------------------------------------------------------------------------
+
+(7) changes: have you made any design changes or unit test changes from earlier milestones?
+
+From the front end perspective, we decided against Django and moved to Flask for our framework, 
+due to its greater flexibility and lower learning curve. Flask also provides tools for handling 
+users that we found effective and easy to use. As a result, we've decided to split our original
+conception for the User class in two. The first part of the class, allowing Users to login and
+be identified within the system, is given to Flask. While the second part of the class, storing
+user health data for use in identifying their condition, will be given to the database. This
+change also meant that start_assessment() is now called by the front end instead of a User class.
+
++----------+                     +---------------------+                     +---------------+
+|   User   | <-----------------> |   Flask/Front End   | <-----------------> | Baysian Graph |
++----------+                     +---------------------+                     +---------------+
+
+This move is in line with a larger move of information modeling out of classes in the application,
+and into the databse. Since conditions and symptoms are static information, it didn't make sense
+to make them into classes as we had originally intended. Instead, we store this information in
+the database, and pull it when creating our graph.  
+
+This leads to our next major design change. In our original plan we had the idea to use a graph of connected symptoms and conditions, and the probabilities of their relations to come up with an accurate diagnosis. But we didn't realize the true complexity and challenge of this problem. So in order to create a mathematically robust and correct solution we decided to use a Baysian graph: a directed acyclic graph with conditional probability distributions in each node. So even though the graph node/edge structure is static the conditional probabilities change based on how we traverse the graph in each assessment. This graph is built from the entries in the database.
+
+---------------------------------------------------------------------------------------------------
+
+(8) others: whatever you want to let the TA know
+
+We no longer unit test the graph explicitly, since its tested implicitly  by the success or failure 
+of the assessment.
+
+We were theoretically able to get info from database into Baysian model. However, because of how the 
+Baysian model works conditional probabilities increase exponentially given connections. This means 
+that using the whole database as it is now takes way too long to create the graph. For the database 
+transition to work we would have to use a much smaller database with fewer conditions in order for 
+the algorithm to eventually output. So in the interest of time, as we need to quickly create and 
+recreate the graph to develop our code, our current graph uses a small number of with the made up 
+symptoms/conditions. For iteration 2 we will work on making the database smaller and the code 
+more efficient.

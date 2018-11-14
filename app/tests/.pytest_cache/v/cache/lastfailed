@@ -1,9 +1,19 @@
 {
-  "test_backend.py::TestConditionClass": true,
   "test_backend.py::TestConditionClass::test_get_question": true,
-  "test_backend.py::TestSymptomClass": true,
-  "test_backend.py::TestUserClass": true,
+  "test_backend.py::TestConditionClass::test_get_symptoms": true,
+  "test_backend.py::TestSymptomClass::test_get_conditions": true,
+  "test_backend.py::TestSymptomClass::test_get_desc": true,
+  "test_backend.py::TestSymptomClass::test_get_related_symptoms": true,
+  "test_backend.py::TestUserClass::test_add_preexisting_condition": true,
   "test_backend.py::TestUserClass::test_get_history": true,
+  "test_backend.py::TestUserClass::test_logout": true,
+  "test_backend.py::TestUserClass::test_set_date_of_birth": true,
   "test_backend.py::TestUserClass::test_set_gender": true,
+  "test_backend.py::TestUserClass::test_set_height": true,
+  "test_backend.py::TestUserClass::test_set_id": true,
+  "test_backend.py::TestUserClass::test_set_name": true,
+  "test_backend.py::TestUserClass::test_set_weight": true,
+  "test_backend.py::TestUserClass::test_startAssessment": true,
+  "test_db.py": true,
   "test_ex.py": true
 }

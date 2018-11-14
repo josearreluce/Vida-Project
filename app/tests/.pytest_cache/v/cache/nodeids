@@ -13,14 +13,5 @@
   "test_backend.py::TestUserClass::test_startAssessment",
   "test_backend.py::TestSymptomClass::test_get_conditions",
   "test_backend.py::TestSymptomClass::test_get_desc",
-  "test_backend.py::TestSymptomClass::test_get_related_symptoms",
-  "test_db.py::TestConn::test_right_creds",
-  "test_db.py::TestConn::test_wrong_db",
-  "test_db.py::TestConn::test_wrong_host",
-  "test_db.py::TestConn::test_wrong_passwd",
-  "test_db.py::TestConn::test_wrong_user",
-  "test_db.py::TestQuery::test_no_column",
-  "test_db.py::TestQuery::test_no_return_value",
-  "test_db.py::TestQuery::test_right_query",
-  "test_db.py::TestQuery::test_wrong_syntax"
+  "test_backend.py::TestSymptomClass::test_get_related_symptoms"
 ]
