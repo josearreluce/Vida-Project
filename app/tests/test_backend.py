@@ -6,6 +6,7 @@ from condition import Condition
 from symptom import Symptom
 from users import User #users.py is pluralized because just user is another existing module.
 
+# Test conditions
 class TestConditionClass(unittest.TestCase):
 
     def setUp(self):
@@ -19,27 +20,16 @@ class TestConditionClass(unittest.TestCase):
     def test_get_question(self):
         self.assertEqual(self.condition.getNextQuestion(), "question")
 
-
-
+# Test User profile information
 class TestUserClass(unittest.TestCase):
-
-    # User Information
-    def setUp(self):
-        self.user = User("username", "password", 1, 18)
 
     def test_startAssessment(self):
         self.assertEqual(self.user.startAssessment(), 0)
 
-    def test_logout(self):
-        self.assertEqual(self.user.logout(), 0)
-
+    # User information will be iumplemented in iteration 2
     def test_set_name(self):
         self.user.setName("Patient1")
         self.assertEqual("Patient1", self.user.getName())
-
-    def test_set_id(self):
-        self.user.setId(9999)
-        self.assertEqual(9999, self.user.getId())
 
     def test_set_date_of_birth(self):
         self.user.setDateOfBirth("06-13-1956")
@@ -67,7 +57,7 @@ class TestUserClass(unittest.TestCase):
     def test_get_history(self):
         self.assertEqual([], self.user.getHistory())
 
-
+# Tests symptoms
 class TestSymptomClass(unittest.TestCase):
     def setUp(self):
         self.condition = Condition("Condition1", [], "name", -1, 0)
@@ -84,9 +74,6 @@ class TestSymptomClass(unittest.TestCase):
 
     def test_get_desc(self):
         self.assertEqual(self.symptom.getDesc(), "description")
-
-
-
 
 if __name__ == '__main__':
     unittest.main()
