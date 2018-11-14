@@ -161,3 +161,7 @@
 #symptom-input {
     margin-top: 2em;
 }
+
+.symptom-errors {
+    color: red;
+}

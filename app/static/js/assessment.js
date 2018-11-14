@@ -56,7 +56,9 @@ function handleSuccessors(successors) {
                 is_good_answer = true;
             }
 
+            const symptom_errors = $('.symptom-errors');
             if (is_good_answer) {
+                symptom_errors.text('');
                 const new_answer = "<p class='answer'>" + answer + "</p>";
                 $(new_answer).insertBefore(symptom_input);
 
@@ -67,6 +69,8 @@ function handleSuccessors(successors) {
                     $(new_question).insertBefore(symptom_input);
                 }
                 i += 1;
+            } else {
+                symptom_errors.text("Please input yes or no as your answer.");
             }
         }
     });
@@ -93,12 +97,12 @@ function handleSymptomSearch(res) {
     symptom_box.append("<p class='question'> What is your symptom? </p>");
     symptom_box.append("<p class='answer'>" + res.text + "</p>");
     symptom_box.append("<input type='text' class='chat-input' id='symptom-input' />");
+    symptom_box.append("<div class='symptom-errors'></div>");
 
     $.post('/assessment', {
         data: res.text
     }).done((res) => {
         handleSuccessors(res.successors);
-        draw();
     }).fail(() => {
         console.log("Failure");
     });
