@@ -5,7 +5,7 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/login.css') }}">
     <form class="login__form" action="" method="post" novalidate>
         <div class="login__form-container">
-            <h3>Login </h3>
+            <h3>Sign Up </h3>
             <p> {{ form.username.label }} {{ form.username(size=32) }}</p>
             <br/>
             <p>  {{ form.password.label }} {{ form.password(size=32) }}</p>
@@ -15,7 +15,6 @@
                     <li>{{ form.errors[-1] }}</li>
                 </ul>
             {% endif %}
-            <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
             <p>{{ form.submit() }}</p>
         </div>
     </form>
