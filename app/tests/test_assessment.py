@@ -21,18 +21,44 @@ class TestAssessment(unittest.TestCase):
     #All fails, or none applicable: returns an empty list
     #Success: returns ALL candidate conditions
 
-    def test_select_relevant_cond(self):
+    def test_good_select_relevant_cond(self):
         self.assertEqual(ast.select_relevant_cond(self.correct_symptom, self.list_cond), ['Condition_1', 'Condition_2'])
-        with self.assertRaises(networkx.exception.NetworkXError):
-            ast.select_relevant_cond(self.incorrect_symptom, self.list_cond)
         return
 
-    def test_select_relevant_symptoms(self):
+    def test_bad_select_relevant_cond(self):
+        incorrect_symptom1 = "Symptom 10"
+        incorrect_symptom2 = "Symptom 20"
+        incorrect_symptom3 = 105
+        incorrect_symptom4 = ["Symptom 1", "Symptom 2"]
+        incorrect_symptom5 = ("Set 1", "Set 2")
+        with self.assertRaises(networkx.exception.NetworkXError):
+            ast.select_relevant_cond(self.incorrect_symptom, self.list_cond)
+            ast.select_relevant_cond(incorrect_symptom1, self.list_cond)
+            ast.select_relevant_cond(incorrect_symptom2, self.list_cond)
+            ast.select_relevant_cond(incorrect_symptom3, self.list_cond)
+            ast.select_relevant_cond(incorrect_symptom4, self.list_cond)
+            ast.select_relevant_cond(incorrect_symptom5, self.list_cond)
+
+    def test_good_select_relevant_symptoms(self):
         self.assertEqual(set(ast.select_relevant_symptoms(self.graph, self.correct_condition)), set(['Symptom_1', 'Symptom_2']))
         return
 
+    def test_bad_select_relevant_symptoms(self):
+        incorrect_condition1 = "Condition 10"
+        incorrect_condition2 = 250
+        incorrect_condition3 = []
+        incorrect_condition4 = ("Sponge1", "Sponge2")
+        with self.assertRaises(networkx.exception.NetworkXError):
+            ast.select_relevant_symptoms(self.graph, self.incorrect_condition)
+            ast.select_relevant_symptoms(self.graph, incorrect_condition1)
+            ast.select_relevant_symptoms(self.graph, incorrect_condition2)
+            ast.select_relevant_symptoms(self.graph, incorrect_condition3)
+            ast.select_relevant_symptoms(self.graph, incorrect_condition4)
+
     def test_start_assessment(self):
         self.assertEqual(ast.start_assessment(self.correct_symptom), ['Sub1_symptom_1', 'Sub2_symptom_1'])
+        with self.assertRaises(networkx.exception.NetworkXError):
+            ast.start_assessment("SYMPTOM 246980")
         return
 
     def evaluate(self):
