@@ -1,4 +1,3 @@
-from graph_test import *
 import networkx as nx
 import pylab as plt
 from pgmpy.inference import VariableElimination
