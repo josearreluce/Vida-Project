@@ -9,8 +9,11 @@ class TestCase(unittest.TestCase):
         app.config['TESTING'] = True
         app.config['WTF_CSRF_ENABLED'] = False
         self.app = app.test_client()
+        self.session = models.DatabaseConnection()
+        self.session.open()
 
     def tearDown(self):
+        self.session.close()
         return
 
     def __login(self, username, password):
@@ -21,8 +24,6 @@ class TestCase(unittest.TestCase):
 
     def test_users(self):
         u = models.User(username='gaucan', pswd='gau')
-
-        #rv = self.login('gaucan','gau')
         rv = self.app.get('/',follow_redirects=True)
 
 if __name__ == '__main__':
