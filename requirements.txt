@@ -6,3 +6,4 @@ flask_wtf
 pgmpy
 sqlalchemy
 wrapt
+pandas
