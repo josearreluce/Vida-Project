@@ -9,3 +9,8 @@ wrapt
 pandas
 matplotlib
 psycopg2
+networkx
+numpy
+pyparsing
+pandas
+scipy
