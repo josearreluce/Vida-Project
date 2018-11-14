@@ -36,7 +36,7 @@ class TestAssessment(unittest.TestCase):
     def test_good_select_relevant_cond(self):
         self.assertEqual(ast.select_relevant_cond(self.correct_symptom, self.list_cond), ['Condition_1', 'Condition_2'])
         self.assertEqual(ast.select_relevant_cond(self.correct_symptom2, self.list_cond), ['Condition_1', 'Condition_2'])
-        self.assertEqual(ast.select_relevant_cond(self.correct_symptom3, self.list_cond), ['Condition_1', 'Condition_2'])
+        self.assertEqual(ast.select_relevant_cond(self.correct_symptom3, self.list_cond), [])
         return
 
     def test_bad_select_relevant_cond(self):
@@ -45,13 +45,11 @@ class TestAssessment(unittest.TestCase):
         incorrect_symptom3 = 105
         incorrect_symptom4 = ["Symptom 1", "Symptom 2"]
         incorrect_symptom5 = ("Set 1", "Set 2")
-        with self.assertRaises(networkx.exception.NetworkXError):
-            ast.select_relevant_cond(self.incorrect_symptom, self.list_cond)
-            ast.select_relevant_cond(incorrect_symptom1, self.list_cond)
-            ast.select_relevant_cond(incorrect_symptom2, self.list_cond)
-            ast.select_relevant_cond(incorrect_symptom3, self.list_cond)
-            ast.select_relevant_cond(incorrect_symptom4, self.list_cond)
-            ast.select_relevant_cond(incorrect_symptom5, self.list_cond)
+        self.assertRaises(networkx.exception.NetworkXError, lambda: ast.select_relevant_cond(self.incorrect_symptom, self.list_cond))
+        self.assertRaises(networkx.exception.NetworkXError, lambda: ast.select_relevant_cond(incorrect_symptom1, self.list_cond))
+        self.assertRaises(networkx.exception.NetworkXError, lambda: ast.select_relevant_cond(incorrect_symptom2, self.list_cond))
+        self.assertEquals(ast.select_relevant_cond(incorrect_symptom4, self.list_cond), [])
+        self.assertEquals(ast.select_relevant_cond(incorrect_symptom5, self.list_cond), [])
 
     def test_good_select_relevant_symptoms(self):
         self.assertEqual(set(ast.select_relevant_symptoms(self.graph, self.correct_condition)), set(['Symptom_1', 'Symptom_2']))
@@ -65,9 +63,11 @@ class TestAssessment(unittest.TestCase):
         incorrect_condition4 = ("Sponge1", "Sponge2")
         self.assertRaises(networkx.exception.NetworkXError, lambda: ast.select_relevant_symptoms(self.graph, self.incorrect_condition))
         self.assertRaises(networkx.exception.NetworkXError, lambda: ast.select_relevant_symptoms(self.graph, incorrect_condition1))
-        self.assertRaises(networkx.exception.NetworkXError, lambda: ast.select_relevant_symptoms(self.graph, incorrect_condition2))
-        self.assertRaises(networkx.exception.NetworkXError, lambda: ast.select_relevant_symptoms(self.graph, incorrect_condition3))
-        self.assertRaises(networkx.exception.NetworkXError, lambda: ast.select_relevant_symptoms(self.graph, incorrect_condition4))
+        self.assertRaises(TypeError, lambda: ast.select_relevant_symptoms(self.graph, incorrect_condition2))
+
+        self.assertEquals(ast.select_relevant_symptoms(self.graph, incorrect_condition3), [])
+        self.assertEquals(ast.select_relevant_symptoms(self.graph, incorrect_condition3), [])
+        self.assertEquals(ast.select_relevant_symptoms(self.graph, incorrect_condition4), [])
 
     def test_good_start_assessment(self):
         self.assertEqual(ast.start_assessment(self.correct_symptom), ['Sub1_symptom_1', 'Sub2_symptom_1'])
@@ -75,13 +75,15 @@ class TestAssessment(unittest.TestCase):
         return
 
     def test_bad_start_assessment(self):
-        self.assertRaises(networkx.exception.NetworkXError, lambda: ast.start_assessment("Bad Symptom"))
-        self.assertRaises(networkx.exception.NetworkXError, lambda: ast.start_assessment(123))
-        #self.assertRaises(networkx.exception.NetworkXError, lambda: ast.start_assessment(["Symptom 1", "Symptom 2"]))
-        self.assertRaises(networkx.exception.NetworkXError, lambda: ast.start_assessment("Condition_1"))
-        self.assertRaises(networkx.exception.NetworkXError, lambda: ast.start_assessment())
-        #self.assertRaises(networkx.exception.NetworkXError, lambda: ast.start_assessment("Sub1_symptom_1"))
-        #self.assertRaises(networkx.exception.NetworkXError, lambda: ast.start_assessment("Condition_1"))
+        self.assertRaises(TypeError, lambda: ast.start_assessment(123))
+        self.assertRaises(TypeError, lambda: ast.start_assessment())
+
+        self.assertEquals(ast.start_assessment(["Symptom 1", "Symptom 2"]), [])
+        self.assertEquals(ast.start_assessment("Sub1_symptom_1"), [])
+        self.assertEquals(ast.start_assessment("Condition_1"), [])
+
+        self.assertEquals(ast.start_assessment("Bad Symptom"), [])
+
 
     def evaluate(self):
         self.assertEqual((ast.evaluate(self.correct_symptom, self.correct_successors), self.user_sub_answers), [['Condition_1', 0.54], ['Condition_2', 0.47000000000000003]])

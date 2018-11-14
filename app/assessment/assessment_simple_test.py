@@ -122,6 +122,9 @@ def verify_input(code, inp): # x = 0 (condition), 1 (symptom), 2 (subsymptom)
 # given symptom and all possible condiitons, outputs list of
 # conditions with some degree of connection to this symptom
 def select_relevant_cond(symptom, list_cond):
+    if verify_input(1, symptom) is False:
+        return []
+
     relevant_cond = []
     trail_dic = state_network2.active_trail_nodes(symptom)
     trail_list = list(trail_dic[symptom])
@@ -135,6 +138,9 @@ def select_relevant_cond(symptom, list_cond):
 #  given condiiton and Baysian graph, imputs all the immediate parent of node condiiton
 #  returns a list of sub-symptoms/symptoms immediately connected to the condition
 def select_relevant_symptoms(graph, condition):
+    if verify_input(0, condition) is False:
+        return []
+
     ind = graph.local_independencies(condition)
     mystr = str(ind)
     wordList = mystr.replace("(","").replace(")","").replace(",","").split(" ")
@@ -154,6 +160,9 @@ def select_relevant_symptoms(graph, condition):
 #  given initial symptom, outputs a list of all children (sub-symptoms) 
 #  connected to the init_symptom node
 def start_assessment(symptom_init):
+    if verify_input(1, symptom_init) is False:
+        return []
+
     successors = list(state_network2.successors(symptom_init))
 
     return successors
@@ -161,6 +170,9 @@ def start_assessment(symptom_init):
 #  given the name of the initial symptom (str), list of sub-symptoms to ini_symptom (list str),
 #  and user answers (list int) (0 -- no, 1 -- yes), outputs 
 def evaluate(symptom_init, successors, user_sub_answers):
+    if verify_input(1, symptom_init) is False:
+        return []
+
     # starts with 'yes' for initial symptom
     symp_list_val = [1]
     symp_list_name = [symptom_init]
