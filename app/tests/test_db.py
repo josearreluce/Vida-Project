@@ -1,6 +1,7 @@
 import psycopg2 as pg2
 import unittest
 
+# Tests to make sure database is set up correctly
 class TestConn(unittest.TestCase):
 
 	def setUp(self):
@@ -33,6 +34,7 @@ class TestConn(unittest.TestCase):
 		arg1 = 'host=%s dbname=%s user=%s password=%s'%(self.right_host, self.right_db, self.right_user, self.wrong_passwd)
 		self.assertRaises(pg2.OperationalError, pg2.connect, arg1)
 
+# Test if we can retrieve information from database
 class TestQuery(unittest.TestCase):
 
 	def setUp(self):
