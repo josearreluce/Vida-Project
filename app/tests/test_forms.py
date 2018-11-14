@@ -1,16 +1,8 @@
-import os
 import unittest
-
 import sys
 sys.path.append('../../')
-#sys.path.append("../app")
-'''
-if __name__ == '__main__' and __package__ is None:
-    from os import sys, path
-    sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
-'''
-#from app import *
-from app.models import User, DatabaseConnection
+from app import models
+from app import app
 
 class TestCase(unittest.TestCase):
     def setUp(self):
@@ -24,11 +16,11 @@ class TestCase(unittest.TestCase):
     def __login(self, username, password):
         return self.app.post('/', data=dict(
             username=username,
-            password=password
+            pswd=password
         ), follow_redirects=True)
 
     def test_users(self):
-        u = User(username='gaucan', password='gau')
+        u = models.User(username='gaucan', pswd='gau')
 
         #rv = self.login('gaucan','gau')
         rv = self.app.get('/',follow_redirects=True)
