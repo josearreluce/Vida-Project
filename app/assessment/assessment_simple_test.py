@@ -225,3 +225,25 @@ print(select_relevant_symptoms(state_network2, "Condition_1"))
 print(start_assessment("Symptom_1"))
 
 print(evaluate("Symptom_1", start_assessment("Symptom_1"), [0,1]))
+
+
+def apply_personal_features(user, conditions):
+    return  [['Condition_1', 0.54], ['Condition_2', 0.47000000000000003]]
+
+"""
+    Gets information from the database and passes it to load_graph().
+"""
+def get_graph_info():
+    return graph_info
+
+"""
+    Builds a graph using the information passed from get_graph_info().
+"""
+def load_graph(graph_info):
+    #
+    return
+"""
+    Loads the cpds to build Bayesian graph.
+"""
+def load_cps():
+    return
