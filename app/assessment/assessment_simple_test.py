@@ -157,7 +157,7 @@ def select_relevant_symptoms(graph, condition):
     return rel_symp
 
 
-#  given initial symptom, outputs a list of all children (sub-symptoms) 
+#  given initial symptom, outputs a list of all children (sub-symptoms)
 #  connected to the init_symptom node
 def start_assessment(symptom_init):
     if verify_input(1, symptom_init) is False:
