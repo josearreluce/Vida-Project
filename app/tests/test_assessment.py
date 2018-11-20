@@ -142,12 +142,15 @@ class TestAssessmentWithUser(unittest.TestCase):
         self.assertEqual(ast.load_graph().active_trail_nodes("Condition_1"),{'Condition_1': {'Sub1_symptom_1', 'Condition_1', 'Condition_2', 'Symptom_1', 'Sub2_symptom_2', 'Sub2_symptom_1', 'Symptom_2', 'Sub1_symptom_2'}})
         self.assertEqual(ast.load_graph().active_trail_nodes("Condition_2"), {'Condition_2': {'Condition_1', 'Symptom_2', 'Condition_2', 'Sub2_symptom_2', 'Sub2_symptom_1', 'Sub1_symptom_2', 'Symptom_1', 'Sub1_symptom_1'}})
 
-    def test_load_cpds(self):  # Only issue is that we can't call length of a none-returning function
-        self.assertEqual(len(self.cpds), len(ast.state_network2))  # Number of nodes still equal
+    def test_load_cpds(self):
+        # Number of nodes still equal
+        self.assertEqual(len(self.cpds), len(ast.state_network2))
         for i in range(len(self.cpds)):
-            self.assertNotEqual(self.cpds[i].get_values(), [])  # Each CPD value not equal to []
+            # Each CPD value not equal to []
+            self.assertNotEqual(self.cpds[i].get_values(), [])
             sum = 0
-            for j in range(len(self.cpds[i])):  # Iterate through an index of the cpd probability matrix, ensuring that the "column" sums to 1, so legal
+            # Iterate through an index of the cpd probability matrix, ensuring that the "column" sums to 1, so legal
+            for j in range(len(self.cpds[i])):
                 sum += self.cpds[i].get_values()[j]
             self.assertEqual(sum, 1)
         return

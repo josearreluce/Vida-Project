@@ -7,6 +7,8 @@ sys.path.append('../src')
 import assessment_simple_test as ast
 from users import  *
 import math
+sys.path.append('../../')
+from app import models
 
 class TestUser(unittest.TestCase):
 
@@ -136,3 +138,26 @@ class TestHealthBackground(unittest.TestCase):
 	def test_set_diabetes(self):
 		self.hbg.setDiabetes(2)
 		self.assertEqual(self.hbg.getDiabetes(), 2)
+
+# Function to convert sqlalchemy database User class to backend User class
+class TestDbUsertoUser(unittest.TestCase):
+
+	def setUp(self):
+		self.username = 'test_username'
+		self.password = 'test_password'
+		with models.DatabaseConnection() as db:
+			count = db.query(models.UserSchema).filter_by(username=self.username).count()
+			if count >= 1:
+				user_info = models.UserSchema(username=self.username, pswd=self.password)
+				db.query(models.UserSchema).filter_by(username=self.username).delete()
+				db.commit()
+		self.database_user = models.UserSchema(username=self.username, pswd=self.password)
+
+	def test_dbuser_to_user(self):
+		backend_user = DbUsertoUser(self.database_user)
+		account = AccountInfo("username", "password")
+		basicinfo = BasicInfo(10, "M")
+		personalinfo = PersonalInfo(50, 120)
+		hbg = HealthBackground(0.0, (80, 120), 1)
+		user = User(self.account, self.basicinfo, self.personalinfo, self.hbg)
+		self.assertEqual(backend_user, user)
