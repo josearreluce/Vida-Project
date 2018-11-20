@@ -61,8 +61,8 @@ of Vida's Bayesian graph modeling
 
 (6) who did what: who paired with who; which part is implemented by which pair
 
-Bayesian graph logic: Andy, Bruno, Qi  
-Database: Alex, Miles  
+Bayesian graph logic: Andy, Bruno, Qi
+Database: Alex, Miles
 Front end: Jose, Max, Will
 
 ---------------------------------------------------------------------------------------------------
