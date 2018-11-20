@@ -92,7 +92,11 @@ class TestAssessment(unittest.TestCase):
         self.assertEqual([[x[0], round(x[1], 2)] for x in ast.evaluate(self.correct_symptom, self.correct_successors, self.user_sub_answers)], [['Condition_1', 0.54], ['Condition_2', 0.47]])
         self.assertEqual([[x[0], round(x[1], 3)] for x in ast.evaluate(self.correct_symptom2, self.correct_successors2, self.user_sub_answers)],  [['Condition_1', 0.272], ['Condition_2', 0.22]])
         return
-
+"""
+    Unit Test Cases used for testing the functions used by the assessment algorithm
+    to take into account User Profile information when outputting conditions with
+    probabilities.
+"""
 class TestAssessmentWithUser(unittest.TestCase):
     def setUp(self):
         # Setup the testcase
@@ -121,12 +125,12 @@ class TestAssessmentWithUser(unittest.TestCase):
     def test_apply_user_features(self):
         conditions1 = ast.evaluate(self.correct_symptom1, self.correct_successors1, self.user_sub_answers)
         conditions2 = ast.evaluate(self.correct_symptom2, self.correct_successors2, self.user_sub_answers)
-        self.assertNotEquals(ast.apply_personal_features(self.user, conditions1), [['Condition_1', 0.54], ['Condition_2', 0.47000000000000003]])
-        self.assertNotEquals(ast.apply_personal_features(self.user, conditions2), ['Condition_1', 0.272])
 
-        # TODO: Bad input test cases and ensure probabilities equal 1
+        output1 = ast.apply_personal_features(self.user, conditions1)
+        output2 = ast.apply_personal_features(self.user, conditions2)
+        self.assertNotEquals(output1, [['Condition_1', 0.54], ['Condition_2', 0.47000000000000003]])
+        self.assertNotEquals(output2, ['Condition_1', 0.272])
 
-        
         
     def test_load_graph(self):  # LoadGraph takes no inputs (? I believe), but will be constructed as ast.state_network2 (for now). We check identity using trail_nodes.
         self.assertEqual(ast.load_graph(), self.graph)
@@ -140,11 +144,10 @@ class TestAssessmentWithUser(unittest.TestCase):
 
     def test_load_cpds(self):  # Only issue is that we can't call length of a none-returning function
         self.assertEqual(len(self.cpds), len(ast.state_network2))  # Number of nodes still equal
-        for i in len(list):
-            vals = len(self.cpds)
+        for i in range(len(self.cpds)):
             self.assertNotEqual(self.cpds[i].get_values(), [])  # Each CPD value not equal to []
             sum = 0
-            for j in vals:  # Iterate through an index of the cpd probability matrix, ensuring that the "column" sums to 1, so legal
+            for j in range(len(self.cpds[i])):  # Iterate through an index of the cpd probability matrix, ensuring that the "column" sums to 1, so legal
                 sum += self.cpds[i].get_values()[j]
             self.assertEqual(sum, 1)
         return
