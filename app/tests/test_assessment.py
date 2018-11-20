@@ -121,7 +121,8 @@ class TestAssessmentWithUser(unittest.TestCase):
         self.graph = ast.state_network2
         self.cpds = []
         
-        
+
+    # Test that the probabilities for the conditions change when personal features are applied.
     def test_apply_user_features(self):
         conditions1 = ast.evaluate(self.correct_symptom1, self.correct_successors1, self.user_sub_answers)
         conditions2 = ast.evaluate(self.correct_symptom2, self.correct_successors2, self.user_sub_answers)
@@ -132,11 +133,11 @@ class TestAssessmentWithUser(unittest.TestCase):
         self.assertNotEquals(output2, ['Condition_1', 0.272])
 
         
-    def test_load_graph(self):  # LoadGraph takes no inputs (? I believe), but will be constructed as ast.state_network2 (for now). We check identity using trail_nodes.
+    def test_load_graph(self):
         self.assertEqual(ast.load_graph(), self.graph)
-        # Then, check the nodes for set equality
+        # Check the nodes for set equality
         self.assertCountEqual(ast.load_graph().nodes, ['Symptom_1', 'Sub1_symptom_1', 'Sub2_symptom_1', 'Symptom_2', 'Sub1_symptom_2', 'Sub2_symptom_2', 'Condition_1', 'Condition_2'])
-        # Then, check trail_nodes to investigate links
+        # Check trail_nodes to investigate links
         self.assertEqual(ast.load_graph().active_trail_nodes("Symptom_1"), {'Symptom_1': {'Symptom_1', 'Condition_1', 'Sub2_symptom_1', 'Sub1_symptom_1', 'Condition_2'}})
         self.assertEqual(ast.load_graph().active_trail_nodes("Symptom_2"), {'Symptom_2': {'Sub1_symptom_2', 'Symptom_2', 'Sub2_symptom_2', 'Condition_1', 'Condition_2'}})
         self.assertEqual(ast.load_graph().active_trail_nodes("Condition_1"),{'Condition_1': {'Sub1_symptom_1', 'Condition_1', 'Condition_2', 'Symptom_1', 'Sub2_symptom_2', 'Sub2_symptom_1', 'Symptom_2', 'Sub1_symptom_2'}})
