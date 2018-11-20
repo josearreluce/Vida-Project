@@ -143,7 +143,6 @@ class TestHealthBackground(unittest.TestCase):
 class TestDbUsertoUser(unittest.TestCase):
 
 	def setUp(self):
-		# ensure clean test enviroment
 		self.username = 'test_username'
 		self.password = 'test_password'
 		with models.DatabaseConnection() as db:
