@@ -61,6 +61,37 @@ class TestWebForms(unittest.TestCase):
 class TestSignUp(TestWebForms):
 
     def test_invalid_signup(self):
+
+        # Username should not be the same as password
+        self.app.get(self.sign_up_page, follow_redirects=True)
+        invalid_user1 = dict(username="test_username",password="test_username")
+        response = self._make_post(self.sign_up_page, invalid_user1)
+
+        self.assertIn('Invalid username and/or password.', str(response.data))
+
+        # Username and password should be at least 5 characters but less than 50
+        self.app.get(self.sign_up_page, follow_redirects=True)
+        invalid_user2 = dict(username="test",password="pass")
+        response = self._make_post(self.sign_up_page, invalid_user2)
+
+        self.assertIn('Invalid username and/or password.', str(response.data))
+
+        self.app.get(self.sign_up_page, follow_redirects=True)
+        invalid_user1 = dict(username="test_username_that_is_too_long_12345678901234567890",
+            password="test_password_that_is_too_long_12345678901234567890")
+        response = self._make_post(self.sign_up_page, invalid_user1)
+
+        self.assertIn('Invalid username and/or password.', str(response.data))
+
+        # Username and password should contain at least 1 letter
+        self.app.get(self.sign_up_page, follow_redirects=True)
+        invalid_user2 = dict(username="*****",password="password")
+        response = self._make_post(self.sign_up_page, invalid_user2)
+
+        self.assertIn('Invalid username and/or password.', str(response.data))
+
+
+    def test_existing_user(self):
         # ensure the username will be invalid
         if not self._test_user_in_db():
             self._add_test_user()

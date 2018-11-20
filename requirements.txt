@@ -14,3 +14,4 @@ numpy
 pyparsing
 pandas
 scipy
+numpy

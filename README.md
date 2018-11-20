@@ -78,15 +78,15 @@ user health data for use in identifying their condition, will be given to the da
 change also meant that start_assessment() is now called by the front end instead of a User class.
 
 +----------+                     +---------------------+                     +---------------+
-|   User   | <-----------------> |   Flask/Front End   | <-----------------> | Baysian Graph |
+|   User   | <-----------------> |   Flask/Front End   | <-----------------> | Bayesian Graph |
 +----------+                     +---------------------+                     +---------------+
 
 This move is in line with a larger move of information modeling out of classes in the application,
-and into the databse. Since conditions and symptoms are static information, it didn't make sense
+and into the database. Since conditions and symptoms are static information, it didn't make sense
 to make them into classes as we had originally intended. Instead, we store this information in
 the database, and pull it when creating our graph.
 
-This leads to our next major design change. In our original plan we had the idea to use a graph of connected symptoms and conditions, and the probabilities of their relations to come up with an accurate diagnosis. But we didn't realize the true complexity and challenge of this problem. So in order to create a mathematically robust and correct solution we decided to use a Baysian graph: a directed acyclic graph with conditional probability distributions in each node. So even though the graph node/edge structure is static the conditional probabilities change based on how we traverse the graph in each assessment. This graph is built from the entries in the database.
+This leads to our next major design change. In our original plan we had the idea to use a graph of connected symptoms and conditions, and the probabilities of their relations to come up with an accurate diagnosis. But we didn't realize the true complexity and challenge of this problem. So in order to create a mathematically robust and correct solution we decided to use a Bayesian graph: a directed acyclic graph with conditional probability distributions in each node. So even though the graph node/edge structure is static the conditional probabilities change based on how we traverse the graph in each assessment. This graph is built from the entries in the database.
 
 ---------------------------------------------------------------------------------------------------
 
@@ -95,11 +95,24 @@ This leads to our next major design change. In our original plan we had the idea
 We no longer unit test the graph explicitly, since its tested implicitly  by the success or failure
 of the assessment.
 
-We were theoretically able to get info from database into Baysian model. However, because of how the
-Baysian model works conditional probabilities increase exponentially given connections. This means
+We were theoretically able to get info from database into Bayesian model. However, because of how the
+Bayesian model works conditional probabilities increase exponentially given connections. This means
 that using the whole database as it is now takes way too long to create the graph. For the database
 transition to work we would have to use a much smaller database with fewer conditions in order for
 the algorithm to eventually output. So in the interest of time, as we need to quickly create and
 recreate the graph to develop our code, our current graph uses a small number of with the made up
 symptoms/conditions. For iteration 2 we will work on making the database smaller and the code
 more efficient.
+
+# Iteration 2
+
+## Unit Test Cases
+### test_db.py
+Comments within the code of this program indicate the newest section for iteration 2. The biggest change we made was restructuring how symptoms, sub symptoms, and conditions relate to each other in accordance with the Bayesian Model graph. We now have conditions relate only to sub symptoms, and sub symptoms only relate to a single symptom. We are also adding columns to the conditions table to indicate the age range of people likely to get the conditions, as well as the typical time that symptoms can be expected to last. Again, populate_db.py and generate_sub_symptoms.py are used to fill and format the database tables, but the best way to test these programs is to query the database and make sure the data is stored the way we expect it to be.
+
+Comments in code provide more specifics as to what each tests do, but we are mainly checking to make sure sub symptoms only map to one symptom, that conditional probabilities are correct, that age ranges for conditions are correct, and that times for conditons are correct. 
+
+Please note: we are implementing several changes to the database currently, so if tests from iteration 1 are now failing because of this, that is only temporary and will be changed once the database has its final form.
+
+To run: at commandline run "pytest test_db.py"
+

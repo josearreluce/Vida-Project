@@ -14,26 +14,19 @@ class AccountInfo():
         return self.password
 
     def setPassword(self, password):
-        self.password = self.password
+        self.password = password
 
 class BasicInfo(object):
 
-    def __init__(self, name, dob, sex):
-        self.name = name
-        self.dob = dob
+    def __init__(self, age, sex):
+        self.age = age
         self.sex = sex
 
-    def getName(self):
-        return self.name
+    def getAge(self):
+        return self.age
 
-    def setName(self, name):
-        self.name = name
-
-    def getDOB(self):
-        return self.dob
-
-    def setDOB(self, dob):
-        self.dob = dob
+    def setAge(self, age):
+        self.age = age
 
     def getSex(self):
         return self.sex
@@ -75,14 +68,14 @@ class HealthBackground(object):
     def getBloodPressure(self):
         return self.blood_pressure
 
-    def setBloodPressure(self, smoker):
-        self.smoker = smoker
+    def setBloodPressure(self, blood_pressure):
+        self.blood_pressure = blood_pressure
 
     def getDiabetes(self):
-        self.diabetes = diabetes
+        return self.diabetes
 
     def setDiabetes(self, diabetes):
-        return self.diabetes
+        self.diabetes = diabetes
 
 class User(object):
 
