@@ -78,15 +78,15 @@ user health data for use in identifying their condition, will be given to the da
 change also meant that start_assessment() is now called by the front end instead of a User class.
 
 +----------+                     +---------------------+                     +---------------+
-|   User   | <-----------------> |   Flask/Front End   | <-----------------> | Baysian Graph |
+|   User   | <-----------------> |   Flask/Front End   | <-----------------> | Bayesian Graph |
 +----------+                     +---------------------+                     +---------------+
 
 This move is in line with a larger move of information modeling out of classes in the application,
-and into the databse. Since conditions and symptoms are static information, it didn't make sense
+and into the database. Since conditions and symptoms are static information, it didn't make sense
 to make them into classes as we had originally intended. Instead, we store this information in
 the database, and pull it when creating our graph.
 
-This leads to our next major design change. In our original plan we had the idea to use a graph of connected symptoms and conditions, and the probabilities of their relations to come up with an accurate diagnosis. But we didn't realize the true complexity and challenge of this problem. So in order to create a mathematically robust and correct solution we decided to use a Baysian graph: a directed acyclic graph with conditional probability distributions in each node. So even though the graph node/edge structure is static the conditional probabilities change based on how we traverse the graph in each assessment. This graph is built from the entries in the database.
+This leads to our next major design change. In our original plan we had the idea to use a graph of connected symptoms and conditions, and the probabilities of their relations to come up with an accurate diagnosis. But we didn't realize the true complexity and challenge of this problem. So in order to create a mathematically robust and correct solution we decided to use a Bayesian graph: a directed acyclic graph with conditional probability distributions in each node. So even though the graph node/edge structure is static the conditional probabilities change based on how we traverse the graph in each assessment. This graph is built from the entries in the database.
 
 ---------------------------------------------------------------------------------------------------
 
@@ -95,8 +95,8 @@ This leads to our next major design change. In our original plan we had the idea
 We no longer unit test the graph explicitly, since its tested implicitly  by the success or failure
 of the assessment.
 
-We were theoretically able to get info from database into Baysian model. However, because of how the
-Baysian model works conditional probabilities increase exponentially given connections. This means
+We were theoretically able to get info from database into Bayesian model. However, because of how the
+Bayesian model works conditional probabilities increase exponentially given connections. This means
 that using the whole database as it is now takes way too long to create the graph. For the database
 transition to work we would have to use a much smaller database with fewer conditions in order for
 the algorithm to eventually output. So in the interest of time, as we need to quickly create and
