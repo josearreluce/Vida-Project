@@ -221,11 +221,12 @@ class TestLogout(TestWebForms):
         self.app.get(self.logout_page, follow_redirects=True)
         response = self._make_post(self.logout_page, {})
         # Check that you are taken back to home page
-        self.assertNotIn("Login", str(response.data))
+        self.assertIn("Login", str(response.data))
 
     def test_valid_logout(self):
         # Login first
-        self.app.get(self.login_page, follow_redirects=True)
+        response = self.app.get(self.login_page, follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
 
         response = self._make_post(self.login_page, self.user_dict)
         self.assertNotIn('Username &#34;{}&#34; Already In Use!'.format(self.username), str(response.data))
