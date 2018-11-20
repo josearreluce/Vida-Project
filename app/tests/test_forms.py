@@ -16,6 +16,12 @@ class TestWebForms(unittest.TestCase):
         self.session.open()
         self.db = self.session.db
 
+        self.login_page = '/'
+        self.sign_up_page = '/sign_up'
+        self.profile_page = '/profile'
+        self.logout_page = '/logout'
+
+        # Basic Username, password, and profile info
         self.username = 'test_username'
         self.password = 'test_password'
         self.user_dict = dict(username=self.username, password=self.password)
@@ -27,11 +33,6 @@ class TestWebForms(unittest.TestCase):
                 height=65,
                 smoker=0.0,
                 diabetes='None')
-
-        self.login_page = '/'
-        self.sign_up_page = '/sign_up'
-        self.profile_page = '/profile'
-        self.logout_page = '/logout'
 
     """
     Helpers to ensure user info is in the database prior to testing webform
