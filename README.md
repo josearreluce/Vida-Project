@@ -105,6 +105,15 @@ symptoms/conditions. For iteration 2 we will work on making the database smaller
 more efficient.
 
 # Iteration 2
+## Iteration 2 Plan
+Much of what we laid out in our original design document will be implemented in Iteration 2. More specifically, we are integrating user information to hone our algorithm and diagnostics, as we outlined in the original document. We will be fully integrating the database with our backend algorithm, which will now run on 12 conditions and 100+ symptoms/sub symptoms. While this is not implementing the web scraping approach that we had discussed at the very beginning, we believe that focusing on the algorithm over taking the time to web scrape was a better use of time resources. We believe that the set of conditions and symptoms/sub symptoms is comprehensive enough to demonstrate the complexity of our algorithm, and allows for a more fully formed web app to be implemented at the end of iteration 2.
+
+We will be restructuring the database to capture relationships between symptoms and sub symptoms in order to be able to integrate it with the updated algorithm seemlessly. Each subsymptom will only relate to a single symptom. Since we do not have large amounts of medical data to reference, or user data, we will be setting naive conditional probabilities for each symptom/subsymptom relationship (where the likelihood of a symptom to have one of its subsymptoms is 1/(number of sub symptoms)).
+
+In this iteration we will also be implementing a profile viewer and assessment history viewer into the User Interface. This is entirely in line with our original goals outlined in the design document. In addition to this, we will be adding a logout function so that users can log out, and restrictions for usernames/passwords.
+
+In this iteration, our backend algorithm will also use data from a User's profile to refine it's diagnosis in addition to the original Bayesian model.
+
 
 ## Unit Test Cases
 All test cases can be run at once by entering the test directory from your terminal and running "pytest".
