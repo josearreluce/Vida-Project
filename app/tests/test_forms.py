@@ -20,6 +20,7 @@ class TestWebForms(unittest.TestCase):
 
         self.login_page = '/'
         self.sign_up_page = '/sign_up'
+        self.profile_page = '/profile'
 
     def _delete_test_user(self):
             user_info = models.User(username=self.username, pswd=self.password)
@@ -53,10 +54,7 @@ class TestSignUp(TestWebForms):
             self._add_test_user()
 
         self.app.get(self.sign_up_page, follow_redirects=True)
-        response = self._make_post(
-                self.sign_up_page,
-                self.username,
-                self.password)
+        response = self._make_post(self.sign_up_page, self.username, self.password)
 
         self.assertIn('Username &#34;{}&#34; Already In Use!'.format(self.username), str(response.data))
 
@@ -66,10 +64,7 @@ class TestSignUp(TestWebForms):
             self._delete_test_user()
 
         self.app.get(self.sign_up_page, follow_redirects=True)
-        response = self._make_post(
-                self.sign_up_page,
-                self.username,
-                self.password)
+        response = self._make_post(self.sign_up_page, self.username, self.password)
 
         self.assertNotIn('Username &#34;{}&#34; Already In Use!'.format(self.username), str(response.data))
 
@@ -81,10 +76,8 @@ class TestLogin(TestWebForms):
             self._delete_test_user()
 
         self.app.get(self.login_page, follow_redirects=True)
-        response = self._make_post(
-                self.login_page,
-                self.username,
-                self.password)
+
+        response = self._make_post(self.login_page, self.username, self.password)
 
         self.assertIn("Invalid Username or Password", str(response.data))
 
@@ -94,12 +87,77 @@ class TestLogin(TestWebForms):
             self._add_test_user()
 
         self.app.get(self.login_page,follow_redirects=True)
-        response = self._make_post(
-                self.login_page,
-                self.username,
-                self.password)
+
+        response = self._make_post(self.login_page, self.username, self.password)
 
         self.assertNotIn("Invalid Username or Password", str(response.data))
+
+    def test_login_rate_limit(self):
+        # ensure username and pass are saved
+        if not self._test_user_in_db():
+            self._add_test_user()
+
+        self.app.get(self.login_page,follow_redirects=True)
+
+        # 5 Failed Attempted Login
+        response = self._make_post(self.login_page, self.username, self.password + 'oops1')
+        self.assertIn("Invalid Username or Password", str(response.data))
+
+        response = self._make_post(self.login_page, self.username, self.password + 'oops2')
+        self.assertIn("Invalid Username or Password", str(response.data))
+
+        response = self._make_post(self.login_page, self.username, self.password + 'oops3')
+        self.assertIn("Invalid Username or Password", str(response.data))
+
+        response = self._make_post(self.login_page, self.username, self.password + 'oops4')
+        self.assertIn("Invalid Username or Password", str(response.data))
+
+        response = self._make_post(self.login_page, self.username, self.password + 'oops5')
+        self.assertIn("Maximum Login Attempts Reached, Please Try Again Later", str(response.data))
+
+
+class TestProfile(TestWebForms):
+    # 10 < age < 150
+    # sex 'male' or 'female'
+    # 40lbs < weight < 1500lbs
+    # 30in <  height < 110
+    # 0.0 packs < smoke packs a day < 4.0 packs
+    # diabetes: Type I, Type II, None
+
+    def test_invalid_profiles(self):
+        self.app.get(self.profile_page, follow_redirects=True)
+
+        # Invalid Age
+        response = self._make_post(self.profile_page, 1, 'male', 190, 65, 70, 0, 'None')
+        self.assertIn("Invalid Personal Information", str(response.data))
+
+        # Invalid Sex
+        response = self._make_post(self.profile_page, 19, '', 190, 65, 70, 0, 'None')
+        self.assertIn("Invalid Personal Information", str(response.data))
+
+        # Invalid weight
+        response = self._make_post(self.profile_page, 19, 'male', -1, 65, 70, 0, 'Type I')
+        self.assertNotIn("Invalid Personal Information", str(response.data))
+
+        # Invalid height
+        response = self._make_post(self.profile_page, 19, 'male', -1, -1, 70, 0, 'Type I')
+        self.assertNotIn("Invalid Personal Information", str(response.data))
+
+        # Invalid smoking info
+        response = self._make_post(self.profile_page, 1, 'male', 190, 65, 70, -1, 'None')
+        self.assertNotIn("Invalid Personal Information", str(response.data))
+
+        # Invalid diabetes info
+        response = self._make_post(self.profile_page, 1, 'male', 190, 65, 70, 0.0, 'Yes')
+        self.assertNotIn("Invalid Personal Information", str(response.data))
+
+
+    def test_valid_profile(self):
+        self.app.get(self.profile_page, follow_redirects=True)
+
+        # Invalid Age
+        response = self._make_post(self.profile_page, 33, 'male', 270, 67, 70, 0.5, 'None')
+        self.assertNotIn("Invalid Personal Information", str(response.data))
 
 
 if __name__ == '__main__':
