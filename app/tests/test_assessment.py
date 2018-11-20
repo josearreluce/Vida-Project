@@ -6,6 +6,7 @@ sys.path.append('../assessment')   # gets into proper file path
 sys.path.append('../src')
 import assessment_simple_test as ast
 from users import  *
+import math
 
 
 class TestAssessment(unittest.TestCase):
@@ -91,8 +92,9 @@ class TestAssessment(unittest.TestCase):
 
 
     def test_evaluate(self):
-        self.assertEqual((ast.evaluate(self.correct_symptom, self.correct_successors, self.user_sub_answers), self.user_sub_answers), [['Condition_1', 0.54], ['Condition_2', 0.47000000000000003]])
-        self.assertEqual((ast.evaluate(self.correct_symptom2, self.correct_successors2, self.user_sub_answers), self.user_sub_answers), ['Condition_1', 0.272])
+        print(ast.evaluate(self.correct_symptom, self.correct_successors, self.user_sub_answers))
+        self.assertEqual([[x[0], round(x[1], 2)] for x in ast.evaluate(self.correct_symptom, self.correct_successors, self.user_sub_answers)], [['Condition_1', 0.54], ['Condition_2', 0.47]])
+        self.assertEqual([[x[0], round(x[1], 3)] for x in ast.evaluate(self.correct_symptom2, self.correct_successors2, self.user_sub_answers)],  [['Condition_1', 0.272], ['Condition_2', 0.22]])
         return
 
 class TestAssessmentWithUser(unittest.TestCase):
