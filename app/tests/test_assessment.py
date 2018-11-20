@@ -115,6 +115,13 @@ class TestAssessmentWithUser(unittest.TestCase):
         self.correct_successors2 = ast.start_assessment(self.correct_symptom2)
         self.user_sub_answers = [0, 1]
 
+        # Graphical Setup
+        self.nograph = ast.BayesianModel()
+        self.cpds = ast.load_cpds(ast.state_network2)
+        self.graph = ast.state_network2
+        self.cpds = []
+        
+        
     def test_apply_user_features(self):
         conditions1 = ast.evaluate(self.correct_symptom1, self.correct_successors1, self.user_sub_answers)
         conditions2 = ast.evaluate(self.correct_symptom2, self.correct_successors2, self.user_sub_answers)
@@ -122,15 +129,28 @@ class TestAssessmentWithUser(unittest.TestCase):
         self.assertNotEquals(ast.apply_personal_features(self.user, conditions2), ['Condition_1', 0.272])
 
         # TODO: Bad input test cases and ensure probabilities equal 1
-
-    def test_load_graph(self):
-        # TODO Test load_graph
-        self.assertEquals(True, False)
+        
+        
+    def test_load_graph(self):  # LoadGraph takes no inputs (? I believe), but will be constructed as ast.state_network2 (for now). We check identity using trail_nodes.
+        self.assertEqual(ast.load_graph(), self.graph)
+        # Then, check the nodes for set equality
+        self.assertCountEqual(ast.load_graph().nodes, ['Symptom_1', 'Sub1_symptom_1', 'Sub2_symptom_1', 'Symptom_2', 'Sub1_symptom_2', 'Sub2_symptom_2', 'Condition_1', 'Condition_2'])
+        # Then, check trail_nodes to investigate links
+        self.assertEqual(ast.load_graph().active_trail_nodes("Symptom_1"), {'Symptom_1': {'Symptom_1', 'Condition_1', 'Sub2_symptom_1', 'Sub1_symptom_1', 'Condition_2'}})
+        self.assertEqual(ast.load_graph().active_trail_nodes("Symptom_2"), {'Symptom_2': {'Sub1_symptom_2', 'Symptom_2', 'Sub2_symptom_2', 'Condition_1', 'Condition_2'}})
+        self.assertEqual(ast.load_graph().active_trail_nodes("Condition_1"),{'Condition_1': {'Sub1_symptom_1', 'Condition_1', 'Condition_2', 'Symptom_1', 'Sub2_symptom_2', 'Sub2_symptom_1', 'Symptom_2', 'Sub1_symptom_2'}})
+        self.assertEqual(ast.load_graph().active_trail_nodes("Condition_2"), {'Condition_2': {'Condition_1', 'Symptom_2', 'Condition_2', 'Sub2_symptom_2', 'Sub2_symptom_1', 'Sub1_symptom_2', 'Symptom_1', 'Sub1_symptom_1'}})
         return
 
-    def test_load_cpds(self):
-        # TODO Test load_cpds
-        self.assertEquals(True, False)
+    def test_load_cpds(self):  # Only issue is that we can't call length of a none-returning function
+        self.assertEqual(len(self.cpds), len(ast.state_network2))  # Number of nodes still equal
+        for i in len(list):
+            vals = len(self.cpds)
+            self.assertNotEqual(self.cpds[i].get_values(), [])  # Each CPD value not equal to []
+            sum = 0
+            for j in vals:  # Iterate through an index of the cpd probability matrix, ensuring that the "column" sums to 1, so legal
+                sum += self.cpds[i].get_values()[j]
+            self.assertEqual(sum, 1)
         return
 
 if __name__ == '__main__':
