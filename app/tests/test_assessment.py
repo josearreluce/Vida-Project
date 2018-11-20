@@ -1,13 +1,10 @@
 import unittest
 import sys
 import networkx
-import datetime
-sys.path.append('../assessment')   # gets into proper file path
+sys.path.append('../assessment')
 sys.path.append('../src')
 import assessment_simple_test as ast
 from users import  *
-import math
-
 
 class TestAssessment(unittest.TestCase):
 

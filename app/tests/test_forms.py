@@ -189,8 +189,8 @@ class TestLogout(TestWebForms):
         # Check that you are taken back to home page
         self.assertNotIn("Login", str(response.data))
 
-     def test_valid_logout(self):
-         # Login first
+    def test_valid_logout(self):
+        # Login first
         self.app.get(self.login_page, follow_redirects=True)
 
         response = self._make_post(self.login_page, self.user_dict)
