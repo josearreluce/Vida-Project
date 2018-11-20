@@ -115,3 +115,11 @@ Comments in code provide more specifics as to what each tests do, but we are mai
 Please note: we are implementing several changes to the database currently, so if tests from iteration 1 are now failing because of this, that is only temporary and will be changed once the database has its final form.
 
 To run: at commandline run "pytest test_db.py"
+
+### test_assessment.py
+The new test cases within this file are located in the TestAssessmentWithUser class. These test cases will test
+the new functions that are going to be used by the assessment algorithm for the 2nd iteration of the project.
+
+The functions include: apply_user_features(), load_graph(), and load_cpds().
+
+To run: at commandline run "pytest test_assessment.py"
