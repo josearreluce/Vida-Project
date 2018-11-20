@@ -7,7 +7,7 @@ import sqlalchemy as sqlalchemy
 from sqlalchemy.orm import sessionmaker
 from flask import request
 from flask import redirect
-from app.models import DatabaseConnection, User
+from app.models import DatabaseConnection, UserSchema
 from .assessment import assessment
 
 curr_user = 0
@@ -49,8 +49,8 @@ def login():
             return redirect('/')
 
         with DatabaseConnection() as db:
-            user_info = User(username=username, pswd=password)
-            check_user = db.query(User).filter_by(username=username, pswd=password).count()
+            user_info = UserSchema(username=username, pswd=password)
+            check_user = db.query(UserSchema).filter_by(username=username, pswd=password).count()
 
         if check_user < 1:
             if form.log_errors:
@@ -80,8 +80,8 @@ def signup():
     if form.validate_on_submit():
 
         with DatabaseConnection() as db:
-            user_info = User(username=username, pswd=password)
-            check_user = db.query(User).filter_by(username=username).all()
+            user_info = UserSchema(username=username, pswd=password)
+            check_user = db.query(UserSchema).filter_by(username=username).all()
 
         if check_user:
             if form.log_errors:

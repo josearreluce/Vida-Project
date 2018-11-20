@@ -33,21 +33,24 @@ class TestWebForms(unittest.TestCase):
         self.profile_page = '/profile'
         self.logout_page = '/logout'
 
+    """
+    Helpers to ensure user info is in the database prior to testing webform
+    """
     def _delete_test_user(self):
-            user_info = models.User(username=self.username, pswd=self.password)
-            self.db.query(models.User).filter_by(username=self.username, pswd=self.password).delete()
-            self.db.commit()
+        user_info = models.UserSchema(username=self.username, pswd=self.password)
+        self.db.query(models.UserSchema).filter_by(username=self.username, pswd=self.password).delete()
+        self.db.commit()
 
     def _add_test_user(self):
-            u = models.User(username=self.username, pswd=self.password)
-            self.db.add(u)
-            self.db.commit()
+        u = models.UserSchema(username=self.username, pswd=self.password)
+        self.db.add(u)
+        self.db.commit()
 
     def _make_post(self, page, data_dict):
         return self.app.post(page, data=data_dict, follow_redirects=True)
 
     def _test_user_in_db(self):
-        check_user = self.db.query(models.User).filter_by(username=self.username, pswd=self.password).count()
+        check_user = self.db.query(models.UserSchema).filter_by(username=self.username, pswd=self.password).count()
         return True if check_user >= 1 else False
 
     def tearDown(self):
@@ -216,7 +219,7 @@ class TestLogout(TestWebForms):
     def test_invalid_logout(self):
         # If not logged in, can't log out
         self.app.get(self.logout_page, follow_redirects=True)
-        response = self._make_post(self.logout_page)
+        response = self._make_post(self.logout_page, {})
         # Check that you are taken back to home page
         self.assertNotIn("Login", str(response.data))
 
@@ -229,7 +232,7 @@ class TestLogout(TestWebForms):
 
         self.app.get(self.logout_page, follow_redirects=True)
 
-        response = self._make_post(self.logout_page)
+        response = self._make_post(self.logout_page, {})
         # Check that you are taken back to home page
         self.assertIn("Login", str(response.data))
 

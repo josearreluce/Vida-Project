@@ -32,7 +32,7 @@ class DatabaseConnection():
 
 Base = declarative_base()
 
-class User(Base):
+class UserSchema(Base):
     __tablename__ = 'users'
 
     username = Column(String, primary_key=True)
