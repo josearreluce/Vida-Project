@@ -33,20 +33,17 @@ class TestPages(unittest.TestCase):
         response = self.app.get('/sign_up')
         self.assertEqual(response.status_code, 200)
 
-        # Page does not yet exist
         response = self.app.get('/profile')
-        self.assertNotEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
-        # Page does not yet exist
         response = self.app.get('/logout')
-        self.assertNotEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
     def tearDown(self):
         return
 
 
 class TestUserInterfaceClass(unittest.TestCase):
-
     def setUp(self):
         options = webdriver.ChromeOptions()
         options.add_argument('--disable-gpu')
@@ -113,6 +110,9 @@ class TestUserInterfaceClass(unittest.TestCase):
 
     def test_sign_up_page_nav_bar(self):
         self.__check_navigation_bar(self.homepage+'/sign_up')
+
+    def test_sign_up_page_nav_bar(self):
+        self.__check_navigation_bar(self.homepage+'/profile')
 
     def test_assessment_page(self):
         """
