@@ -107,6 +107,8 @@ more efficient.
 # Iteration 2
 
 ## Unit Test Cases
+All test cases can be run at once by entering the test directory from your terminal and running "pytest".
+
 ### test_db.py
 Comments within the code of this program indicate the newest section for iteration 2. The biggest change we made was restructuring how symptoms, sub symptoms, and conditions relate to each other in accordance with the Bayesian Model graph. We now have conditions relate only to sub symptoms, and sub symptoms only relate to a single symptom. We are also adding columns to the conditions table to indicate the age range of people likely to get the conditions, as well as the typical time that symptoms can be expected to last. Again, populate_db.py and generate_sub_symptoms.py are used to fill and format the database tables, but the best way to test these programs is to query the database and make sure the data is stored the way we expect it to be.
 
@@ -123,3 +125,14 @@ the new functions that are going to be used by the assessment algorithm for the 
 The functions include: apply_user_features(), load_graph(), and load_cpds().
 
 To run: at commandline run "pytest test_assessment.py"
+
+### test_forms.py
+New test cases now check for invalid usernames and passwords during sign up within the TestSignUp class. For other
+new tests, we moved a portion of the web form test methods into a superclass (TestWebForms), so that all web form
+tests can add and remove users as necessary. We also added a maximum-login rate attempt test, user profile tests, and
+logout tests in TestLogin, TestProfile, and TestLogout, respectively.
+
+These tests cover aspects for assuring valid user profile information  is entered, usernames and passwords are standardized,
+and insuring that our website is not susceptible to brute-force attacks.
+
+To run: at commandline enter "pytest test_forms.py"
