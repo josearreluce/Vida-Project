@@ -61,8 +61,8 @@ of Vida's Bayesian graph modeling
 
 (6) who did what: who paired with who; which part is implemented by which pair
 
-Bayesian graph logic: Andy, Bruno, Qi
-Database: Alex, Miles
+Bayesian graph logic: Andy, Bruno, Qi  
+Database: Alex, Miles  
 Front end: Jose, Max, Will
 
 ---------------------------------------------------------------------------------------------------
@@ -110,9 +110,8 @@ more efficient.
 ### test_db.py
 Comments within the code of this program indicate the newest section for iteration 2. The biggest change we made was restructuring how symptoms, sub symptoms, and conditions relate to each other in accordance with the Bayesian Model graph. We now have conditions relate only to sub symptoms, and sub symptoms only relate to a single symptom. We are also adding columns to the conditions table to indicate the age range of people likely to get the conditions, as well as the typical time that symptoms can be expected to last. Again, populate_db.py and generate_sub_symptoms.py are used to fill and format the database tables, but the best way to test these programs is to query the database and make sure the data is stored the way we expect it to be.
 
-Comments in code provide more specifics as to what each tests do, but we are mainly checking to make sure sub symptoms only map to one symptom, that conditional probabilities are correct, that age ranges for conditions are correct, and that times for conditons are correct. 
+Comments in code provide more specifics as to what each tests do, but we are mainly checking to make sure sub symptoms only map to one symptom, that conditional probabilities are correct, that age ranges for conditions are correct, and that times for conditions are correct.
 
 Please note: we are implementing several changes to the database currently, so if tests from iteration 1 are now failing because of this, that is only temporary and will be changed once the database has its final form.
 
 To run: at commandline run "pytest test_db.py"
-
