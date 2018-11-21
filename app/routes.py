@@ -10,6 +10,10 @@ from flask import redirect
 from app.models import DatabaseConnection, UserSchema
 from .assessment import assessment
 
+@app.route('/profile', methods=['GET', 'POST'])
+def view_profile():
+    return render_template("profile.html")
+
 curr_user = 0
 users = {curr_user: {}}
 @app.route('/successors',methods=['GET','POST'])
