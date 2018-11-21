@@ -156,7 +156,7 @@ To run: at commandline enter "pytest test_user.py"
 
 ---------------------------------------------------------------------------------------------------
 
-(6) who did what: who paired with who; which part is implemented by which pair
+who did what: who paired with who; which part is implemented by which pair
 
 Bayesian graph logic: Andy, Bruno, Alex
 Database: Miles, Will
