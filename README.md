@@ -145,3 +145,20 @@ These tests cover aspects for assuring valid user profile information  is entere
 and insuring that our website is not susceptible to brute-force attacks.
 
 To run: at commandline enter "pytest test_forms.py"
+
+### test_user.py
+We re-define the backend user class to have three layers of profile information: account information, basic information, personal information, and health background.
+The account information has the username and password. The basic and personal information have the user's height, weight, etc. The health background class stores information about the user's health condition, for example, whether or not the user smokes. The tests cover getting and setting information in those classes.
+
+The user class interacts with the user schema. We refactor the user information we retrieve from the database as user schema to differentiate the user class. We will convert the user schema to a user class with getters and setters so that the backend assessment algorithm can interact with the data in the class, for example, using user age in the diagnosis.
+
+To run: at commandline enter "pytest test_user.py"
+
+---------------------------------------------------------------------------------------------------
+
+(6) who did what: who paired with who; which part is implemented by which pair
+
+Bayesian graph logic: Andy, Bruno, Alex
+Database: Miles, Will
+Front end: Jose, Max
+User: Qi, Max
