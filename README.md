@@ -114,6 +114,16 @@ In this iteration we will also be implementing a profile viewer and assessment h
 
 In this iteration, our backend algorithm will also use data from a User's profile to refine it's diagnosis in addition to the original Bayesian model.
 
+---------------------------------------------------------------------------------------------------
+
+who did what: who paired with who; which part is implemented by which pair
+
+Bayesian graph logic: Andy, Bruno, Alex
+Database: Miles, Will
+Front end: Jose, Max
+User: Qi, Max
+
+---------------------------------------------------------------------------------------------------
 
 ## Unit Test Cases
 All test cases can be run at once by entering the test directory from your terminal and running "pytest".
@@ -153,12 +163,3 @@ The account information has the username and password. The basic and personal in
 The user class interacts with the user schema. We refactor the user information we retrieve from the database as user schema to differentiate the user class. We will convert the user schema to a user class with getters and setters so that the backend assessment algorithm can interact with the data in the class, for example, using user age in the diagnosis.
 
 To run: at commandline enter "pytest test_user.py"
-
----------------------------------------------------------------------------------------------------
-
-who did what: who paired with who; which part is implemented by which pair
-
-Bayesian graph logic: Andy, Bruno, Alex
-Database: Miles, Will
-Front end: Jose, Max
-User: Qi, Max
