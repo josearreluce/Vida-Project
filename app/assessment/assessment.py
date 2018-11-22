@@ -28,14 +28,12 @@ state_network2 = BayesianModel([("Symptom_1", "Sub1_symptom_1"),
 
 values = pd.DataFrame(np.random.randint(low=0, high=2, size=(1000, 8)),
                    columns=['Symptom_1', 'Symptom_2', 'Sub1_symptom_1', 'Sub1_symptom_2' ,'Sub2_symptom_1', 'Sub2_symptom_2', 'Condition_1', 'Condition_2'])
-# print(values)
+
 estimator = BayesianEstimator(state_network2, values)
 x = estimator.get_parameters(prior_type='BDeu', equivalent_sample_size=5)
 for i,cpd in enumerate(x):
-    print(i, cpd.values)
     state_network2.add_cpds(cpd)
 
-print(estimator.estimate_cpd('Condition_2', prior_type="dirichlet", pseudo_counts=[1,2]))
 # inference on graph
 network_infer = VariableElimination(state_network2)
 
@@ -114,15 +112,12 @@ def evaluate(symptom_init, successors, user_sub_answers):
     score_top = cond_scores_list[index_max_prob]
 
     condition_val_tuples = sorted(condition_val_tuples, key=lambda x: x[1], reverse=True)
-    print(condition_val_tuples)
 
     rel_symptoms = select_relevant_symptoms(state_network2, condition_val_tuples[0][0])
-    print(rel_symptoms)
     # for condition,val in condition_val_tuples:
     #     for symptoms in condition.symptoms:
 
 
 
 
-    print(top_cond_candidate, score_top)
     return condition_val_tuples
