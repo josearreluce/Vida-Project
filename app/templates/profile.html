@@ -1,6 +1,28 @@
 {% extends "page.html" %}
 {% block content %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/profile.css') }}">
     <div class="profile">
-        <h1>PROFILE</h1>
+        <div class="profile-info">
+            <div class="profile-info__title">
+                <h2> Profile Information </h2>
+            </div>
+            <div class="account-info info-container">
+                <span class="user info">Username: {{ username }} </span>
+            </div>
+            <div class="basic-info info-container">
+                <span class="age info">Age: {{ age }} </span>
+                <span class="sex info">Sex: {{ sex }} </span>
+            </div>
+            <div class="personal-info info-container">
+                <span class="height info">Height: {{ height }} </span>
+                <span class="weight info">Weight: {{ weight }} </span>
+            </div>
+            <div class="health-info info-container">
+                <span class="smoker info">Smoker: {{ smoker }}</span>
+                <span class="blood-pressure info">Blood Pressure: {{ blood_pressure }}</span>
+                <span class="diabetes info">Diabetes: {{ diabetes }}</span>
+            </div>
+            <button class="edit-profile-info">Edit Info</button>
+        </div>
     </div>
 {% endblock %}
