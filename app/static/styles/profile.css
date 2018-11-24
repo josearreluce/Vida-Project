@@ -33,5 +33,13 @@
 }
 
 .profile-editor {
+    border: 2px solid black;
     display: none;
+    margin: 0 auto;
+    padding: 2em;
+    width: 50%;
+}
+
+.profile-editor h3 {
+    text-align: center;
 }
