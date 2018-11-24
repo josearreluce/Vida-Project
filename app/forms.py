@@ -3,6 +3,16 @@ from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import DataRequired, ValidationError, EqualTo, Length
 from app.models import UserSession
 
+class ProfileForm(FlaskForm):
+    age = StringField('Age', validators=[DataRequired()])
+    sex = StringField('Sex', validators=[DataRequired()])
+    height = StringField('Height', validators=[DataRequired()])
+    weight = StringField('Weight', validators=[DataRequired()])
+    smoker = StringField('Smoker', validators=[DataRequired()])
+    blood_pressure = StringField('Blood Pressure', validators=[DataRequired()])
+    diabetes = StringField('Diabetes', validators=[DataRequired()])
+    submit = SubmitField('Save')
+
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
