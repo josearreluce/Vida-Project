@@ -1,13 +1,13 @@
-from app import app
-
-from flask import render_template, jsonify, redirect, flash
-from flask_login import login_required
-from app.forms import LoginForm, SignUpForm
+from app import app, db
+from flask import render_template, jsonify, redirect
+from flask_login import login_required, login_user, current_user, logout_user
 import sqlalchemy as sqlalchemy
 from sqlalchemy.orm import sessionmaker
 from flask import request
 from flask import redirect
-from app.models import DatabaseConnection, UserSchema
+from wtforms.validators import ValidationError
+from app.models import DatabaseConnection, UserSession
+from app.forms import LoginForm, SignUpForm, LogoutForm
 from .assessment import assessment
 
 @app.route('/profile', methods=['GET', 'POST'])
@@ -24,6 +24,7 @@ def handle_successors():
     successors = users[curr_user]["successors"]
     conditions = assessment.evaluate(symptom, successors, answers)
     return jsonify({'text':"hello world", 'conditions': conditions})
+
 
 @app.route("/assessment", methods=["POST"])
 def handle_assessment():
@@ -43,36 +44,37 @@ def symptom_assessment():
 def login():
     form = LoginForm()
 
+    if current_user.is_authenticated:
+         if form.log_errors:
+                form.log_errors.pop()
+            form.log_errors.append('Already Logged In!!')
+        return redirect('/profile')
+
+
     if form.validate_on_submit():
         username = form.username.data
         password = form.password.data
-        if username == '' or password == '':
-            if form.log_errors:
-                form.log_errors.pop()
-            form.log_errors.append('Username and Password Must Be Filed In')
-            return redirect('/')
 
-        with DatabaseConnection() as db:
-            user_info = UserSchema(username=username, pswd=password)
-            check_user = db.query(UserSchema).filter_by(username=username, pswd=password).count()
-
-        if check_user < 1:
+        check_user = UserSession.query.filter_by(username=username).first()
+        if check_user is None or not check_user.check_password(password):
             if form.log_errors:
                 form.log_errors.pop()
-            flash('Failed login!')
-            form.log_errors.append('Invalid Username or Password')
-            return redirect('/')
-        elif check_user > 1:
-            if form.log_errors:
-                form.log_errors.pop()
-            form.log_errors.append('DATABASE ERROR PLEASE CONTACT ADMINS')
+            form.log_errors.append('Invalid Username or Password!')
             return redirect('/')
         else:
-            if form.log_errors:
-                form.log_errors.pop()
+            login_user(check_user, remember=form.remember_me.data)
             return redirect('/assessment')
 
     return render_template('login.html', title='Log In', form=form)
+
+
+@app.route('/logout')
+def logout():
+    form = LogoutForm()
+
+    if form.submit():
+        logout_user()
+    return redirect('/')
 
 
 @app.route("/sign_up", methods=["GET","POST"])
@@ -83,21 +85,12 @@ def signup():
 
     if form.validate_on_submit():
 
-        with DatabaseConnection() as db:
-            user_info = UserSchema(username=username, pswd=password)
-            check_user = db.query(UserSchema).filter_by(username=username).all()
+        user = UserSession(username=username, pswd=password)
+        user.set_password(password)
 
-        if check_user:
-            if form.log_errors:
-                form.log_errors.pop()
-            form.log_errors.append('Username "{}" Already In Use!'.format(username))
-        else:
-            flash('Welcome to Vida!')
-            db.add(user_info)
-            db.commit()
-            if form.log_errors:
-                form.log_errors.pop()
-            return redirect('/assessment')
+        db.session.add(user)
+        db.session.commit()
+        return redirect('/assessment')
 
     return render_template('sign_up.html', title='Sign Up', form=form)
 

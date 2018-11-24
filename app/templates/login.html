@@ -10,11 +10,11 @@
             <br/>
             <p>  {{ form.password.label }} {{ form.password(size=32) }}</p>
             <br/>
-            {% if form.log_errors %}
-                <ul class=errors>
-                    <li>{{ form.log_errors[-1] }}</li>
-                </ul>
-            {% endif %}
+            <p>
+                {% if form.log_errors %}
+                    <span style="color: red;">{{ form.log_errors[-1] }}</span>
+                {% endif %}
+            </p>
             <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
             <p>{{ form.submit() }}</p>
         </div>
