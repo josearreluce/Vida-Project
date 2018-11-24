@@ -31,3 +31,7 @@
     padding: 0.5em 0;
     width: 100%;
 }
+
+.profile-editor {
+    display: none;
+}
