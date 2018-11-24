@@ -7,12 +7,13 @@ from flask import request
 from flask import redirect
 from wtforms.validators import ValidationError
 from app.models import DatabaseConnection, UserSession
-from app.forms import LoginForm, SignUpForm, LogoutForm
+from app.forms import LoginForm, SignUpForm, LogoutForm, ProfileForm
 from .assessment import assessment
 
 @app.route('/profile', methods=['GET', 'POST'])
 def view_profile():
-    return render_template("profile.html")
+    form = ProfileForm()
+    return render_template("profile.html", form=form)
 
 curr_user = 0
 users = {curr_user: {}}
