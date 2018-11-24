@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
-from wtforms.validators import DataRequired, ValidationError, EqualTo
+from wtforms.validators import DataRequired, ValidationError, EqualTo, Length
 from app.models import UserSession
 
 class LoginForm(FlaskForm):
@@ -12,15 +12,25 @@ class LoginForm(FlaskForm):
 
 
 class SignUpForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    password2 = PasswordField('Repeat Password', validators=[DataRequired(), EqualTo('password')])
+    username = StringField('Username', validators=[DataRequired(),Length(min=4, max=50, message='Invalid Username Length!')])
+    #wtforms.validators.Regexp(regex, flags=0, message=u'Invalid input.')
+    password = PasswordField(
+            'Password',
+            validators=[DataRequired(), Length(min=4, max=50, message='Invalid Password Length!')])
+    password2 = PasswordField(
+            'Repeat Password',
+            validators=[DataRequired(), EqualTo('password', message='Password Must Match!')])
     submit = SubmitField('Sign Up')
 
     def validate_username(self, username):
         user = UserSession.query.filter_by(username=username.data).first()
         if user is not None:
             raise ValidationError('Username Already In Use!')
+
+    def validate_password(self, password):
+        if self.username.data == password.data:
+            raise ValidationError('Username Cannot Equal Password!')
+
 
 class LogoutForm(FlaskForm):
     submit = SubmitField('Logout')

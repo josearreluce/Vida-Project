@@ -40,7 +40,6 @@ def symptom_assessment():
     return render_template("assessment.html")
 
 
-
 @app.route("/", methods=["GET","POST"])
 def login():
     form = LoginForm()
@@ -61,12 +60,13 @@ def login():
                 form.log_errors.pop()
 
             login_user(check_user, remember=form.remember_me.data)
-            return redirect('/assessment')
+        return redirect('/assessment')
 
     return render_template('login.html', title='Log In', form=form)
 
 
 @app.route('/logout')
+@login_required
 def logout():
     form = LogoutForm()
     if form.submit():
@@ -78,16 +78,16 @@ def logout():
 def signup():
     form = SignUpForm(request.form)
 
-    username = form.username.data
-    password = form.password.data
+    if form.validate_on_submit() and not current_user.is_authenticated:
 
-    if form.validate_on_submit():
-
-        user = UserSession(username=username, pswd=password)
+        username = form.username.data
+        password = form.password.data
+        user = UserSession(username=username)
         user.set_password(password)
 
         db.session.add(user)
         db.session.commit()
+        login_user(user)
         return redirect('/assessment')
 
     return render_template('sign_up.html', title='Sign Up', form=form)
