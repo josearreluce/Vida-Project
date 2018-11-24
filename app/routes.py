@@ -40,18 +40,12 @@ def symptom_assessment():
     return render_template("assessment.html")
 
 
+
 @app.route("/", methods=["GET","POST"])
 def login():
     form = LoginForm()
 
-    if current_user.is_authenticated:
-         if form.log_errors:
-                form.log_errors.pop()
-            form.log_errors.append('Already Logged In!!')
-        return redirect('/profile')
-
-
-    if form.validate_on_submit():
+    if not current_user.is_authenticated and form.validate_on_submit():
         username = form.username.data
         password = form.password.data
 
@@ -59,9 +53,13 @@ def login():
         if check_user is None or not check_user.check_password(password):
             if form.log_errors:
                 form.log_errors.pop()
+
             form.log_errors.append('Invalid Username or Password!')
             return redirect('/')
         else:
+            if form.log_errors:
+                form.log_errors.pop()
+
             login_user(check_user, remember=form.remember_me.data)
             return redirect('/assessment')
 
@@ -71,7 +69,6 @@ def login():
 @app.route('/logout')
 def logout():
     form = LogoutForm()
-
     if form.submit():
         logout_user()
     return redirect('/')
@@ -80,6 +77,7 @@ def logout():
 @app.route("/sign_up", methods=["GET","POST"])
 def signup():
     form = SignUpForm(request.form)
+
     username = form.username.data
     password = form.password.data
 
