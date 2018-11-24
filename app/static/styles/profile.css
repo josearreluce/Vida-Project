@@ -32,6 +32,7 @@
     width: 100%;
 }
 
+/* Profile Editor Form Styles */
 .profile-editor {
     border: 2px solid black;
     display: none;
@@ -42,4 +43,12 @@
 
 .profile-editor h3 {
     text-align: center;
+}
+
+.profile-editor #submit {
+    background-color: #5051DB;
+    color: white;
+    font-size: 1em;
+    padding: 0.5em 0;
+    width: 100%;
 }
