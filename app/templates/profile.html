@@ -30,5 +30,20 @@
                 <button class="edit-profile-info">Edit Info</button>
             {% endif %}
         </div>
+        <div class="profile-editor">
+            <form class="login__form" action="" method="post" novalidate>
+                <div class="login__form-container">
+                <h3> Edit Profile Information </h3>
+                <p> {{ form.age.label }} {{ form.age(size=2) }}</p>
+                <p> {{ form.sex.label }} {{ form.sex(size=2) }}</p>
+                <p> {{ form.height.label }} {{ form.height(size=2) }}</p>
+                <p> {{ form.weight.label }} {{ form.weight(size=2) }} </p>
+                <p> {{ form.smoker.label }} {{ form.smoker(size=3) }} </p>
+                <p> {{ form.blood_pressure.label }} {{ form.blood_pressure(size=3) }} </p>
+                <p> {{ form.diabetes.label }} {{ form.diabetes(size=3) }} </p>
+                <p> {{ form.submit() }} </p>
+        </div>
+    </form>
+        </div>
     </div>
 {% endblock %}
