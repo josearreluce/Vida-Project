@@ -23,8 +23,8 @@
     margin-bottom: 2em;
 }
 
-/* Edit Profile Button styles */
-.edit-profile-info {
+/* Profile Template Button styles */
+.profile-button {
     background-color: #5051DB;
     color: white;
     font-size: 1em;
