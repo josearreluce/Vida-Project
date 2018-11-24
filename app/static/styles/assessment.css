@@ -24,6 +24,7 @@
     padding: 2em 0;
     position: absolute;
     transform: translate(-50%, -50%);
+    transition: all 1s linear;
     width: 50%;
 }
 
@@ -32,6 +33,7 @@
     overflow-y: scroll;
     display: flex;
     flex-wrap: wrap;
+    transition: all 1s linear;
     width: 30%;
 }
 
