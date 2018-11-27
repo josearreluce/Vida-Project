@@ -37,4 +37,11 @@ class UserSchema(Base):
 
     username = Column(String, primary_key=True)
     pswd = Column(String)
-
+    age = Column(Integer)
+    sex = Column(Integer)
+    height = Column(Integer)
+    weight = Column(Integer)
+    smoker = Column(Integer)
+    diabetes = Column(Integer)
+    blood_pressure_low = Column(Integer)
+    blood_pressure_high = Column(Integer)

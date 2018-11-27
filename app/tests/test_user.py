@@ -154,7 +154,7 @@ class TestDbUsertoUser(unittest.TestCase):
 		self.database_user = models.UserSchema(username=self.username, pswd=self.password)
 
 	def test_dbuser_to_user(self):
-		backend_user = DbUsertoUser(self.database_user)
+		backend_user = dbUsertoUser(self.database_user)
 		account = AccountInfo("username", "password")
 		basicinfo = BasicInfo(10, "M")
 		personalinfo = PersonalInfo(50, 120)
