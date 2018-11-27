@@ -23,6 +23,12 @@
     {% include 'graph.html' %}
     {% else %}
     <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/assessment.css') }}">
+    <h2>Welcome to Vida </h2>
+    <h>We are Vida, your personalized healthcare advisor. <br>
+    Once you enter your primary symptom, we will ask you a few more questions about other symptoms you are experiencing. <br> 
+    Then, we will use statistical learning models to give you the most accurate diagnosis possible. <br>
+    Please fill out your profile information for an even more accurate condition diagnosis. </h>
+    <div class="start-assessment"></div>
     <div class="symptom-visualization">{% include 'graph.html' %}</div>
     {% endif %}
 

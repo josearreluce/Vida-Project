@@ -24,7 +24,7 @@
                 </div>
                 <div class="health-info info-container">
                     <span class="smoker info">Smoker: {{ smoker }}</span>
-                    <span class="blood-pressure info">Blood Pressure: {{ blood_pressure }}</span>
+                    <span class="blood-pressure info">Blood Pressure: {{ blood_pressure_systolic }} {{ blood_pressure_diastolic }}</span>
                     <span class="diabetes info">Diabetes: {{ diabetes }}</span>
                 </div>
                 <button class="profile-button edit-profile-info">Edit Info</button>
@@ -40,7 +40,8 @@
                     <p> {{ form.height.label }} {{ form.height(size=2) }}</p>
                     <p> {{ form.weight.label }} {{ form.weight(size=2) }} </p>
                     <p> {{ form.smoker.label }} {{ form.smoker(size=3) }} </p>
-                    <p> {{ form.blood_pressure.label }} {{ form.blood_pressure(size=3) }} </p>
+                    <p> {{ form.blood_pressure_systolic.label }} {{ form.blood_pressure_systolic(size=3) }} </p>
+                    <p> {{ form.blood_pressure_diastolic.label }} {{ form.blood_pressure_diastolic(size=3) }} </p>
                     <p> {{ form.diabetes.label }} {{ form.diabetes(size=3) }} </p>
                     <p> {{ form.submit() }} </p>
                 </div>
