@@ -205,34 +205,34 @@ class TestProfile(TestWebForms):
         # Invalid Age
         self.profile_dict.update(age=-1)
         response = self._make_post(self.profile_page, self.profile_dict)
-        self.assertIn("Invalid Personal Information", str(response.data))
+        self.assertIn("Invalid age: 10-150", str(response.data))
 
         # Invalid Sex
         self.profile_dict.update(age=22, sex='')
         response = self._make_post(self.profile_page, self.profile_dict)
-        self.assertIn("Invalid Personal Information", str(response.data))
+        self.assertIn("Invalid sex: 0 - intersex, 1 - male, 2 - female", str(response.data))
 
         # Invalid weight
         self.profile_dict.update(sex='female',weight=-1)
         response = self._make_post(self.profile_page, self.profile_dict)
-        self.assertIn("Invalid Personal Information", str(response.data))
+        self.assertIn("Invalid weight: 40-1500 (lbs)", str(response.data))
 
         # Invalid height
         self.profile_dict.update(weight=140, height=-1)
         response = self._make_post(self.profile_page, self.profile_dict)
-        self.assertIn("Invalid Personal Information", str(response.data))
+        self.assertIn("Invalid height: 30-110 (inches)", str(response.data))
 
         # Invalid smoking info
         self.profile_dict.update(height=55, smoker=-1)
         response = self._make_post(self.profile_page, self.profile_dict)
-        self.assertIn("Invalid Personal Information", str(response.data))
+        self.assertIn("Invalid packs smoked: 0.0-4.0 (packs)", str(response.data))
 
         # Invalid diabetes info
-        self.profile_dict.update(smoker=0.5, diabetes='invalid')
+        self.profile_dict.update(smoker=0.5, diabetes=10)
         response = self._make_post(self.profile_page, self.profile_dict)
-        self.assertIn("Invalid Personal Information", str(response.data))
+        self.assertIn("Invalid entry: 0 for no diabetes, 1 for type I and 2 for type II diabetes", str(response.data))
 
-        self.profile_dict.update(diabetes='Type II')
+        self.profile_dict.update(diabetes=2)
 
     def test_valid_profile(self):
         self.app.get(self.profile_page, follow_redirects=True)

@@ -7,7 +7,7 @@ class ProfileForm(FlaskForm):
     age = IntegerField('Age', validators=[DataRequired(), 
         NumberRange(min=10, max=150, message="Invalid age: 10-150")])
     sex = IntegerField('Sex', validators=[DataRequired(),
-        NumberRange(min=0, max=2, message=None)])
+        NumberRange(min=0, max=2, message="Invalid sex: 0 - intersex, 1 - male, 2 - female")])
     height = IntegerField('Height', validators=[DataRequired(),
         NumberRange(min=30, max=110, message="Invalid height: 30-110 (inches)")])
     weight = IntegerField('Weight', validators=[DataRequired(),
