@@ -4,7 +4,7 @@ from flask_login import login_required, login_user, current_user, logout_user
 import sqlalchemy as sqlalchemy
 from sqlalchemy.orm import sessionmaker
 from flask import request
-from flask import redirect
+from flask import redirect, url_for
 from wtforms.validators import ValidationError
 from app.models import DatabaseConnection, UserSession
 from app.forms import LoginForm, SignUpForm, LogoutForm, ProfileForm
