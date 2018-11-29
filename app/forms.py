@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
-from wtforms.validators import DataRequired, ValidationError, EqualTo, Length
+from wtforms.validators import DataRequired, ValidationError, EqualTo, Length, Regexp
 from app.models import UserSession
 
 class ProfileForm(FlaskForm):
@@ -29,7 +29,8 @@ class SignUpForm(FlaskForm):
     #wtforms.validators.Regexp(regex, flags=0, message=u'Invalid input.')
     password = PasswordField(
             'Password',
-            validators=[DataRequired(), Length(min=4, max=50, message='Invalid Password Length!'), alphanumeric])
+            validators=[DataRequired(), Length(min=4, max=50, message='Invalid Password Length!'), 
+            Regexp('^[^0-9a-zA-Z]+$', message='Invalid Password: alphanumeric input only')])
     password2 = PasswordField(
             'Repeat Password',
             validators=[DataRequired(), EqualTo('password', message='Password Must Match!')])
@@ -43,18 +44,6 @@ class SignUpForm(FlaskForm):
     def validate_password(self, password):
         if self.username.data == password.data:
             raise ValidationError('Username Cannot Equal Password!')
-
-    def alphanumeric(self, signupstring):
-        has_letter = False
-        has_number = False
-
-        for i in loginstring:
-            if i.isalpha():
-                has_letter = True
-            if i.isdigit():
-                has_number = True
-
-        return (has_letter and has_number)
 
 
 class LogoutForm(FlaskForm):
