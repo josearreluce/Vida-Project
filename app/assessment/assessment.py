@@ -1,12 +1,4 @@
 from graph import *
-import networkx as nx
-import pylab as plt
-from pgmpy.inference import VariableElimination
-from pgmpy.estimators import BayesianEstimator
-import re
-from sqlalchemy import create_engine
-import pandas as pd
-import numpy as np
 
 
 # network_infer = VariableElimination(G_sympt_1)
