@@ -2,6 +2,7 @@
 
 {% block content %}
 <div class="login">
+    {% if not current_user.is_authenticated %}
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/login.css') }}">
     <form class="login__form" action="" method="post" novalidate>
         <div class="login__form-container">
@@ -10,16 +11,26 @@
             <br/>
             <p>  {{ form.password.label }} {{ form.password(size=32) }}</p>
             <br/>
-            {% if form.log_errors %}
-                <ul class=errors>
-                    <li>{{ form.log_errors[-1] }}</li>
-                </ul>
-            {% endif %}
+            <p>
+                {% if form.log_errors %}
+                    <span style="color: red;">{{ form.log_errors[0][-1] }}</span>
+                {% endif %}
+            </p>
             <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
             <p>{{ form.submit() }}</p>
         </div>
     </form>
     {% include 'graph.html' %}
+    {% else %}
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/assessment.css') }}">
+    <h2>Welcome to Vida </h2>
+    <h>We are Vida, your personalized healthcare advisor. <br>
+    Once you enter your primary symptom, we will ask you a few more questions about other symptoms you are experiencing. <br>
+    Then, we will use statistical learning models to give you the most accurate diagnosis possible. <br>
+    Please fill out your profile information for an even more accurate condition diagnosis. </h>
+    <div class="start-assessment"></div>
+    <div class="symptom-visualization">{% include 'graph.html' %}</div>
+    {% endif %}
 
 </div>
 {% endblock %}

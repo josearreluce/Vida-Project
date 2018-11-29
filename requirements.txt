@@ -2,6 +2,8 @@ Flask
 pytest
 selenium
 Flask-login
+Flask-Session
+Flask-SQLAlchemy===2.1
 flask_wtf
 pgmpy
 sqlalchemy

@@ -9,7 +9,7 @@ const width = graph_box_dims.width;
 const svg = d3.select('.graph-svg');
 
 // An offset value for determining node placement in the graph
-const dist_offset = Math.sqrt((height * width)) / 10;
+const dist_offset = Math.sqrt((height * width)) / 15;
 
 const simulation = d3.forceSimulation()
     .force('link', d3.forceLink().id(function (d) {
@@ -63,7 +63,7 @@ function create_ui_graph(links, nodes) {
 
     // Draw 'Node'
     node.append('circle')
-        .attr('r', 18)
+        .attr('r', 15)
         .style('fill', color);
 
     node.append('title')

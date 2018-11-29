@@ -1,7 +1,7 @@
 import sys
 sys.path.append('../../')
 from app import models
-from app.models import DatabaseConnection, UserSchema
+from app.models import DatabaseConnection, UserSession
 
 class AccountInfo():
 

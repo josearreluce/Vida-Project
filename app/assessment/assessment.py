@@ -1,6 +1,5 @@
 from .graph import *
 
-
 # network_infer = VariableElimination(G_sympt_1)
 # given symptom and all possible condiitons, outputs list of
 # conditions with some degree of connection to this symptom

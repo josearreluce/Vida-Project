@@ -3,7 +3,7 @@ import sys
 sys.path.append('../../')
 
 from app import models
-from app import app
+from app import app, db
 
 
 class TestWebForms(unittest.TestCase):
@@ -14,7 +14,7 @@ class TestWebForms(unittest.TestCase):
         self.app = app.test_client()
         self.session = models.DatabaseConnection()
         self.session.open()
-        self.db = self.session.db
+        self.db = db.session
 
         self.login_page = '/'
         self.sign_up_page = '/sign_up'
@@ -24,7 +24,7 @@ class TestWebForms(unittest.TestCase):
         # Basic Username, password, and profile info
         self.username = 'test_username'
         self.password = 'test_password'
-        self.user_dict = dict(username=self.username, password=self.password)
+        self.user_dict = dict(username=self.username, password=self.password, password2=self.password)
 
         self.profile_dict = dict(
                 age=18,
@@ -38,12 +38,14 @@ class TestWebForms(unittest.TestCase):
     Helpers to ensure user info is in the database prior to testing webform
     """
     def _delete_test_user(self):
-        user_info = models.UserSchema(username=self.username, pswd=self.password)
-        self.db.query(models.UserSchema).filter_by(username=self.username, pswd=self.password).delete()
+        u = models.UserSession(username=self.username)
+        u.set_password(self.password)
+        u.query.filter_by(username=u.username).delete()
         self.db.commit()
 
     def _add_test_user(self):
-        u = models.UserSchema(username=self.username, pswd=self.password)
+        u = models.UserSession(username=self.username)
+        u.set_password(self.password)
         self.db.add(u)
         self.db.commit()
 
@@ -51,8 +53,13 @@ class TestWebForms(unittest.TestCase):
         return self.app.post(page, data=data_dict, follow_redirects=True)
 
     def _test_user_in_db(self):
-        check_user = self.db.query(models.UserSchema).filter_by(username=self.username, pswd=self.password).count()
-        return True if check_user >= 1 else False
+        u = models.UserSession(username=self.username)
+        u.set_password(self.password)
+        check_user = u.query.filter_by(username=self.username).count()
+        if check_user and u.check_password(self.password):
+            return True
+        else:
+            return False
 
     def tearDown(self):
         self.session.close()
@@ -62,34 +69,36 @@ class TestWebForms(unittest.TestCase):
 class TestSignUp(TestWebForms):
 
     def test_invalid_signup(self):
+        if self._test_user_in_db():
+            self._delete_test_user()
 
         # Username should not be the same as password
         self.app.get(self.sign_up_page, follow_redirects=True)
-        invalid_user1 = dict(username="test_username",password="test_username")
+        invalid_user1 = dict(username="test_username",password="test_username",password2="test_username")
         response = self._make_post(self.sign_up_page, invalid_user1)
 
-        self.assertIn('Invalid username and/or password.', str(response.data))
+        self.assertIn('Username Cannot Equal Password!', str(response.data))
 
         # Username and password should be at least 5 characters but less than 50
         self.app.get(self.sign_up_page, follow_redirects=True)
-        invalid_user2 = dict(username="test",password="pass")
+        invalid_user2 = dict(username="test",password="pass",password2="pass")
         response = self._make_post(self.sign_up_page, invalid_user2)
-
-        self.assertIn('Invalid username and/or password.', str(response.data))
+        self.assertIn('Invalid Username or Password.', str(response.data))
 
         self.app.get(self.sign_up_page, follow_redirects=True)
         invalid_user1 = dict(username="test_username_that_is_too_long_12345678901234567890",
-            password="test_password_that_is_too_long_12345678901234567890")
+            password="test_password_that_is_too_long_12345678901234567890",
+            password2="test_password_that_is_too_long_12345678901234567890")
         response = self._make_post(self.sign_up_page, invalid_user1)
 
-        self.assertIn('Invalid username and/or password.', str(response.data))
+        self.assertIn('Invalid Username or Password.', str(response.data))
 
         # Username and password should contain at least 1 letter
         self.app.get(self.sign_up_page, follow_redirects=True)
         invalid_user2 = dict(username="*****",password="password")
         response = self._make_post(self.sign_up_page, invalid_user2)
 
-        self.assertIn('Invalid username and/or password.', str(response.data))
+        self.assertIn('Invalid Username or Password.', str(response.data))
 
 
     def test_existing_user(self):
@@ -100,7 +109,7 @@ class TestSignUp(TestWebForms):
         self.app.get(self.sign_up_page, follow_redirects=True)
         response = self._make_post(self.sign_up_page, self.user_dict)
 
-        self.assertIn('Username &#34;{}&#34; Already In Use!'.format(self.username), str(response.data))
+        self.assertIn('Username Already In Use!', str(response.data))
 
     def test_valid_signup(self):
         # ensure username and pass are not already in the db
@@ -110,7 +119,7 @@ class TestSignUp(TestWebForms):
         self.app.get(self.sign_up_page, follow_redirects=True)
         response = self._make_post(self.sign_up_page, self.user_dict)
 
-        self.assertNotIn('Username &#34;{}&#34; Already In Use!'.format(self.username), str(response.data))
+        self.assertNotIn('Username Already In Use!', str(response.data))
 
 
 class TestLogin(TestWebForms):
@@ -126,6 +135,7 @@ class TestLogin(TestWebForms):
 
         self.assertIn("Invalid Username or Password", str(response.data))
 
+
     def test_valid_login(self):
         # ensure username and pass are saved
         if not self._test_user_in_db():
@@ -135,8 +145,19 @@ class TestLogin(TestWebForms):
 
         response = self._make_post(self.login_page, self.user_dict)
 
+        # Ensure no errors were thrown
         self.assertNotIn("Invalid Username or Password", str(response.data))
 
+        # Ensure sucessful redirect
+        self.assertIn("Start Assessment", str(response.data))
+
+        # Ensure Home page no longer shows the Login Form
+        response = self.app.get(self.login_page, follow_redirects=True)
+        self.assertIn("We are Vida, your personalized healthcare advisor.", str(response.data))
+
+
+class TestLoginLimit(TestWebForms):
+    # Required to be a different class since this will block all other login testing
     def test_login_rate_limit(self):
         # ensure username and pass are saved
         if not self._test_user_in_db():
@@ -163,7 +184,11 @@ class TestLogin(TestWebForms):
 
         self.user_dict.update(password=self.password + 'oops5')
         response = self._make_post(self.login_page, self.user_dict)
-        self.assertIn("Maximum Login Attempts Reached, Please Try Again Later", str(response.data))
+
+        # This ensures that brute force attacks will not be possible
+        # by limiting the number of attempted logins
+        self.assertIn("Maximum Failed Logins Reached. Please Restart Flask", str(response.data))
+
 
 
 class TestProfile(TestWebForms):
@@ -219,23 +244,25 @@ class TestLogout(TestWebForms):
 
     def test_invalid_logout(self):
         # If not logged in, can't log out
-        self.app.get(self.logout_page, follow_redirects=True)
-        response = self._make_post(self.logout_page, {})
-        # Check that you are taken back to home page
-        self.assertIn("Login", str(response.data))
+        response = self.app.get(self.logout_page, follow_redirects=True)
+        # We don't allow users to go to log out if they aren't logged in
+        # 401 Is an unauthorized status code
+        self.assertEqual(response.status_code, 401)
+
 
     def test_valid_logout(self):
         # Login first
         response = self.app.get(self.login_page, follow_redirects=True)
-        self.assertEqual(response.status_code, 200)
 
         response = self._make_post(self.login_page, self.user_dict)
-        self.assertNotIn('Username &#34;{}&#34; Already In Use!'.format(self.username), str(response.data))
+        self.assertNotIn('Username Already In Use!', str(response.data))
 
         self.app.get(self.logout_page, follow_redirects=True)
 
-        response = self._make_post(self.logout_page, {})
+        self.assertEqual(response.status_code, 200)
+        response = self.app.get(self.login_page, follow_redirects=True)
         # Check that you are taken back to home page
+        # And that the home page now displays a login form once again
         self.assertIn("Login", str(response.data))
 
 

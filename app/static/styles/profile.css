@@ -1,0 +1,54 @@
+.profile {
+    margin: 0 auto;
+    width: 50%;
+}
+
+.profile-info {
+    border: 2px solid black;
+    margin: 0 auto;
+    padding: 2em;
+    width: 50%;
+}
+
+.profile-info__title {
+    text-align: center;
+    width: 100%;
+}
+
+.info {
+    display: block;
+}
+
+.info-container {
+    margin-bottom: 2em;
+}
+
+/* Profile Template Button styles */
+.profile-button {
+    background-color: #5051DB;
+    color: white;
+    font-size: 1em;
+    padding: 0.5em 0;
+    width: 100%;
+}
+
+/* Profile Editor Form Styles */
+.profile-editor {
+    border: 2px solid black;
+    display: none;
+    margin: 0 auto;
+    padding: 2em;
+    width: 50%;
+}
+
+.profile-editor h3 {
+    text-align: center;
+}
+
+.profile-editor #submit {
+    background-color: #5051DB;
+    color: white;
+    font-size: 1em;
+    padding: 0.5em 0;
+    width: 100%;
+}
