@@ -197,6 +197,7 @@ class TestProfile(TestWebForms):
     # 40lbs < weight < 1500lbs
     # 30in <  height < 110
     # 0.0 packs < smoke packs a day < 4.0 packs
+    # Blood pressure range (100/50 to 150/100)
     # diabetes: Type I, Type II, None
     def test_invalid_profiles(self):
         self.app.get(self.profile_page, follow_redirects=True)

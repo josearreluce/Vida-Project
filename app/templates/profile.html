@@ -15,17 +15,17 @@
                     <span class="user info">Username: {{ current_user.username }} </span>
                 </div>
                 <div class="basic-info info-container">
-                    <span class="age info">Age: {{ age }} </span>
-                    <span class="sex info">Sex: {{ sex }} </span>
+                    <span class="age info">Age: {{ current_user.age }} </span>
+                    <span class="sex info">Sex: {{ current_user.sex }} </span>
                 </div>
                 <div class="personal-info info-container">
-                    <span class="height info">Height: {{ height }} </span>
-                    <span class="weight info">Weight: {{ weight }} </span>
+                    <span class="height info">Height: {{ current_user.height }} </span>
+                    <span class="weight info">Weight: {{ current_user.weight }} </span>
                 </div>
                 <div class="health-info info-container">
-                    <span class="smoker info">Smoker: {{ smoker }}</span>
-                    <span class="blood-pressure info">Blood Pressure: {{ blood_pressure_systolic }} {{ blood_pressure_diastolic }}</span>
-                    <span class="diabetes info">Diabetes: {{ diabetes }}</span>
+                    <span class="smoker info">Smoker: {{ current_user.smoker }}</span>
+                    <span class="blood-pressure info">Blood Pressure: {{ current_user.blood_pressure_systolic }} {{ current_user.blood_pressure_diastolic }}</span>
+                    <span class="diabetes info">Diabetes: {{ current_user.diabetes }}</span>
                 </div>
                 <button class="profile-button edit-profile-info">Edit Info</button>
                 <button class="profile-button view-assessments"> View Assessment History </button>
@@ -35,13 +35,37 @@
             <form class="login__form" action="" method="post" novalidate>
                 <div class="login__form-container">
                 <h3> Edit Profile Information </h3>
+                    <p> {% for error in form.age.errors %}
+                    <span style="color: red;">{{ error }}</span>
+                    {% endfor %} </p>
                     <p> {{ form.age.label }} {{ form.age(size=2) }}</p>
+                     <p> {% for error in form.sex.errors %}
+                    <span style="color: red;">{{ error }}</span>
+                    {% endfor %} </p>
                     <p> {{ form.sex.label }} {{ form.sex(size=2) }}</p>
+                     <p> {% for error in form.height.errors %}
+                    <span style="color: red;">{{ error }}</span>
+                    {% endfor %} </p>
                     <p> {{ form.height.label }} {{ form.height(size=2) }}</p>
+                     <p> {% for error in form.weight.errors %}
+                    <span style="color: red;">{{ error }}</span>
+                    {% endfor %} </p>
                     <p> {{ form.weight.label }} {{ form.weight(size=2) }} </p>
+                     <p> {% for error in form.smoker.errors %}
+                    <span style="color: red;">{{ error }}</span>
+                    {% endfor %} </p>
                     <p> {{ form.smoker.label }} {{ form.smoker(size=3) }} </p>
+                     <p> {% for error in form.blood_pressure_systolic.errors %}
+                    <span style="color: red;">{{ error }}</span>
+                    {% endfor %} </p>
                     <p> {{ form.blood_pressure_systolic.label }} {{ form.blood_pressure_systolic(size=3) }} </p>
+                     <p> {% for error in form.blood_pressure_diastolic.errors %}
+                    <span style="color: red;">{{ error }}</span>
+                    {% endfor %} </p>
                     <p> {{ form.blood_pressure_diastolic.label }} {{ form.blood_pressure_diastolic(size=3) }} </p>
+                     <p> {% for error in form.diabetes.errors %}
+                    <span style="color: red;">{{ error }}</span>
+                    {% endfor %} </p>
                     <p> {{ form.diabetes.label }} {{ form.diabetes(size=3) }} </p>
                     <p> {{ form.submit() }} </p>
                 </div>

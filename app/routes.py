@@ -10,11 +10,6 @@ from app.models import DatabaseConnection, UserSession
 from app.forms import LoginForm, SignUpForm, LogoutForm, ProfileForm
 from .assessment import assessment
 
-@app.route('/profile', methods=['GET', 'POST'])
-def view_profile():
-    form = ProfileForm()
-    return render_template("profile.html", form=form)
-
 curr_user = 0
 users = {curr_user: {}}
 @app.route('/successors',methods=['GET','POST'])
@@ -34,6 +29,26 @@ def handle_assessment():
     successors = assessment.start_assessment(symptom)
     users[curr_user]['successors'] = successors
     return jsonify({'text': 'Hello World', 'successors': successors})
+
+@app.route('/profile', methods=['GET', 'POST'])
+def view_profile():
+    form = ProfileForm()
+
+    if form.validate_on_submit():
+        user = UserSession.query.get(current_user.username)
+        user.age = form.age.data
+        user.sex = form.sex.data
+        user.height = form.height.data
+        user.weight = form.weight.data
+        user.smoker = form.smoker.data
+        user.blood_pressure_systolic = form.blood_pressure_systolic.data
+        user.blood_pressure_diastolic = form.blood_pressure_diastolic.data
+        user.diabetes = form.diabetes.data
+        db.session.add(user)
+        db.session.commit()
+        return render_template("profile.html", form=form)
+
+    return render_template("profile.html", form=form)
 
 
 @app.route("/assessment")
