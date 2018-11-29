@@ -36,12 +36,14 @@ def tbl_to_df_sympt_id(sympt_id):
 
 df_related_symptoms_sympt_1 = tbl_to_df_sympt_id("sympt_1")
 
-# Create Bayesian Model
 
+# Create Bayesian Model given symptom id
 def load_graph_sympt_id(df_cond, df_related_symptoms, sympt_id):
     G = BayesianModel()
     sub_symptom_list = []
     condition_list = set()
+
+    # Go through related symptoms table and add edges (symptom -> sub symptom)
     for i, row in df_related_symptoms.iterrows():
 
         symptom_id = str(row[0])
@@ -53,7 +55,7 @@ def load_graph_sympt_id(df_cond, df_related_symptoms, sympt_id):
                         G.add_edge(symptom_id, sub_symptom_id)
                         sub_symptom_list.append(sub_symptom_id)
 
-
+    # Go through conditions table and add edges (sub symptom -> condition)
     for i, row in df_cond.iterrows():
         cond_id = str(row[0])
         for j, col in row.iteritems():
@@ -68,10 +70,6 @@ def load_graph_sympt_id(df_cond, df_related_symptoms, sympt_id):
 
 G_sympt_1, sympt_1_sub_list, condition_list = load_graph_sympt_id(df_cond, df_related_symptoms, "sympt_1")
 
-print(len(sympt_1_sub_list))
-print(sympt_1_sub_list)
-print(condition_list)
-
 num_conditions = df_cond.shape[0]
 num_symptoms = df_related_symptoms.shape[0]
 num_sub_symptoms = df_sub_symptom_names.shape[0]
@@ -84,25 +82,34 @@ all_sub_symptoms = list(df_sub_symptom_names['sub_sympt_id'])
 def create_all_symptom_graphs(df_cond, df_related_symptoms):
     d = {} # symptom_id: [Graph, subsymptoms, conditions]
     for sympt_id in all_symptoms:
-        print(sympt_id)
         G, sub_symptom_list, condition_list = load_graph_sympt_id(df_cond, df_related_symptoms, sympt_id)
         d[sympt_id] = [G, sub_symptom_list, condition_list]
     return d 
 
 graph_dict = create_all_symptom_graphs(df_cond, df_related_symptoms)
-print(graph_dict)
 
 
 def load_cpds():
     for sympt_id in graph_dict:
-        print(sympt_id)
         G_sympt = graph_dict[sympt_id][0]
         data = pd.DataFrame(np.random.randint(low=0, high=2, size=(100, len(G_sympt.nodes))),
                    columns= G_sympt.nodes)
         G_sympt.fit(data, estimator=BayesianEstimator, prior_type="BDeu")
+    print("loaded cpds")
 
 load_cpds()
 
+
+
+
+
+
+
+
+
+
+
+# Makes giant graph for all nodes 
 def load_graph(df_cond, df_related_symptoms):
     G = BayesianModel()
     # Go through conditions table and add edges (sub symptom -> condition)
@@ -127,65 +134,45 @@ def load_graph(df_cond, df_related_symptoms):
                     G.add_edge(sympt_id, sub_symptom_id)
     return G
 
-G = load_graph(df_cond, df_related_symptoms)
-
-# All the nodes in the graph (157 nodes)
-gnodes = G.nodes
-
-print(len(G.edges))
-
-data = pd.DataFrame(np.random.randint(low=0, high=2, size=(10, len(gnodes))),
-                   columns= gnodes)
-data_sympt_1 = pd.DataFrame(np.random.randint(low=0, high=2, size=(300, len(G_sympt_1.nodes))),
-                   columns= G_sympt_1.nodes)
-# G.fit(data)
-
-# print(values2)
-estimator2 = BayesianEstimator(G, data)
-estimator_sympt_1 = BayesianEstimator(G_sympt_1, data_sympt_1)
+total_G = load_graph(df_cond, df_related_symptoms)
 
 
-# for i in range(1, num_sub_symptoms + 1):
-#     print(i)
-#     cpd_sub = estimator2.estimate_cpd('sub_sympt_' + str(i), prior_type="BDeu")
-#     G.add_cpds(cpd_sub)
-#     if i <= num_symptoms:
-#         cpd_symp = estimator2.estimate_cpd('sympt_' + str(i), prior_type="BDeu")
-#         G.add_cpds(cpd_symp)
+# Compute and load all cpds for total graph. Takes a long time
+def load_total_cpds():
+    # All the nodes in the graph (157 nodes)
+    gnodes = total_G.nodes
 
-
-# print("done population symptoms and subsymptoms cpds")
-# print(G.get_cpds())
+    data = pd.DataFrame(np.random.randint(low=0, high=2, size=(100, len(gnodes))),
+                       columns= gnodes)
+    # Option 1 of fitting cpds
+    estimator = BayesianEstimator(total_G, data)
+    p = estimator.get_parameters(prior_type='BDeu', equivalent_sample_size=5)
+    for i,cpd in enumerate(p):
+        total_G.add_cpds(cpd)
 
 
 
 
+    # Option 2 of fitting cpds
+    for i in range(1, num_sub_symptoms + 1):
+        cpd_sub = estimator.estimate_cpd('sub_sympt_' + str(i), prior_type="BDeu")
+        total_G.add_cpds(cpd_sub)
+        if i <= num_symptoms:
+            cpd_symp = estimator.estimate_cpd('sympt_' + str(i), prior_type="BDeu")
+            total_G.add_cpds(cpd_symp)
 
 
-# params = estimator2.get_parameters(prior_type='BDeu', equivalent_sample_size=2)
-# for i,cpd in enumerate(params):
-#     print(i, cpd.values)
-#     if i == 2:
-#         break;
-#     G.add_cpds(cpd)
+    print("done population symptoms and subsymptoms cpds")
+    print(total_G.get_cpds())
 
-# values = pd.DataFrame(np.random.randint(low=0, high=2, size=(1000, 4)),
-#                       columns=['A', 'B', 'C', 'D'])
-# model = BayesianModel([('A', 'B'), ('C', 'B'), ('C', 'D')])
-# estimator = BayesianEstimator(model, values)
-# p = estimator.get_parameters(prior_type='BDeu', equivalent_sample_size=5)
-# for i,cpd in enumerate(p):
-#     print(i, cpd.values, cpd)
-    
+    # this is the time cruncher.
+    for i in range(1, num_conditions + 1):
+        cpd_cond = estimator.estimate_cpd('cond_' + str(i), prior_type="BDeu")
+        total_G.add_cpds(cpd_cond)
 
-# G.fit(data, estimator=BayesianEstimator, prior_type="BDeu")
-# G_sympt_1.fit(data_sympt_1, estimator=BayesianEstimator, prior_type="BDeu")
-# print(len(G_sympt_1.get_cpds()))
-# estimator_sympt_1 = BayesianEstimator(G_sympt_1, data_sympt_1)
-# G_sympt_1_parameters = estimator_sympt_1.get_parameters(prior_type='BDeu', equivalent_sample_size=5)
+#load_total_cpds()
 
-# for i,cpd in enumerate(G_sympt_1_parameters):
-#   print(i, cpd.values, cpd)
+
 
 
 

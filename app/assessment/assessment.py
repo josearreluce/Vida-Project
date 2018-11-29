@@ -8,35 +8,6 @@ from sqlalchemy import create_engine
 import pandas as pd
 import numpy as np
 
-# def tbl_to_df():
-# 	engine = create_engine("postgresql://pv_admin:CMSC22001@ec2-13-59-75-157.us-east-2.compute.amazonaws.com:5432/pv_db")
-# 	conditions = pd.read_sql("select * from conditions", engine)
-# 	related_symptoms = pd.read_sql("select * from related_symptoms", engine)
-# 	return conditions, related_symptoms
-# print(state_network.get_cpds())
-
-# network visual
-# set structure -- defining relationships
-# G_sympt = BayesianModel([("Symptom_1", "Sub1_symptom_1"),
-#                                ("Symptom_1", "Sub2_symptom_1"),
-#                               ("Symptom_2", "Sub1_symptom_2"),
-#                                ("Symptom_2", "Sub2_symptom_2"),
-#                               ("Sub1_symptom_1", "Condition_1"),
-#                                 ("Sub2_symptom_1", "Condition_2"),
-#                               ("Sub1_symptom_2", "Condition_1"),
-#                               ("Sub2_symptom_2", "Condition_2")])
-
-# values = pd.DataFrame(np.random.randint(low=0, high=2, size=(1000, 8)),
-#                    columns=['Symptom_1', 'Symptom_2', 'Sub1_symptom_1', 'Sub1_symptom_2' ,'Sub2_symptom_1', 'Sub2_symptom_2', 'Condition_1', 'Condition_2'])
-# # print(values)
-# estimator = BayesianEstimator(G_sympt, values)
-# x = estimator.get_parameters(prior_type='BDeu', equivalent_sample_size=5)
-# for i,cpd in enumerate(x):
-#     print(i, cpd.values)
-#     G_sympt.add_cpds(cpd)
-
-# print(estimator.estimate_cpd('Condition_2', prior_type="dirichlet", pseudo_counts=[1,2]))
-# # inference on graph
 
 # network_infer = VariableElimination(G_sympt_1)
 # given symptom and all possible condiitons, outputs list of
@@ -54,7 +25,7 @@ def select_relevant_cond(symptom, list_cond):
 
 
 #given condition, find all related symptoms
-def select_relevant_symptoms(graph, condition):
+def select_relevant_symptoms(graph, condition, symptom_init):
     ind = graph.local_independencies(condition)
     mystr = str(ind)
     wordList = mystr.replace("(","").replace(")","").replace(",","").split(" ")
@@ -67,7 +38,8 @@ def select_relevant_symptoms(graph, condition):
         ind = graph.local_independencies(sub_symp)
         symp = str(ind).replace(",", "").replace(")","").split(" ")[-1]
         rel_symp.add(symp)
-
+    if symptom_init in rel_symp:
+        rel_symp.remove(symptom_init)
     return list(rel_symp)
 
 
@@ -97,10 +69,12 @@ def evaluate(symptom_init, successors, user_sub_answers):
             symp_list_val.append(0)
             symp_list_name.append(successors[i])
 
-    #all condiitons to compare
-    relev_conds = select_relevant_cond(symptom_init, condition_list) # condition_list is a global in graph.py
+    # all condiitons to compare
+    # condition_list is all the conditions reachable via symptom_init
+    relev_conds = select_relevant_cond(symptom_init, condition_list) 
     llen = len(symp_list_val)
-    #create evidence dict
+
+    # create evidence dict
     # e.g. {symptom:yes}
     evidencee = {}
     cond_scores_list = []
@@ -113,23 +87,71 @@ def evaluate(symptom_init, successors, user_sub_answers):
                                     evidence = evidencee)
         val_yes = cond_prob[relev_conds[j]].values[1]
         condition_val_tuples.append([relev_conds[j], val_yes])
-        cond_scores_list.append(val_yes)
-
-    index_max_prob = cond_scores_list.index(max(cond_scores_list))
-    top_cond_candidate = relev_conds[index_max_prob]
-    score_top = cond_scores_list[index_max_prob]
 
     condition_val_tuples = sorted(condition_val_tuples, key=lambda x: x[1], reverse=True)
-    print(condition_val_tuples)
 
-    # TODO: move this out
-    rel_symptoms = select_relevant_symptoms(G_sympt, condition_val_tuples[0][0])
-    print(rel_symptoms)
-
-    print(top_cond_candidate, score_top)
+    # print(top_cond_candidate, score_top)
     return condition_val_tuples
 
+def followup(initial_evaluate, symptom_init):
+
+    # find relevant symptoms given the top probabilistic condition 
+    rel_symptoms = select_relevant_symptoms(total_G, initial_evaluate[0][0], symptom_init)
+
+    successors_list = []
+    for sympt_id in rel_symptoms:
+        successors = start_assessment(sympt_id)
+        successors_list.append(successors)
+
+    return rel_symptoms, successors_list 
+
+# list of symptoms, list of successors, list of user_sub_answers. (1D, 2D, 2D)
+# returns updated probabilty on the top probabilistic condition in the initial evaluate
+def followup2(rel_symptoms, successors_list, user_sub_answers, cond_id):
+
+    condition_val_tuples_matrix = []
+    for i,sympt_id in enumerate(rel_symptoms):
+        evaluated = evaluate(sympt_id, successors_list[i], user_sub_answers[i])
+        condition_val_tuples_matrix.append(evaluated)
+
+    cond_id_values = []
+    for cond_val_tuples_list in condition_val_tuples_matrix:
+        for cond, val in cond_val_tuples_list:
+            if cond == cond_id:
+                cond_id_values.append(val)
+    average = sum(cond_id_values) / (len(cond_id_values) * 1.0)
+
+    return [cond_id, average]
+
+
+
+# Testing Examples
 x = start_assessment("sympt_1")
 res = evaluate("sympt_1", x, [1,0,1,1,0,0,1,1])
-
 print(res)
+
+x3 = start_assessment("sympt_27")
+res3 = evaluate("sympt_27", x3, [0])
+print(res3)
+
+x4 = start_assessment("sympt_8")
+res4 = evaluate("sympt_8", x4, [0, 0, 1, 1])
+print(res4)
+
+x2 = start_assessment("sympt_12")
+res2 = evaluate("sympt_12", x2, [1,1])
+print(res2)
+
+rel_symptoms, successors_list = followup(res2, "sympt_12")
+print(rel_symptoms)
+print(successors_list)
+
+fake_user_sub = []
+for s_list in successors_list:
+    new = []
+    for sub in s_list:
+        new.append(np.random.randint(low=0, high=2))
+    fake_user_sub.append(new)
+
+fup2 = followup2(rel_symptoms, successors_list, fake_user_sub, res2[0][0])
+print(fup2)
