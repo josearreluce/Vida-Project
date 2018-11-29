@@ -13,6 +13,17 @@ from .assessment import assessment
 @app.route('/profile', methods=['GET', 'POST'])
 def view_profile():
     form = ProfileForm()
+    user = UserSession()
+    user.age = form.age.data
+    print(user.age)
+    user.sex = form.sex.data
+    user.height = form.height.data
+    user.weight = form.weight.data
+    user.smoker = form.smoker.data
+    user.blood_pressure_systolic = form.blood_pressure_systolic.data
+    user.blood_pressure_diastolic = form.blood_pressure_diastolic.data
+    user.diabetes = form.diabetes.data
+    db.session.commit()
     return render_template("profile.html", form=form)
 
 curr_user = 0
