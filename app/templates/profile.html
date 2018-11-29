@@ -12,6 +12,13 @@
                 </div>
             {% else %}
                 <div class="account-info info-container">
+                    {% if form.errors %}
+                    <span style="color: red;">Please fill in the below fields correctly to save your profile information: </span>
+                    <p> {% for error in form.errors %}
+                    <span style="color: red;">{{ error }}</span>
+                    {% endfor %} </p>
+                    {% else %}
+                    {% endif %}
                     <span class="user info">Username: {{ current_user.username }} </span>
                 </div>
                 <div class="basic-info info-container">

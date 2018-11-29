@@ -44,7 +44,7 @@ def view_profile():
         user.blood_pressure_systolic = form.blood_pressure_systolic.data
         user.blood_pressure_diastolic = form.blood_pressure_diastolic.data
         user.diabetes = form.diabetes.data
-        db.session.add(user)
+        # db.session.add(user)
         db.session.commit()
         return render_template("profile.html", form=form)
 
