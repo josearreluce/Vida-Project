@@ -9,9 +9,9 @@ class ProfileForm(FlaskForm):
     height = StringField('Height', validators=[DataRequired()])
     weight = StringField('Weight', validators=[DataRequired()])
     smoker = StringField('Smoker', validators=[DataRequired()])
-    blood_pressure_systolic = StringField('Blood Pressure Systolic (Higher measurement)', 
+    blood_pressure_systolic = StringField('Blood Pressure Systolic (Higher measurement)',
         validators=[DataRequired()])
-    blood_pressure_diastolic = StringField('Blood Pressure Diastolic (Lower measurement)', 
+    blood_pressure_diastolic = StringField('Blood Pressure Diastolic (Lower measurement)',
         validators=[DataRequired()])
     diabetes = StringField('Diabetes', validators=[DataRequired()])
     submit = SubmitField('Save')
@@ -21,7 +21,7 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Sign In')
-    log_errors = []
+    log_errors = [[], 0]
 
 
 class SignUpForm(FlaskForm):

@@ -9,6 +9,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 
+
 class DatabaseConnection():
 
     def __init__(self):
@@ -40,7 +41,6 @@ Base = declarative_base()
 class UserSession(UserMixin, db.Model):
     __tablename__ = 'users'
 
-#    index = Column(Integer)
     username = Column(String, primary_key=True)
     pswd = Column(String)
 
@@ -55,6 +55,7 @@ class UserSession(UserMixin, db.Model):
 
     def get_id(self):
         return self.username
+
 
 @login.user_loader
 def load_user(username):

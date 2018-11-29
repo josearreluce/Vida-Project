@@ -109,7 +109,7 @@ class TestSignUp(TestWebForms):
         self.app.get(self.sign_up_page, follow_redirects=True)
         response = self._make_post(self.sign_up_page, self.user_dict)
 
-        self.assertNotIn('Username Already In Use!', str(response.data))
+        self.assertIn('Username Already In Use!', str(response.data))
 
     def test_valid_signup(self):
         # ensure username and pass are not already in the db
@@ -135,6 +135,7 @@ class TestLogin(TestWebForms):
 
         self.assertIn("Invalid Username or Password", str(response.data))
 
+
     def test_valid_login(self):
         # ensure username and pass are saved
         if not self._test_user_in_db():
@@ -144,8 +145,19 @@ class TestLogin(TestWebForms):
 
         response = self._make_post(self.login_page, self.user_dict)
 
+        # Ensure no errors were thrown
         self.assertNotIn("Invalid Username or Password", str(response.data))
 
+        # Ensure sucessful redirect
+        self.assertIn("Start Assessment", str(response.data))
+
+        # Ensure Home page no longer shows the Login Form
+        response = self.app.get(self.login_page, follow_redirects=True)
+        self.assertIn("We are Vida, your personalized healthcare advisor.", str(response.data))
+
+
+class TestLoginLimit(TestWebForms):
+    # Required to be a different class since this will block all other login testing
     def test_login_rate_limit(self):
         # ensure username and pass are saved
         if not self._test_user_in_db():
@@ -172,7 +184,11 @@ class TestLogin(TestWebForms):
 
         self.user_dict.update(password=self.password + 'oops5')
         response = self._make_post(self.login_page, self.user_dict)
-        self.assertIn("Maximum Login Attempts Reached, Please Try Again Later", str(response.data))
+
+        # This ensures that brute force attacks will not be possible
+        # by limiting the number of attempted logins
+        self.assertIn("Maximum Failed Logins Reached. Please Restart Flask", str(response.data))
+
 
 
 class TestProfile(TestWebForms):
@@ -227,25 +243,26 @@ class TestProfile(TestWebForms):
 class TestLogout(TestWebForms):
 
     def test_invalid_logout(self):
-        pass
         # If not logged in, can't log out
-        self.app.get(self.logout_page, follow_redirects=True)
-        response = self._make_post(self.logout_page, {})
-        # Check that you are taken back to home page
-        self.assertIn("Login", str(response.data))
+        response = self.app.get(self.logout_page, follow_redirects=True)
+        # We don't allow users to go to log out if they aren't logged in
+        # 401 Is an unauthorized status code
+        self.assertEqual(response.status_code, 401)
+
 
     def test_valid_logout(self):
         # Login first
         response = self.app.get(self.login_page, follow_redirects=True)
-        self.assertEqual(response.status_code, 200)
 
         response = self._make_post(self.login_page, self.user_dict)
         self.assertNotIn('Username Already In Use!', str(response.data))
 
         self.app.get(self.logout_page, follow_redirects=True)
 
-        response = self._make_post(self.logout_page, {})
+        self.assertEqual(response.status_code, 200)
+        response = self.app.get(self.login_page, follow_redirects=True)
         # Check that you are taken back to home page
+        # And that the home page now displays a login form once again
         self.assertIn("Login", str(response.data))
 
 

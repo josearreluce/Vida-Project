@@ -44,6 +44,8 @@ def symptom_assessment():
 @app.route("/", methods=["GET","POST"])
 def login():
     form = LoginForm()
+    if form.log_errors[1] > 4:
+        return redirect('/failed') # Prevent Brute Force Attacks
 
     if not current_user.is_authenticated and form.validate_on_submit():
         username = form.username.data
@@ -51,19 +53,28 @@ def login():
 
         check_user = UserSession.query.filter_by(username=username).first()
         if check_user is None or not check_user.check_password(password):
-            if form.log_errors:
-                form.log_errors.pop()
+            if form.log_errors[0]:
+                form.log_errors[0].pop()
 
-            form.log_errors.append('Invalid Username or Password!')
+            form.log_errors[0].append('Invalid Username or Password!')
+            form.log_errors[1] += 1
+
             return redirect('/')
         else:
-            if form.log_errors:
-                form.log_errors.pop()
+            if form.log_errors[0]:
+                form.log_errors[0].clear()
 
+            form.log_errors[1] = 0
             login_user(check_user, remember=form.remember_me.data)
+
         return redirect('/assessment')
 
     return render_template('login.html', title='Log In', form=form)
+
+
+@app.route("/failed")
+def failed():
+    return render_template("failed.html")
 
 
 @app.route('/logout')
@@ -89,6 +100,7 @@ def signup():
         db.session.add(user)
         db.session.commit()
         login_user(user)
+
         return redirect('/assessment')
 
     return render_template('sign_up.html', title='Sign Up', form=form)
