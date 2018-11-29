@@ -11,6 +11,7 @@
             {% if not current_user.is_authenticated %}
                 <li> <a href="/sign_up"> Sign Up </a></li>
             {% else %}
+                <li> <a href="/assessment_history"> Assessment History </a></li>
                 <li> <a href="/logout"> Logout </a></li>
             {% endif %}
         </ul>

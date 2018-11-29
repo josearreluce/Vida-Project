@@ -40,6 +40,10 @@ def handle_assessment():
 def symptom_assessment():
     return render_template("assessment.html")
 
+@app.route("/assessment_history")
+def handle_assessment_history():
+    return render_template("assessment_history.html")
+
 
 @app.route("/", methods=["GET","POST"])
 def login():
