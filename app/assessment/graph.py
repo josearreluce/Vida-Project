@@ -15,8 +15,12 @@ from sqlalchemy import create_engine
 import pandas as pd
 import numpy as np
 import sys
-sys.path.append('../src')
+# sys.path.append('../src')
 # from users import *
+sys.path.append('../../')
+from app.src.users import *
+from app import models
+from app.models import DatabaseConnection, UserSession
 
 
 # Extracts data from DynamoDB. 3 tables: Conditions, Related symptoms, sub symptom names
@@ -87,7 +91,6 @@ def create_all_symptom_graphs(df_cond, df_related_symptoms):
     return d 
 
 graph_dict = create_all_symptom_graphs(df_cond, df_related_symptoms)
-
 
 def load_cpds():
     for sympt_id in graph_dict:
@@ -172,10 +175,19 @@ def load_total_cpds():
 
 #load_total_cpds()
 
+def dbUsertoUser(userschema):
 
+    # Account Info
+    acc_info = AccountInfo(userschema.username, userschema.pswd)
 
+    # Basic Info
+    basic_info = BasicInfo(userschema.age, userschema.sex)
 
+    # Personal Info
+    personal_info = PersonalInfo(userschema.height, userschema.weight)
 
+    # Health Background
+    blood_pressure = (userschema.blood_pressure_low, userschema.blood_pressure_high)
+    health_background = HealthBackground(userschema.smoker, blood_pressure, userschema.diabetes)
 
-
-
+    return User(acc_info, basic_info, personal_info, health_background)

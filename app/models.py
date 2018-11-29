@@ -64,6 +64,11 @@ class UserSession(UserMixin, db.Model):
     def get_id(self):
         return self.username
 
+class AssessmentHistory():
+    __tablename__ = 'users'
+
+    username = Column(String)
+    pswd = Column(String)
 
 @login.user_loader
 def load_user(username):

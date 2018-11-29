@@ -1,7 +1,7 @@
-import sys
-sys.path.append('../../')
-from app import models
-from app.models import DatabaseConnection, UserSession
+# import sys
+# sys.path.append('../../')
+# from app import models
+# from app.models import DatabaseConnection, UserSession
 
 class AccountInfo():
 
@@ -115,19 +115,19 @@ class User(object):
     def setHealthBackground(self, health_background):
         self.health_background = health_background
 
-def dbUsertoUser(userschema):
+# def dbUsertoUser(userschema):
 
-    # Account Info
-    acc_info = AccountInfo(userschema.username, userschema.pswd)
+#     # Account Info
+#     acc_info = AccountInfo(userschema.username, userschema.pswd)
 
-    # Basic Info
-    basic_info = BasicInfo(userschema.age, userschema.sex)
+#     # Basic Info
+#     basic_info = BasicInfo(userschema.age, userschema.sex)
 
-    # Personal Info
-    personal_info = PersonalInfo(userschema.height, userschema.weight)
+#     # Personal Info
+#     personal_info = PersonalInfo(userschema.height, userschema.weight)
 
-    # Health Background
-    blood_pressure = (userschema.blood_pressure_low, userschema.blood_pressure_high)
-    health_background = HealthBackground(userschema.smoker, blood_pressure, userschema.diabetes)
+#     # Health Background
+#     blood_pressure = (userschema.blood_pressure_low, userschema.blood_pressure_high)
+#     health_background = HealthBackground(userschema.smoker, blood_pressure, userschema.diabetes)
 
-    return User(acc_info, basic_info, personal_info, health_background)
+#     return User(acc_info, basic_info, personal_info, health_background)
