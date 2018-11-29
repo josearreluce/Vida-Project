@@ -1,4 +1,4 @@
-from .graph import *
+from graph import *
 import networkx as nx
 import pylab as plt
 from pgmpy.inference import VariableElimination
@@ -17,33 +17,34 @@ import numpy as np
 
 # network visual
 # set structure -- defining relationships
-state_network2 = BayesianModel([("Symptom_1", "Sub1_symptom_1"),
-                               ("Symptom_1", "Sub2_symptom_1"),
-                              ("Symptom_2", "Sub1_symptom_2"),
-                               ("Symptom_2", "Sub2_symptom_2"),
-                              ("Sub1_symptom_1", "Condition_1"),
-                                ("Sub2_symptom_1", "Condition_2"),
-                              ("Sub1_symptom_2", "Condition_1"),
-                              ("Sub2_symptom_2", "Condition_2")])
+# G_sympt = BayesianModel([("Symptom_1", "Sub1_symptom_1"),
+#                                ("Symptom_1", "Sub2_symptom_1"),
+#                               ("Symptom_2", "Sub1_symptom_2"),
+#                                ("Symptom_2", "Sub2_symptom_2"),
+#                               ("Sub1_symptom_1", "Condition_1"),
+#                                 ("Sub2_symptom_1", "Condition_2"),
+#                               ("Sub1_symptom_2", "Condition_1"),
+#                               ("Sub2_symptom_2", "Condition_2")])
 
-values = pd.DataFrame(np.random.randint(low=0, high=2, size=(1000, 8)),
-                   columns=['Symptom_1', 'Symptom_2', 'Sub1_symptom_1', 'Sub1_symptom_2' ,'Sub2_symptom_1', 'Sub2_symptom_2', 'Condition_1', 'Condition_2'])
-# print(values)
-estimator = BayesianEstimator(state_network2, values)
-x = estimator.get_parameters(prior_type='BDeu', equivalent_sample_size=5)
-for i,cpd in enumerate(x):
-    print(i, cpd.values)
-    state_network2.add_cpds(cpd)
+# values = pd.DataFrame(np.random.randint(low=0, high=2, size=(1000, 8)),
+#                    columns=['Symptom_1', 'Symptom_2', 'Sub1_symptom_1', 'Sub1_symptom_2' ,'Sub2_symptom_1', 'Sub2_symptom_2', 'Condition_1', 'Condition_2'])
+# # print(values)
+# estimator = BayesianEstimator(G_sympt, values)
+# x = estimator.get_parameters(prior_type='BDeu', equivalent_sample_size=5)
+# for i,cpd in enumerate(x):
+#     print(i, cpd.values)
+#     G_sympt.add_cpds(cpd)
 
-print(estimator.estimate_cpd('Condition_2', prior_type="dirichlet", pseudo_counts=[1,2]))
-# inference on graph
-network_infer = VariableElimination(state_network2)
+# print(estimator.estimate_cpd('Condition_2', prior_type="dirichlet", pseudo_counts=[1,2]))
+# # inference on graph
 
+# network_infer = VariableElimination(G_sympt_1)
 # given symptom and all possible condiitons, outputs list of
 # conditions with some degree of connection to this symptom
 def select_relevant_cond(symptom, list_cond):
+    G_sympt = graph_dict[symptom][0]
     relevant_cond = []
-    trail_dic = state_network2.active_trail_nodes(symptom)
+    trail_dic = G_sympt.active_trail_nodes(symptom)
     trail_list = list(trail_dic[symptom])
     length = len(list_cond)
     for i in range(length):
@@ -59,28 +60,33 @@ def select_relevant_symptoms(graph, condition):
     wordList = mystr.replace("(","").replace(")","").replace(",","").split(" ")
 
     wordList.reverse()
-    rel_symp = []
+    rel_symp = set()
     for sub_symp in wordList:
         if sub_symp == '|':
             break;
         ind = graph.local_independencies(sub_symp)
         symp = str(ind).replace(",", "").replace(")","").split(" ")[-1]
-        rel_symp.append(symp)
+        rel_symp.add(symp)
 
-    return rel_symp
+    return list(rel_symp)
 
 
 
 # 0 -- no, 1 -- yes
 # what happens when user mystypes symptom
 def start_assessment(symptom_init):
-    successors = list(state_network2.successors(symptom_init))
+    G_sympt = graph_dict[symptom_init][0]
+    successors = list(G_sympt.successors(symptom_init))
 
     return successors
 
 
 def evaluate(symptom_init, successors, user_sub_answers):
     #starts with 'yes' for initial symptom
+    G_sympt = graph_dict[symptom_init][0]
+    condition_list = graph_dict[symptom_init][2]
+    network_infer = VariableElimination(G_sympt)
+
     symp_list_val = [1]
     symp_list_name = [symptom_init]
     for i,answer in enumerate(user_sub_answers):
@@ -94,7 +100,7 @@ def evaluate(symptom_init, successors, user_sub_answers):
     #all condiitons to compare
     relev_conds = select_relevant_cond(symptom_init, condition_list) # condition_list is a global in graph.py
     llen = len(symp_list_val)
-    #creade evidence dict
+    #create evidence dict
     # e.g. {symptom:yes}
     evidencee = {}
     cond_scores_list = []
@@ -116,13 +122,14 @@ def evaluate(symptom_init, successors, user_sub_answers):
     condition_val_tuples = sorted(condition_val_tuples, key=lambda x: x[1], reverse=True)
     print(condition_val_tuples)
 
-    rel_symptoms = select_relevant_symptoms(state_network2, condition_val_tuples[0][0])
+    # TODO: move this out
+    rel_symptoms = select_relevant_symptoms(G_sympt, condition_val_tuples[0][0])
     print(rel_symptoms)
-    # for condition,val in condition_val_tuples:
-    #     for symptoms in condition.symptoms:
-
-
-
 
     print(top_cond_candidate, score_top)
     return condition_val_tuples
+
+x = start_assessment("sympt_1")
+res = evaluate("sympt_1", x, [1,0,1,1,0,0,1,1])
+
+print(res)

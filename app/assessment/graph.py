@@ -16,7 +16,7 @@ import pandas as pd
 import numpy as np
 import sys
 sys.path.append('../src')
-from users import *
+# from users import *
 
 
 # Extracts data from DynamoDB. 3 tables: Conditions, Related symptoms, sub symptom names
@@ -29,35 +29,79 @@ def tbl_to_df():
 
 df_cond, df_related_symptoms, df_sub_symptom_names = tbl_to_df()
 
-# def tbl_to_df_sympt_id(sympt_id):
-#     engine = create_engine("postgresql://pv_admin:CMSC22001@ec2-13-59-75-157.us-east-2.compute.amazonaws.com:5432/pv_db")
-#     related_symptoms = pd.read_sql("select * from related_symptoms where sympt_id = '" + sympt_id + "'", engine)
-#     return related_symptoms
+def tbl_to_df_sympt_id(sympt_id):
+    engine = create_engine("postgresql://pv_admin:CMSC22001@ec2-13-59-75-157.us-east-2.compute.amazonaws.com:5432/pv_db")
+    related_symptoms = pd.read_sql("select * from related_symptoms where sympt_id = '" + sympt_id + "'", engine)
+    return related_symptoms
 
-# df_related_symptoms_sympt_1 = tbl_to_df_sympt_id("sympt_1")
+df_related_symptoms_sympt_1 = tbl_to_df_sympt_id("sympt_1")
 
-# # Create Bayesian Model
+# Create Bayesian Model
 
-# def load_graph(df_cond, df_related_symptoms, sympt_id):
-#     G = BayesianModel()
-#     sub_symptom_list = []
-#     for i, row in df_related_symptoms.iterrows():
+def load_graph_sympt_id(df_cond, df_related_symptoms, sympt_id):
+    G = BayesianModel()
+    sub_symptom_list = []
+    condition_list = set()
+    for i, row in df_related_symptoms.iterrows():
 
-#         sympt_id = row[0]
-#         for j, col in row.iteritems():
-#             sub_sympt_id = str(j)
-#             if sub_sympt_id[:8]== "sub_symp":
-#                 if col != 0:
-#                     G.add_edge(sympt_id, sub_sympt_id)
-#                     sub_symptom_list.append(sub_sympt_id)
+        symptom_id = str(row[0])
+        if (symptom_id == sympt_id):
+            for j, col in row.iteritems():
+                sub_symptom_id = str(j)
+                if sub_symptom_id[:8]== "sub_symp":
+                    if col != 0:
+                        G.add_edge(symptom_id, sub_symptom_id)
+                        sub_symptom_list.append(sub_symptom_id)
 
-#     return G
 
-# G_symp1 = BayesianModel()
+    for i, row in df_cond.iterrows():
+        cond_id = str(row[0])
+        for j, col in row.iteritems():
+            if col != 0.0:
+                sub_symptom_id = str(j)
+                # print(symptom_id, cond_id)
+                if (sub_symptom_id in sub_symptom_list):
+                    G.add_edge(sub_symptom_id, cond_id)
+                    condition_list.add(cond_id)
+    condition_list = list(condition_list)
+    return G, sub_symptom_list, condition_list
+
+G_sympt_1, sympt_1_sub_list, condition_list = load_graph_sympt_id(df_cond, df_related_symptoms, "sympt_1")
+
+print(len(sympt_1_sub_list))
+print(sympt_1_sub_list)
+print(condition_list)
 
 num_conditions = df_cond.shape[0]
 num_symptoms = df_related_symptoms.shape[0]
 num_sub_symptoms = df_sub_symptom_names.shape[0]
+
+all_symptoms = list(df_related_symptoms['sympt_id'])
+all_conditions = list(df_cond['cond_id'])
+all_sub_symptoms = list(df_sub_symptom_names['sub_sympt_id'])
+
+
+def create_all_symptom_graphs(df_cond, df_related_symptoms):
+    d = {} # symptom_id: [Graph, subsymptoms, conditions]
+    for sympt_id in all_symptoms:
+        print(sympt_id)
+        G, sub_symptom_list, condition_list = load_graph_sympt_id(df_cond, df_related_symptoms, sympt_id)
+        d[sympt_id] = [G, sub_symptom_list, condition_list]
+    return d 
+
+graph_dict = create_all_symptom_graphs(df_cond, df_related_symptoms)
+print(graph_dict)
+
+
+def load_cpds():
+    for sympt_id in graph_dict:
+        print(sympt_id)
+        G_sympt = graph_dict[sympt_id][0]
+        data = pd.DataFrame(np.random.randint(low=0, high=2, size=(100, len(G_sympt.nodes))),
+                   columns= G_sympt.nodes)
+        G_sympt.fit(data, estimator=BayesianEstimator, prior_type="BDeu")
+
+load_cpds()
 
 def load_graph(df_cond, df_related_symptoms):
     G = BayesianModel()
@@ -77,10 +121,10 @@ def load_graph(df_cond, df_related_symptoms):
 
         sympt_id = str(row[0])
         for j, col in row.iteritems():
-            sub_sympt_id = str(j)
-            if sub_sympt_id[:8]== "sub_symp":
-                if col != 0:
-                    G.add_edge(sympt_id, sub_sympt_id)
+            sub_symptom_id = str(j)
+            if sub_symptom_id[:8]== "sub_symp":
+                if col != 0.0:
+                    G.add_edge(sympt_id, sub_symptom_id)
     return G
 
 G = load_graph(df_cond, df_related_symptoms)
@@ -92,50 +136,26 @@ print(len(G.edges))
 
 data = pd.DataFrame(np.random.randint(low=0, high=2, size=(10, len(gnodes))),
                    columns= gnodes)
+data_sympt_1 = pd.DataFrame(np.random.randint(low=0, high=2, size=(300, len(G_sympt_1.nodes))),
+                   columns= G_sympt_1.nodes)
 # G.fit(data)
 
 # print(values2)
 estimator2 = BayesianEstimator(G, data)
+estimator_sympt_1 = BayesianEstimator(G_sympt_1, data_sympt_1)
 
-# cpd_cond_1 = estimator2.estimate_cpd('sympt_1', prior_type="BDeu", equivalent_sample_size=10)
-# print(cpd_cond_1.values)
-# print(1)
 
-# cpd_cond_2 = estimator2.estimate_cpd('sympt_2', prior_type="BDeu", equivalent_sample_size=10)
-# print(cpd_cond_2.values)
-# print(2)
+# for i in range(1, num_sub_symptoms + 1):
+#     print(i)
+#     cpd_sub = estimator2.estimate_cpd('sub_sympt_' + str(i), prior_type="BDeu")
+#     G.add_cpds(cpd_sub)
+#     if i <= num_symptoms:
+#         cpd_symp = estimator2.estimate_cpd('sympt_' + str(i), prior_type="BDeu")
+#         G.add_cpds(cpd_symp)
 
-# cpd_cond_3 = estimator2.estimate_cpd('sub_sympt_3', prior_type="BDeu", equivalent_sample_size=10)
-# print(cpd_cond_3.values)
-# print(3)
 
-cpd_cond_4 = estimator2.estimate_cpd('cond_4', prior_type="BDeu", equivalent_sample_size=10)
-print(cpd_cond_4)
-
-cpd_cond_5 = estimator2.estimate_cpd('cond_5', prior_type="BDeu", equivalent_sample_size=10)
-print(cpd_cond_5)
-
-cpd_cond_6 = estimator2.estimate_cpd('cond_6', prior_type="BDeu", equivalent_sample_size=10)
-print(cpd_cond_6)
-
-num_sub_symptoms = 110
-num_symptoms = 35
-for i in range(1, int(num_sub_symptoms/2)):
-    print(i)
-    cpd_sub = estimator2.estimate_cpd('sub_sympt_' + str(i), prior_type="BDeu")
-    G.add_cpds(cpd_sub)
-    if i <= num_symptoms:
-        cpd_symp = estimator2.estimate_cpd('sympt_' + str(i), prior_type="BDeu")
-        G.add_cpds(cpd_symp)
-
-print("first batch done")
-for i in range(int(num_sub_symptoms/2), num_sub_symptoms+1):
-    print(i)
-    cpd_sub = estimator2.estimate_cpd('sub_sympt_' + str(i), prior_type="BDeu")
-    print(cpd_sub.values)
-    # G.add_cpds(cpd_sub)
-
-print("done population symptoms and subsymptoms cpds")
+# print("done population symptoms and subsymptoms cpds")
+# print(G.get_cpds())
 
 
 
@@ -159,95 +179,16 @@ print("done population symptoms and subsymptoms cpds")
     
 
 # G.fit(data, estimator=BayesianEstimator, prior_type="BDeu")
+# G_sympt_1.fit(data_sympt_1, estimator=BayesianEstimator, prior_type="BDeu")
+# print(len(G_sympt_1.get_cpds()))
+# estimator_sympt_1 = BayesianEstimator(G_sympt_1, data_sympt_1)
+# G_sympt_1_parameters = estimator_sympt_1.get_parameters(prior_type='BDeu', equivalent_sample_size=5)
 
-
-# set structure -- defining relationships
-state_network = BayesianModel([("Symptom_1", "Sub1_symptom_1"),
-                               ("Symptom_1", "Sub2_symptom_1"),
-                              ("Symptom_2", "Sub1_symptom_2"),
-                               ("Symptom_2", "Sub2_symptom_2"),
-                              ("Sub1_symptom_1", "Condition_1"),
-                                ("Sub2_symptom_1", "Condition_2"),
-                              ("Sub1_symptom_2", "Condition_1"),
-                              ("Sub2_symptom_2", "Condition_2")])
+# for i,cpd in enumerate(G_sympt_1_parameters):
+#   print(i, cpd.values, cpd)
 
 
 
-# set up relationshipt - CPDs (Conditional Porbability Distribution)
-
-Symptom1_cpd = TabularCPD(
-                        variable = "Symptom_1",
-                        variable_card = 2,
-                        values = [[0.4,0.6]])
-
-
-Symptom2_cpd = TabularCPD(
-                        variable = "Symptom_2",
-                        variable_card = 2,
-                        values = [[0.3,0.7]])
-
-Sub1_s1_cpd = TabularCPD(
-                        variable = "Sub1_symptom_1",
-                        variable_card = 2,
-                        values = [[0.7,0.0],
-                                 [0.3,1.0]],
-                        evidence = ["Symptom_1"],
-                        evidence_card = [2])
-
-Sub2_s1_cpd = TabularCPD(
-                        variable = "Sub2_symptom_1",
-                        variable_card = 2,
-                        values = [[0.5,0.0],
-                                 [0.5,1.0]],
-                        evidence = ["Symptom_1"],
-                        evidence_card = [2])
-
-Sub1_s2_cpd = TabularCPD(
-                        variable = "Sub1_symptom_2",
-                        variable_card = 2,
-                        values = [[0.5,0.0],
-                                 [0.5,1.0]],
-                        evidence = ["Symptom_2"],
-                        evidence_card = [2])
-Sub2_s2_cpd = TabularCPD(
-                        variable = "Sub2_symptom_2",
-                        variable_card = 2,
-                        values = [[0.5,0.0],
-                                 [0.5,1.0]],
-                        evidence = ["Symptom_2"],
-                        evidence_card = [2])
-
-
-Cond_1_cpd = TabularCPD(
-                        variable = "Condition_1",
-                        variable_card = 2,
-                        values = [[0.8,0.4,0.7,0.1],
-                                 [0.2,0.6,0.3,0.9]],
-                        evidence = ["Sub1_symptom_1", "Sub1_symptom_2"],
-                        evidence_card = [2,2])
-
-Cond_2_cpd = TabularCPD(
-                        variable = "Condition_2",
-                        variable_card = 2,
-                        values = [[0.7,0.5,0.8,0.2],
-                                 [0.3,0.5,0.2,0.8]],
-                        evidence = ["Sub2_symptom_1", "Sub2_symptom_2"],
-                        evidence_card = [2,2])
-
-
-
-state_network.add_cpds (Symptom1_cpd, 
-                       Symptom2_cpd, 
-                       Sub1_s1_cpd, 
-                       Sub2_s1_cpd, 
-                       Sub1_s2_cpd, 
-                       Sub2_s2_cpd, 
-                       Cond_1_cpd,
-                       Cond_2_cpd
-                       )
-
-#list of all possible conditions in database
-condition_list = ["Condition_1", "Condition_2", "Condition_3not"]
 
 
 
