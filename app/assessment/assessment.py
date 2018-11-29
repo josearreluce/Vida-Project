@@ -1,4 +1,4 @@
-from graph import *
+from .graph import *
 
 
 # network_infer = VariableElimination(G_sympt_1)
@@ -63,7 +63,7 @@ def evaluate(symptom_init, successors, user_sub_answers):
 
     # all condiitons to compare
     # condition_list is all the conditions reachable via symptom_init
-    relev_conds = select_relevant_cond(symptom_init, condition_list) 
+    relev_conds = select_relevant_cond(symptom_init, condition_list)
     llen = len(symp_list_val)
 
     # create evidence dict
@@ -87,7 +87,7 @@ def evaluate(symptom_init, successors, user_sub_answers):
 
 def followup(initial_evaluate, symptom_init):
 
-    # find relevant symptoms given the top probabilistic condition 
+    # find relevant symptoms given the top probabilistic condition
     rel_symptoms = select_relevant_symptoms(total_G, initial_evaluate[0][0], symptom_init)
 
     successors_list = []
@@ -95,7 +95,7 @@ def followup(initial_evaluate, symptom_init):
         successors = start_assessment(sympt_id)
         successors_list.append(successors)
 
-    return rel_symptoms, successors_list 
+    return rel_symptoms, successors_list
 
 # list of symptoms, list of successors, list of user_sub_answers. (1D, 2D, 2D)
 # returns updated probabilty on the top probabilistic condition in the initial evaluate
