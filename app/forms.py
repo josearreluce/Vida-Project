@@ -45,6 +45,5 @@ class SignUpForm(FlaskForm):
         if self.username.data == password.data:
             raise ValidationError('Username Cannot Equal Password!')
 
-
 class LogoutForm(FlaskForm):
     submit = SubmitField('Logout')
