@@ -20,6 +20,7 @@ from app.src.users import *
 from app import models
 from app.models import DatabaseConnection, UserSession
 
+<<<<<<< HEAD
 
 engine = create_engine("postgresql://pv_admin:CMSC22001@ec2-13-59-75-157.us-east-2.compute.amazonaws.com:5432/pv_db")
 def sympt_id_to_name(_id):
@@ -35,6 +36,8 @@ name = sympt_id_to_name(_id)
 
 
 
+=======
+>>>>>>> 6e085401e43195710c0360f5a2c20c604c7a2ead
 # Extracts data from DynamoDB. 3 tables: Conditions, Related symptoms, sub symptom names
 def tbl_to_df():
     engine = create_engine("postgresql://pv_admin:CMSC22001@ec2-13-59-75-157.us-east-2.compute.amazonaws.com:5432/pv_db")
@@ -94,6 +97,7 @@ all_symptoms = list(df_related_symptoms['sympt_id'])
 all_conditions = list(df_cond['cond_id'])
 all_sub_symptoms = list(df_sub_symptom_names['sub_sympt_id'])
 
+<<<<<<< HEAD
 def get_all_symptoms():
 
     temp_id = list(df_related_symptoms['sympt_id'])
@@ -107,6 +111,8 @@ def get_all_symptoms():
         res.append(name)
     return res
 
+=======
+>>>>>>> 6e085401e43195710c0360f5a2c20c604c7a2ead
 
 def create_all_symptom_graphs(df_cond, df_related_symptoms):
     d = {} # symptom_id: [Graph, subsymptoms, conditions]
@@ -153,6 +159,7 @@ def load_graph(df_cond, df_related_symptoms):
     return G
 
 total_G = load_graph(df_cond, df_related_symptoms)
+
 
 
 # Compute and load all cpds for total graph. Takes a long time
@@ -335,9 +342,21 @@ user_info = extract_from_user(user)
 # print(cond_info)
 # print(info.age_max[0])
 #sex, age, time
+def check_cvts(condition_val_tuples):  #The only requirement is that they need to be non-negative
+    for condition_tuple in condition_val_tuples:
+        if condition_tuple[1] < 0:
+            return False
 
 
 def apply_personal_features(user, condition_val_tuples, time_first_symptom):
+    if time_first_symptom < 0:
+        return 0  # Impossible.
+
+    if check_cvts(condition_val_tuples) is False:  # Non-negative required
+        return 0
+
+    array_new = []  # an array for normalization
+
     new_cond_val_tuples = condition_val_tuples
     user_info = extract_from_user(user)
     u_sex = user_info[0]
@@ -350,18 +369,35 @@ def apply_personal_features(user, condition_val_tuples, time_first_symptom):
         if u_sex != cond_info_sex_age_time[0] and cond_info_sex_age_time[0] != 0:
             condition_tuple[1] = 0.1
         if u_age < cond_info_sex_age_time[1] or u_age > cond_info_sex_age_time[2]:
-            condition_tuple[1] = condition_tuple[1] - 0.2
+            condition_tuple[1] = condition_tuple[1] * 0.8
         if time < cond_info_sex_age_time[3] or time > cond_info_sex_age_time[4]:
-            condition_tuple[1] = condition_tuple[1] - 0.1
+            condition_tuple[1] = condition_tuple[1] * 1.2
+        array_new.append(condition_tuple[1])
+        array_normed = [i/sum(array_new) for i in array_new]
+
+    for i in range(len(new_cond_val_tuples)):
+        new_cond_val_tuples[i][1] = array_normed[i]
+
     new_cond_val_tuples = sorted(new_cond_val_tuples, key=lambda x: x[1], reverse=True)
     return new_cond_val_tuples
 
 condition_val_tuples = [['cond_1', 0.47752808988764045], ['cond_2', 0.40588235294117647]]
 new_cond_val_tuples = apply_personal_features(user, condition_val_tuples, 10)
 # new_cond_val_tuples = apply_personal_features(user, condition_val_tuples, 10)
+'''
+print("cvt1")
 print(new_cond_val_tuples)
 
+cvt2 = [['cond_3', 0.95], ['cond_10', 0.05]]
+ncvt2 = apply_personal_features(user, cvt2, 10)
+print("cvt2")
+print(ncvt2)
 
+cvt3 = [['cond_5', 0.5], ['cond_7', 0.3], ['cond_10', 0.2]]
+ncvt3 = apply_personal_features(user, cvt3, 10)
+print("cvt3")
+print(ncvt3)
+'''
 
 
 
@@ -397,27 +433,27 @@ def followup2(rel_symptoms, successors_list, user_sub_answers, cond_id):
     return [cond_id, average]
 
 
-
+'''
 # Testing Examples
 x = start_assessment("sympt_1")
 res = evaluate("sympt_1", x, [1,0,1,1,0,0,1,1])
-# print(res)
+print(res)
 
 x3 = start_assessment("sympt_27")
 res3 = evaluate("sympt_27", x3, [0])
-# print(res3)
+print(res3)
 
 x4 = start_assessment("sympt_8")
 res4 = evaluate("sympt_8", x4, [0, 0, 1, 1])
-# print(res4)
+print(res4)
 
 x2 = start_assessment("sympt_12")
 res2 = evaluate("sympt_12", x2, [1,1])
-# print(res2)
+print(res2)
 
 rel_symptoms, successors_list = followup(res2, "sympt_12")
-# print(rel_symptoms)
-# print(successors_list)
+print(rel_symptoms)
+print(successors_list)
 
 fake_user_sub = []
 for s_list in successors_list:
@@ -427,4 +463,5 @@ for s_list in successors_list:
     fake_user_sub.append(new)
 
 fup2 = followup2(rel_symptoms, successors_list, fake_user_sub, res2[0][0])
-# print(fup2)
+print(fup2)
+'''
