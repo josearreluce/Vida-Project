@@ -33,7 +33,7 @@ class LoginForm(FlaskForm):
 
 class SignUpForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(),Length(min=4, max=50, message='Invalid Username Length!'),
-        Regexp('^[A-Za-z0-9]+$', message='Invalid Password: alphanumeric input only')])
+        Regexp('^[A-Za-z0-9]+$', message='Invalid Username: alphanumeric input only')])
     #wtforms.validators.Regexp(regex, flags=0, message=u'Invalid input.')
     password = PasswordField(
             'Password',

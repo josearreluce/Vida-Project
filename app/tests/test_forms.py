@@ -81,9 +81,9 @@ class TestSignUp(TestWebForms):
 
         # Username and password should be at least 5 characters but less than 50
         self.app.get(self.sign_up_page, follow_redirects=True)
-        invalid_user2 = dict(username="test",password="pass",password2="pass")
+        invalid_user2 = dict(username="t",password="pass",password2="pass")
         response = self._make_post(self.sign_up_page, invalid_user2)
-        self.assertIn('Invalid Username or Password.', str(response.data))
+        self.assertIn('Invalid Username Length!', str(response.data))
 
         self.app.get(self.sign_up_page, follow_redirects=True)
         invalid_user1 = dict(username="test_username_that_is_too_long_12345678901234567890",
@@ -91,14 +91,14 @@ class TestSignUp(TestWebForms):
             password2="test_password_that_is_too_long_12345678901234567890")
         response = self._make_post(self.sign_up_page, invalid_user1)
 
-        self.assertIn('Invalid Username or Password.', str(response.data))
+        self.assertIn('Invalid Username Length!', str(response.data))
 
         # Username and password should contain at least 1 letter
         self.app.get(self.sign_up_page, follow_redirects=True)
         invalid_user2 = dict(username="*****",password="password")
         response = self._make_post(self.sign_up_page, invalid_user2)
 
-        self.assertIn('Invalid Username or Password.', str(response.data))
+        self.assertIn('Invalid Username: alphanumeric input only', str(response.data))
 
 
     def test_existing_user(self):
