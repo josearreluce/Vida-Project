@@ -35,8 +35,8 @@ def handle_assessment():
 @app.route('/profile', methods=['GET', 'POST'])
 def view_profile():
     form = ProfileForm()
-    all_symptoms = assessment.get_all_symptoms()
-    print(all_symptoms)
+    # all_symptoms = assessment.get_all_symptoms()
+    # print(all_symptoms)
 
     if form.validate_on_submit():
         user = UserSession.query.get(current_user.username)

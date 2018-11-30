@@ -30,7 +30,7 @@ def sympt_id_to_name(_id):
 
 _id = 'sympt_1'
 name = sympt_id_to_name(_id)
-print(name)
+# print(name)
 
 
 
@@ -97,9 +97,9 @@ all_sub_symptoms = list(df_sub_symptom_names['sub_sympt_id'])
 def get_all_symptoms():
 
     temp_id = list(df_related_symptoms['sympt_id'])
-    print(temp_id)
+    # print(temp_id)
     res =[]
-    print("HHHERRRERERRERE")
+    # print("HHHERRRERERRERE")
     for id1 in temp_id:
         
         name = sympt_id_to_name(id1)
