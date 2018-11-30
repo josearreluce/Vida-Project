@@ -300,11 +300,13 @@ def evaluate(symptom_init, successors, user_sub_answers):
     condition_val_tuples = sorted(condition_val_tuples, key=lambda x: x[1], reverse=True)
 
     # print(top_cond_candidate, score_top)
+    cond_name_val_tuples = []
     for cond_val_tuple in condition_val_tuples:
         cond_id = cond_val_tuple[0]
-        cond_val_tuple[0] = get_name_from_id(cond_id, df_cond)
-    
-    return condition_val_tuples
+        cond_name= get_name_from_id(cond_id, df_cond)
+        cond_name_val_tuples.append([cond_name, cond_val_tuple[1]])
+
+    return cond_name_val_tuples
 
 
 def tbl_to_df_cond_id(cond_id):
