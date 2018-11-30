@@ -1,4 +1,4 @@
-const example_symptoms = ['Symptom_2', 'Symptom_1'];
+const example_symptoms = ['abdominal pain', 'indigestion', 'diarrhea', 'change in bowel habits', 'loss of appetite', 'nausea', 'fever', 'fatigue', 'itchiness', 'eye itchiness', 'vertigo', 'sore throat', 'irritability', 'thirst', 'mental confusion', 'loss of muscle function', 'missed period', 'light spotting', 'increased sensitivity', 'pus', 'blood in stool', 'dilated pupils', 'body ache', 'malaise', 'itchy nose', 'shortness of breath', 'bulging in groin', 'changes in urination', 'inflammation of ear', 'headache', 'pain in face', 'testicular pain', 'tenderness', 'cough', 'congestion'];
 
 /**
  * Turns off the event listener on the symptom input box and sends an ajax request
@@ -110,6 +110,7 @@ $('#symptom-search').keyup((e) => {
 
     // Get all symptoms that match/begin with input query
     let results = [];
+    const example_symptoms = ['abdominal pain', 'indigestion', 'diarrhea', 'change in bowel habits', 'loss of appetite', 'nausea', 'fever', 'fatigue', 'itchiness', 'eye itchiness', 'vertigo', 'sore throat', 'irritability', 'thirst', 'mental confusion', 'loss of muscle function', 'missed period', 'light spotting', 'increased sensitivity', 'pus', 'blood in stool', 'dilated pupils', 'body ache', 'malaise', 'itchy nose', 'shortness of breath', 'bulging in groin', 'changes in urination', 'inflammation of ear', 'headache', 'pain in face', 'testicular pain', 'tenderness', 'cough', 'congestion'];
     example_symptoms.forEach((symptom) => {
         const curr_symptom = symptom.toLowerCase();
         if (curr_symptom.startsWith(query)) {
