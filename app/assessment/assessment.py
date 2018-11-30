@@ -21,16 +21,17 @@ from app import models
 from app.models import DatabaseConnection, UserSession
 
 
-
-def id_to_name(_id):
-    engine = create_engine("postgresql://pv_admin:CMSC22001@ec2-13-59-75-157.us-east-2.compute.amazonaws.com:5432/pv_db")
-    info = pd.read_sql("select * from conditions where cond_id = '" + _id + "'", engine)
-    name = info.name[0]
+engine = create_engine("postgresql://pv_admin:CMSC22001@ec2-13-59-75-157.us-east-2.compute.amazonaws.com:5432/pv_db")
+def sympt_id_to_name(_id):
+    
+    info = pd.read_sql("select * from related_symptoms where sympt_id = '" + _id + "'", engine)
+    name = info.values[0][1]
     return name
 
-_id = 'cond_2'
-name = id_to_name(_id)
+_id = 'sympt_1'
+name = sympt_id_to_name(_id)
 print(name)
+
 
 
 
@@ -95,11 +96,17 @@ all_sub_symptoms = list(df_sub_symptom_names['sub_sympt_id'])
 
 def get_all_symptoms():
 
-    temp_id = list(df_cond['sympt_id'])
+    temp_id = list(df_related_symptoms['sympt_id'])
+    print(temp_id)
     res =[]
-    for id in temp_id:
-        res.append(id_to_name(id))
+    print("HHHERRRERERRERE")
+    for id1 in temp_id:
+        
+        name = sympt_id_to_name(id1)
+        
+        res.append(name)
     return res
+
 
 def create_all_symptom_graphs(df_cond, df_related_symptoms):
     d = {} # symptom_id: [Graph, subsymptoms, conditions]
