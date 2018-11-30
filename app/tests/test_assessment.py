@@ -124,21 +124,12 @@ class TestAssessmentWithUser(unittest.TestCase):
 
         self.time = 10
 
-        self.correct_symptom1 = "Symptom_1"
-        self.correct_symptom2 = "Symptom_2"
-        self.incorrect_symptom = "Symptom_3"
-        self.correct_condition = "Condition_1"
-        self.correct_successors1 = ast.start_assessment(self.correct_symptom1)
-        self.correct_successors2 = ast.start_assessment(self.correct_symptom2)
-        self.user_sub_answers = [0, 1]
-
         # Graphical Setup
-        self.nograph = ast.BayesianModel()
-        self.cpds = ast.load_cpds(ast.state_network2)
-        self.graph = ast.state_network2
-        self.cpds = []
+        self.df_cond, self.df_related_symptoms, self.sss = ass.tbl_to_df()
+        self.graph = ass.load_graph(self.df_cond, self.df_related_symptoms)
 
-
+        self.nodes = 157
+        self.edges = 293
     # Test that the probabilities for the conditions change when personal features are applied.
     def test_apply_user_features(self):
         self.assertEqual(ass.apply_personal_features(self.user, self.cvt_prior1, self.time), self.cvt1)
@@ -148,28 +139,13 @@ class TestAssessmentWithUser(unittest.TestCase):
         self.assertEqual(ass.apply_personal_features(self.user, self.cvt_bad1, self.time), self.cvt_bad)
 
 
-    def test_load_graph(self):
-        self.assertEqual(ast.load_graph(), self.graph)
-        # Check the nodes for set equality
-        self.assertCountEqual(ast.load_graph().nodes, ['Symptom_1', 'Sub1_symptom_1', 'Sub2_symptom_1', 'Symptom_2', 'Sub1_symptom_2', 'Sub2_symptom_2', 'Condition_1', 'Condition_2'])
-        # Check trail_nodes to investigate links
-        self.assertEqual(ast.load_graph().active_trail_nodes("Symptom_1"), {'Symptom_1': {'Symptom_1', 'Condition_1', 'Sub2_symptom_1', 'Sub1_symptom_1', 'Condition_2'}})
-        self.assertEqual(ast.load_graph().active_trail_nodes("Symptom_2"), {'Symptom_2': {'Sub1_symptom_2', 'Symptom_2', 'Sub2_symptom_2', 'Condition_1', 'Condition_2'}})
-        self.assertEqual(ast.load_graph().active_trail_nodes("Condition_1"),{'Condition_1': {'Sub1_symptom_1', 'Condition_1', 'Condition_2', 'Symptom_1', 'Sub2_symptom_2', 'Sub2_symptom_1', 'Symptom_2', 'Sub1_symptom_2'}})
-        self.assertEqual(ast.load_graph().active_trail_nodes("Condition_2"), {'Condition_2': {'Condition_1', 'Symptom_2', 'Condition_2', 'Sub2_symptom_2', 'Sub2_symptom_1', 'Sub1_symptom_2', 'Symptom_1', 'Sub1_symptom_1'}})
+    def test_load_graph(self):  # No real possibility for a bad input - this is what creates the entire graph.
+        self.assertEqual(len(self.graph.nodes), self.nodes)
+        self.assertEqual(len(self.graph.edges), self.edges)
+
 
     def test_load_cpds(self):
-        # Number of nodes still equal
-        self.assertEqual(len(self.cpds), len(ast.state_network2))
-        for i in range(len(self.cpds)):
-            # Each CPD value not equal to []
-            self.assertNotEqual(self.cpds[i].get_values(), [])
-            sum = 0
-            # Iterate through an index of the cpd probability matrix, ensuring that the "column" sums to 1, so legal
-            for j in range(len(self.cpds[i])):
-                sum += self.cpds[i].get_values()[j]
-            self.assertEqual(sum, 1)
-        return
+        pass
 
 if __name__ == '__main__':
     unittest.main()
