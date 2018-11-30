@@ -20,8 +20,6 @@ from app.src.users import *
 from app import models
 from app.models import DatabaseConnection, UserSession
 
-<<<<<<< HEAD
-
 engine = create_engine("postgresql://pv_admin:CMSC22001@ec2-13-59-75-157.us-east-2.compute.amazonaws.com:5432/pv_db")
 def sympt_id_to_name(_id):
     
@@ -33,11 +31,6 @@ _id = 'sympt_1'
 name = sympt_id_to_name(_id)
 # print(name)
 
-
-
-
-=======
->>>>>>> 6e085401e43195710c0360f5a2c20c604c7a2ead
 # Extracts data from DynamoDB. 3 tables: Conditions, Related symptoms, sub symptom names
 def tbl_to_df():
     engine = create_engine("postgresql://pv_admin:CMSC22001@ec2-13-59-75-157.us-east-2.compute.amazonaws.com:5432/pv_db")
@@ -97,7 +90,6 @@ all_symptoms = list(df_related_symptoms['sympt_id'])
 all_conditions = list(df_cond['cond_id'])
 all_sub_symptoms = list(df_sub_symptom_names['sub_sympt_id'])
 
-<<<<<<< HEAD
 def get_all_symptoms():
 
     temp_id = list(df_related_symptoms['sympt_id'])
@@ -110,9 +102,6 @@ def get_all_symptoms():
         
         res.append(name)
     return res
-
-=======
->>>>>>> 6e085401e43195710c0360f5a2c20c604c7a2ead
 
 def create_all_symptom_graphs(df_cond, df_related_symptoms):
     d = {} # symptom_id: [Graph, subsymptoms, conditions]
