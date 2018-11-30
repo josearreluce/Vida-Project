@@ -17,7 +17,7 @@
 /*.symptom-container { */
 .symptom-assessment.initial {
     margin-top:1em;
-    background-color: #5051DB;;
+    background-color: #5051DB;
     text-align: center;
     left: 50%;
     top: 30%;
@@ -29,7 +29,7 @@
 }
 
 .symptom-assessment.final {
-    background-color: indigo;
+    background-color: #5051DB;
     overflow-y: scroll;
     display: flex;
     flex-wrap: wrap;
@@ -90,7 +90,7 @@
 }
 
 .symptom-result {
-    border-top: 1px solid gray;
+    border-top: 1px solid ghostwhite;
     padding: 0.5em 0;
 }
 
@@ -106,7 +106,7 @@
 }
 
 .symptom-box-container.hidden {
-    border: 2px solid darkgray;
+    border: 2px solid ghostwhite;
     display: none;
 }
 
@@ -118,7 +118,7 @@
 
 .symptom-vis {
     background-color: #5051DB;
-    border: 2px solid darkgray;
+    border: 2px solid ghostwhite;
     width: 70%;
 }
 
@@ -131,8 +131,8 @@
 }
 
 .question {
-    background-color: lightgray;
-    border: 2px solid lightgray;
+    background-color: ghostwhite;
+    border: 2px solid ghostwhite;
     border-radius: 100px;
     margin: 0;
     padding: 0.4em;
