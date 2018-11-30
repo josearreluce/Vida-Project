@@ -5,6 +5,7 @@ sys.path.append('../assessment')
 sys.path.append('../src')
 import assessment_simple_test as ast
 from users import  *
+import assessment as ass
 
 class TestAssessment(unittest.TestCase):
 
@@ -99,14 +100,30 @@ class TestAssessment(unittest.TestCase):
 """
 class TestAssessmentWithUser(unittest.TestCase):
     def setUp(self):
+
         # Setup the testcase
         self.account_info = AccountInfo("bbjacob", "bru123321")
         self.basic_info = BasicInfo(22, 1)  # sex 1-male, 2-female
         self.personal_info = PersonalInfo(185, 81)  # cm, kg
-        self.health_back = (0, 0, 0)  # 0-no, 1-yes, 2-not responded
+        self.health_back = HealthBackground(0, 0, 0)  # 0-no, 1-yes, 2-not responded
         self.user = User(self.account_info, self.basic_info, self.personal_info, self.health_back)
 
+        # Personal feature "correct" answers
+        self.cvt1 = [['cond_1', 0.5853757342515697], ['cond_2', 0.41462426574843025]]
+        self.cvt2 = [['cond_3', 0.9405940594059405], ['cond_10', 0.0594059405940594]]
+        self.cvt3 = [['cond_5', 0.5], ['cond_7', 0.3], ['cond_10', 0.2]]
+        self.cvt_bad = 0
+
         # Conditions, Symptoms, and Subsymptoms
+
+        # Personal feature initial inputs
+        self.cvt_prior1 = [['cond_1', 0.47752808988764045], ['cond_2', 0.40588235294117647]]
+        self.cvt_prior2 = [['cond_3', 0.95], ['cond_10', 0.05]]
+        self.cvt_prior3 = [['cond_5', 0.5], ['cond_7', 0.3], ['cond_10', 0.2]]
+        self.cvt_bad1 = [['cond_1', 0.4], ['cond_2', -0.4]]  # Bad input
+
+        self.time = 10
+
         self.correct_symptom1 = "Symptom_1"
         self.correct_symptom2 = "Symptom_2"
         self.incorrect_symptom = "Symptom_3"
@@ -120,19 +137,17 @@ class TestAssessmentWithUser(unittest.TestCase):
         self.cpds = ast.load_cpds(ast.state_network2)
         self.graph = ast.state_network2
         self.cpds = []
-        
+
 
     # Test that the probabilities for the conditions change when personal features are applied.
     def test_apply_user_features(self):
-        conditions1 = ast.evaluate(self.correct_symptom1, self.correct_successors1, self.user_sub_answers)
-        conditions2 = ast.evaluate(self.correct_symptom2, self.correct_successors2, self.user_sub_answers)
+        self.assertEqual(ass.apply_personal_features(self.user, self.cvt_prior1, self.time), self.cvt1)
+        self.assertEqual(ass.apply_personal_features(self.user, self.cvt_prior2, self.time), self.cvt2)
+        self.assertEqual(ass.apply_personal_features(self.user, self.cvt_prior3, self.time), self.cvt3)
 
-        output1 = ast.apply_personal_features(self.user, conditions1)
-        output2 = ast.apply_personal_features(self.user, conditions2)
-        self.assertNotEquals(output1, [['Condition_1', 0.54], ['Condition_2', 0.47000000000000003]])
-        self.assertNotEquals(output2, ['Condition_1', 0.272])
+        self.assertEqual(ass.apply_personal_features(self.user, self.cvt_bad1, self.time), self.cvt_bad)
 
-        
+
     def test_load_graph(self):
         self.assertEqual(ast.load_graph(), self.graph)
         # Check the nodes for set equality
