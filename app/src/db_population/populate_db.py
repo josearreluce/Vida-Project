@@ -9,25 +9,24 @@ def conditions_df(xlwkbk):
 def get_and_order_symptoms(df):
 	main_df = df
 	symptom_list_main = main_df['symptoms']
-	symptom_str = ','.join(symptom_list_main)
-	symptom_list = symptom_str.split(',')
+	symptom_str = ', '.join(symptom_list_main)
+	symptom_list = symptom_str.split(', ')
 	symptom_set = set(symptom_list)
 	symptom_list = list(symptom_set)
-	
 	sympt_id = {}
 	id_key = 1
 	for symptom in symptom_list:
-		sympt_id[symptom] = "sympt_"+str(id_key)
+		sympt_id[symptom] = "sub_sympt_"+str(id_key)
 		id_key += 1
 
 	numeric_symptoms = []
 	for cond in symptom_list_main:
 		sympt_ids = []
-		symptom_list = cond.split(',')
+		symptom_list = cond.split(', ')
 		for symptom in symptom_list:
 			sympt_ids.append(sympt_id[symptom])
 		numeric_symptoms.append(sympt_ids)
-	main_df['symptom_ids'] = numeric_symptoms
+	main_df['sub_symptom_ids'] = numeric_symptoms
 	return sympt_id, main_df
 
 def create_binary_cond_df(sympt_dict, cond_df):
@@ -36,55 +35,62 @@ def create_binary_cond_df(sympt_dict, cond_df):
 		col_name = sympt_dict[symptom]
 		main_cond_df[col_name] = 0
 
-	cond_symptoms = main_cond_df['symptom_ids']
+	cond_symptoms = main_cond_df['sub_symptom_ids']
 	for i in range(len(cond_symptoms)):
 		for symptom in cond_symptoms[i]:
 			main_cond_df.at[i, symptom] = 1
-	main_cond_df=main_cond_df.drop(labels=['symptoms', 'symptom_ids'], axis=1)
+	main_cond_df=main_cond_df.drop(labels=['symptoms', 'sub_symptom_ids'], axis=1)
 	return main_cond_df
 
+def create_prob_cond_df(sympt_dict, cond_df):
+	for sympt in sympt_dict:
+		sympt_id = sympt_dict[sympt]
+		non_zero = list(cond_df['name'][cond_df[sympt_id]!=0])
+		perc = 1.0/float(len(non_zero))
+		for name in non_zero:
+			cond_df.at[cond_df['name']==name, sympt_id] = perc
+	return cond_df
 
-
-def create_binary_sympt_df(sympt_dict, cond_df):
-	sympt_df_dict = {'sympt_id':[], 'name':[]}
+def create_sub_sympt_df(sympt_dict):
+	sympt_df_dict = {'sub_sympt_id':[], 'name':[]}
 	for symptom in sympt_dict:
-		sympt_df_dict['sympt_id'].append(sympt_dict[symptom])
+		sympt_df_dict['sub_sympt_id'].append(sympt_dict[symptom])
 		sympt_df_dict['name'].append(symptom)
 	sympt_df = pd.DataFrame.from_dict(sympt_df_dict)
-	sympt_df = sympt_df.sort_values(by=['sympt_id'])
+	sympt_df = sympt_df.sort_values(by=['sub_sympt_id'])
 	
-	cond_id = cond_df['cond_id']
-	i = 0
-	for id in cond_id:
-		sympt_df[id] = 0
-		for sympt_id in sympt_df['sympt_id']:
-			if cond_df.loc[cond_df['cond_id']==id, sympt_id].item() == 1:
-				sympt_df.at[sympt_df['sympt_id']==sympt_id, id] = 1
+	#cond_id = cond_df['cond_id']
+	# i = 0
+	# for id in cond_id:
+	# 	sympt_df[id] = 0
+	# 	for sympt_id in sympt_df['sub_sympt_id']:
+	# 		if cond_df.loc[cond_df['cond_id']==id, sympt_id].item() == 1:
+	# 			sympt_df.at[sympt_df['sub_sympt_id']==sympt_id, id] = 1
 	return sympt_df
 
-def create_related_sympt_df(symptom_df, cond_df):
-	sympt_df = symptom_df
-	sympt_ids = sympt_df['sympt_id']
-	related_sympt = {}
-	for sympt in sympt_ids:
-		sympt_df[sympt] = 0
-		related_symptoms = []
-		for cond in cond_df['cond_id']:
-			if sympt_df.loc[sympt_df['sympt_id']==sympt, cond].item() == 1:
-				symptoms = list(sympt_df['sympt_id'][sympt_df[cond]==1])
-				related_symptoms += symptoms
-		related_symptoms = set(related_symptoms)
-		related_symptoms = list(related_symptoms)
-		related_symptoms.remove(sympt)
-		related_sympt[sympt] = related_symptoms
-	print(related_sympt)
-	for sympt_id in related_sympt:
-		for sympt in related_sympt[sympt_id]:
-			sympt_df.at[sympt_df['sympt_id']==sympt_id, sympt] = 1
+# def create_related_sympt_df(symptom_df, cond_df):
+# 	sympt_df = symptom_df
+# 	sympt_ids = sympt_df['sub_sympt_id']
+# 	related_sympt = {}
+# 	for sympt in sympt_ids:
+# 		sympt_df[sympt] = 0
+# 		related_symptoms = []
+# 		for cond in cond_df['cond_id']:
+# 			if sympt_df.loc[sympt_df['sub_sympt_id']==sympt, cond].item() == 1:
+# 				symptoms = list(sympt_df['sub_sympt_id'][sympt_df[cond]==1])
+# 				related_symptoms += symptoms
+# 		related_symptoms = set(related_symptoms)
+# 		related_symptoms = list(related_symptoms)
+# 		related_symptoms.remove(sympt)
+# 		related_sympt[sympt] = related_symptoms
+# 	print(related_sympt)
+# 	for sympt_id in related_sympt:
+# 		for sympt in related_sympt[sympt_id]:
+# 			sympt_df.at[sympt_df['sub_sympt_id']==sympt_id, sympt] = 1
 
-	for cond in cond_df['cond_id']:
-		sympt_df = sympt_df.drop(labels=[cond], axis=1)
-	return sympt_df
+# 	for cond in cond_df['cond_id']:
+# 		sympt_df = sympt_df.drop(labels=[cond], axis=1)
+# 	return sympt_df
 
 
 
@@ -96,10 +102,11 @@ def main():
 	conditions = conditions_df('Conditions_and_symptoms.xlsx')
 	sympt_id, conditions = get_and_order_symptoms(conditions)
 	conditions = create_binary_cond_df(sympt_id, conditions)
-	symptoms = create_binary_sympt_df(sympt_id, conditions)
+	conditions = create_prob_cond_df(sympt_id, conditions)
+	symptoms = create_sub_sympt_df(sympt_id)
 	#related_symptoms = create_related_sympt_df(symptoms, conditions)
 	write_to_db('conditions', conditions)
-	write_to_db('symptoms', symptoms)
+	write_to_db('sub_symptom_names', symptoms)
 	#write_to_db('related_symptoms', related_symptoms)
 
 main()
