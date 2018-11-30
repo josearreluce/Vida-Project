@@ -94,7 +94,12 @@ all_conditions = list(df_cond['cond_id'])
 all_sub_symptoms = list(df_sub_symptom_names['sub_sympt_id'])
 
 def get_all_symptoms():
-    return list(df_cond['cond_id'])
+
+    temp_id = list(df_cond['sympt_id'])
+    res =[]
+    for id in temp_id:
+        res.append(id_to_name(id))
+    return res
 
 def create_all_symptom_graphs(df_cond, df_related_symptoms):
     d = {} # symptom_id: [Graph, subsymptoms, conditions]
