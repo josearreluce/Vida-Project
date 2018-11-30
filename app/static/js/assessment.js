@@ -19,7 +19,7 @@ function sendSuccessors(answers) {
         data : JSON.stringify(data),
         success : (res) => {
             const condition_elem = $(
-                "<p class='question'> Congratulations! You have " +
+                "<p class='question'> You have " +
                 res.conditions[0][0] +
                 "</p>");
 
