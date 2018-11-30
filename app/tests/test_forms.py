@@ -208,12 +208,12 @@ class TestProfile(TestWebForms):
         self.assertIn("Invalid age: 10-150", str(response.data))
 
         # Invalid Sex
-        self.profile_dict.update(age=22, sex='')
+        self.profile_dict.update(age=22, sex=10)
         response = self._make_post(self.profile_page, self.profile_dict)
         self.assertIn("Invalid sex: 0 - intersex, 1 - male, 2 - female", str(response.data))
 
         # Invalid weight
-        self.profile_dict.update(sex='female',weight=-1)
+        self.profile_dict.update(sex=1,weight=-1)
         response = self._make_post(self.profile_page, self.profile_dict)
         self.assertIn("Invalid weight: 40-1500 (lbs)", str(response.data))
 
