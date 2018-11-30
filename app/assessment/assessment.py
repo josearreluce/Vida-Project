@@ -20,6 +20,20 @@ from app.src.users import *
 from app import models
 from app.models import DatabaseConnection, UserSession
 
+
+
+def id_to_name(_id):
+    engine = create_engine("postgresql://pv_admin:CMSC22001@ec2-13-59-75-157.us-east-2.compute.amazonaws.com:5432/pv_db")
+    info = pd.read_sql("select * from conditions where cond_id = '" + _id + "'", engine)
+    name = info.name[0]
+    return name
+
+_id = 'cond_2'
+name = id_to_name(_id)
+print(name)
+
+
+
 # Extracts data from DynamoDB. 3 tables: Conditions, Related symptoms, sub symptom names
 def tbl_to_df():
     engine = create_engine("postgresql://pv_admin:CMSC22001@ec2-13-59-75-157.us-east-2.compute.amazonaws.com:5432/pv_db")
