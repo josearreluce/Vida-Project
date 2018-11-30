@@ -93,13 +93,15 @@ all_symptoms = list(df_related_symptoms['sympt_id'])
 all_conditions = list(df_cond['cond_id'])
 all_sub_symptoms = list(df_sub_symptom_names['sub_sympt_id'])
 
+def get_all_symptoms():
+    return list(df_cond['cond_id'])
 
 def create_all_symptom_graphs(df_cond, df_related_symptoms):
     d = {} # symptom_id: [Graph, subsymptoms, conditions]
     for sympt_id in all_symptoms:
         G, sub_symptom_list, condition_list = load_graph_sympt_id(df_cond, df_related_symptoms, sympt_id)
         d[sympt_id] = [G, sub_symptom_list, condition_list]
-    return d 
+    return d
 
 graph_dict = create_all_symptom_graphs(df_cond, df_related_symptoms)
 
@@ -113,7 +115,7 @@ def load_cpds():
 
 load_cpds()
 
-# Makes giant graph for all nodes 
+# Makes giant graph for all nodes
 def load_graph(df_cond, df_related_symptoms):
     G = BayesianModel()
     # Go through conditions table and add edges (sub symptom -> condition)
@@ -126,7 +128,7 @@ def load_graph(df_cond, df_related_symptoms):
                 # print(symptom_id, cond_id)
                 if (sub_symptom_id[:8] == 'sub_symp'):
                     G.add_edge(sub_symptom_id, cond_id)
-                    
+
     # Go through related symptoms table and add edges (symptom -> sub symptom)
     for i, row in df_related_symptoms.iterrows():
 
@@ -301,7 +303,7 @@ def extract_from_user(user):
     age = [user.basic_info.age]
     sex_age = sex_age + sex + age
     return sex_age
-    
+
 
 # condition_val_tuples = sorted(condition_val_tuples, key=lambda x: x[1], reverse=True)
 
@@ -323,7 +325,7 @@ user_info = extract_from_user(user)
 #sex, age, time
 
 
-def apply_personal_features(user, condition_val_tuples, time_first_symptom): 
+def apply_personal_features(user, condition_val_tuples, time_first_symptom):
     new_cond_val_tuples = condition_val_tuples
     user_info = extract_from_user(user)
     u_sex = user_info[0]
@@ -341,10 +343,10 @@ def apply_personal_features(user, condition_val_tuples, time_first_symptom):
             condition_tuple[1] = condition_tuple[1] - 0.1
     new_cond_val_tuples = sorted(new_cond_val_tuples, key=lambda x: x[1], reverse=True)
     return new_cond_val_tuples
-    
+
 condition_val_tuples = [['cond_1', 0.47752808988764045], ['cond_2', 0.40588235294117647]]
-new_cond_val_tuples = apply_personal_features(user, condition_val_tuples, 10)  
-# new_cond_val_tuples = apply_personal_features(user, condition_val_tuples, 10)  
+new_cond_val_tuples = apply_personal_features(user, condition_val_tuples, 10)
+# new_cond_val_tuples = apply_personal_features(user, condition_val_tuples, 10)
 print(new_cond_val_tuples)
 
 
