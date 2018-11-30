@@ -111,9 +111,6 @@ def create_all_symptom_graphs(df_cond, df_related_symptoms):
     return d
 
 graph_dict = create_all_symptom_graphs(df_cond, df_related_symptoms)
-print("graph_dict")
-print(graph_dict)
-
 
 def load_cpds():
     for sympt_id in graph_dict:
@@ -122,8 +119,8 @@ def load_cpds():
                    columns= G_sympt.nodes)
         G_sympt.fit(data, estimator=BayesianEstimator, prior_type="BDeu")
     # print("loaded cpds")
-    return data
 
+load_cpds()
 
 # Makes giant graph for all nodes
 def load_graph(df_cond, df_related_symptoms):
@@ -151,6 +148,7 @@ def load_graph(df_cond, df_related_symptoms):
     return G
 
 total_G = load_graph(df_cond, df_related_symptoms)
+
 
 
 # Compute and load all cpds for total graph. Takes a long time
