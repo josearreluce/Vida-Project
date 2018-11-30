@@ -263,7 +263,7 @@ def start_assessment(symptom_init):
 
 def evaluate(symptom_init, successors, user_sub_answers):
     #starts with 'yes' for initial symptom
-    symptom_init = get_name_from_id(symptom_init, df_related_symptoms)
+    symptom_init = get_id_from_name(symptom_init, df_related_symptoms)
     G_sympt = graph_dict[symptom_init][0]
     condition_list = graph_dict[symptom_init][2]
     network_infer = VariableElimination(G_sympt)
