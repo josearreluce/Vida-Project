@@ -25,7 +25,7 @@ def handle_successors():
 @app.route("/assessment", methods=["POST"])
 def handle_assessment():
     all_symptoms = assessment.get_all_symptoms()
-    print(all_symptoms)
+    # print(all_symptoms)
     symptom = request.form.get('data')
     users[curr_user]['symptom'] = symptom
     successors = assessment.start_assessment(symptom)
