@@ -124,6 +124,7 @@ def load_cpds():
     # print("loaded cpds")
     return data
 
+load_cpds()
 
 # Makes giant graph for all nodes
 def load_graph(df_cond, df_related_symptoms):
