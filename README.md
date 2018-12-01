@@ -65,8 +65,7 @@ We refined our front end design, and expanded the back end. Firstly, users can n
 background health information to help with their diagnosis, and their diagnosis history is stored
 with their account. We also implemented proper user sessions, password hashing, and password
 strength requirements. The database is now fully populated with real symptoms and conditions that
-are used to build an updated version of Vida's Bayesian graph model, though these names don't
-appear on the front end due to technical restrictions.
+are used to build an updated version of Vida's Bayesian graph model, and users will see the symptoms and conditions when they start assessment.
 
 The conditions supported are:
 "apendicitis"
