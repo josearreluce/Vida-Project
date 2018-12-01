@@ -1,4 +1,4 @@
-const example_symptoms = ['sympt_1', 'sympt_10', 'sympt_11', 'sympt_12', 'sympt_13', 'sympt_14', 'sympt_15', 'sympt_16', 'sympt_17', 'sympt_18', 'sympt_19', 'sympt_2', 'sympt_20', 'sympt_21', 'sympt_22', 'sympt_23', 'sympt_24', 'sympt_25', 'sympt_26', 'sympt_27', 'sympt_28', 'sympt_29', 'sympt_3', 'sympt_30', 'sympt_31', 'sympt_32', 'sympt_33', 'sympt_34', 'sympt_35', 'sympt_4', 'sympt_5', 'sympt_6', 'sympt_7', 'sympt_8', 'sympt_9'];
+// const example_symptoms = ['sympt_1', 'sympt_10', 'sympt_11', 'sympt_12', 'sympt_13', 'sympt_14', 'sympt_15', 'sympt_16', 'sympt_17', 'sympt_18', 'sympt_19', 'sympt_2', 'sympt_20', 'sympt_21', 'sympt_22', 'sympt_23', 'sympt_24', 'sympt_25', 'sympt_26', 'sympt_27', 'sympt_28', 'sympt_29', 'sympt_3', 'sympt_30', 'sympt_31', 'sympt_32', 'sympt_33', 'sympt_34', 'sympt_35', 'sympt_4', 'sympt_5', 'sympt_6', 'sympt_7', 'sympt_8', 'sympt_9'];
 
 /**
  * Turns off the event listener on the symptom input box and sends an ajax request
@@ -110,7 +110,41 @@ $('#symptom-search').keyup((e) => {
 
     // Get all symptoms that match/begin with input query
     let results = [];
-    const example_symptoms = ['sympt_1', 'sympt_10', 'sympt_11', 'sympt_12', 'sympt_13', 'sympt_14', 'sympt_15', 'sympt_16', 'sympt_17', 'sympt_18', 'sympt_19', 'sympt_2', 'sympt_20', 'sympt_21', 'sympt_22', 'sympt_23', 'sympt_24', 'sympt_25', 'sympt_26', 'sympt_27', 'sympt_28', 'sympt_29', 'sympt_3', 'sympt_30', 'sympt_31', 'sympt_32', 'sympt_33', 'sympt_34', 'sympt_35', 'sympt_4', 'sympt_5', 'sympt_6', 'sympt_7', 'sympt_8', 'sympt_9'];
+    const example_symptoms =   ["abdominal pain",
+                                "indigestion",
+                                "diarrhea",
+                                "change in bowel habits",
+                                "loss of appetite",
+                                "nausea",
+                                "fever",
+                                "fatigue",
+                                "itchiness",
+                                "eye itchiness",
+                                "vertigo",
+                                "sore throat",
+                                "irritability",
+                                "thirst",
+                                "mental confusion",
+                                "loss of muscle function",
+                                "missed period",
+                                "light spotting",
+                                "increased sensitivity",
+                                "pus",
+                                "blood in stool",
+                                "dilated pupils",
+                                "body ache",
+                                "malaise",
+                                "itchy nose",
+                                "shortness of breath",
+                                "bulging in groin",
+                                "changes in urination",
+                                "inflammation of ear",
+                                "headache",
+                                "pain in face",
+                                "testicular pain",
+                                "tenderness",
+                                "cough",
+                                "congestion"];
     example_symptoms.forEach((symptom) => {
         const curr_symptom = symptom.toLowerCase();
         if (curr_symptom.startsWith(query)) {

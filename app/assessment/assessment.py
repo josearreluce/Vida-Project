@@ -20,16 +20,15 @@ from app.src.users import *
 from app import models
 from app.models import DatabaseConnection, UserSession
 
-engine = create_engine("postgresql://pv_admin:CMSC22001@ec2-13-59-75-157.us-east-2.compute.amazonaws.com:5432/pv_db")
-def sympt_id_to_name(_id):
-    
-    info = pd.read_sql("select * from related_symptoms where sympt_id = '" + _id + "'", engine)
-    name = info.values[0][1]
-    return name
+def get_name_from_id(id, df):
+    index = df[df.columns[0]][df[df.columns[0]]==id].index[0]
+    return df.iloc[index]['name']
+    #return df.at[df[df[df.columns[0]]==id].loc, 'name']
 
-_id = 'sympt_1'
-name = sympt_id_to_name(_id)
-# print(name)
+def get_id_from_name(name, df):
+    index = df['name'][df['name']==name].index[0]
+    return df.iloc[index][df.columns[0]]
+
 
 # Extracts data from DynamoDB. 3 tables: Conditions, Related symptoms, sub symptom names
 def tbl_to_df():
@@ -40,13 +39,6 @@ def tbl_to_df():
     return conditions, related_symptoms, sub_symptom_names
 
 df_cond, df_related_symptoms, df_sub_symptom_names = tbl_to_df()
-
-def tbl_to_df_sympt_id(sympt_id):
-    engine = create_engine("postgresql://pv_admin:CMSC22001@ec2-13-59-75-157.us-east-2.compute.amazonaws.com:5432/pv_db")
-    related_symptoms = pd.read_sql("select * from related_symptoms where sympt_id = '" + sympt_id + "'", engine)
-    return related_symptoms
-
-df_related_symptoms_sympt_1 = tbl_to_df_sympt_id("sympt_1")
 
 
 # Create Bayesian Model given symptom id
@@ -98,7 +90,7 @@ def get_all_symptoms():
     # print("HHHERRRERERRERE")
     for id1 in temp_id:
         
-        name = sympt_id_to_name(id1)
+        name = get_name_from_id(id1, df_related_symptoms)
         
         res.append(name)
     return res
@@ -111,8 +103,6 @@ def create_all_symptom_graphs(df_cond, df_related_symptoms):
     return d
 
 graph_dict = create_all_symptom_graphs(df_cond, df_related_symptoms)
-print("graph_dict")
-print(graph_dict)
 
 
 def load_cpds():
@@ -244,14 +234,20 @@ def select_relevant_symptoms(graph, condition, symptom_init):
 # 0 -- no, 1 -- yes
 # what happens when user mystypes symptom
 def start_assessment(symptom_init):
+    symptom_init = get_id_from_name(symptom_init, df_related_symptoms)
     G_sympt = graph_dict[symptom_init][0]
     successors = list(G_sympt.successors(symptom_init))
 
-    return successors
+    successors_names = []
+    for sub_id in successors:
+        successors_names.append(get_name_from_id(sub_id, df_sub_symptom_names))
+
+    return successors_names
 
 
 def evaluate(symptom_init, successors, user_sub_answers):
     #starts with 'yes' for initial symptom
+    symptom_init = get_id_from_name(symptom_init, df_related_symptoms)
     G_sympt = graph_dict[symptom_init][0]
     condition_list = graph_dict[symptom_init][2]
     network_infer = VariableElimination(G_sympt)
@@ -259,12 +255,12 @@ def evaluate(symptom_init, successors, user_sub_answers):
     symp_list_val = [1]
     symp_list_name = [symptom_init]
     for i,answer in enumerate(user_sub_answers):
+        sub_sympt_id = get_id_from_name(successors[i], df_sub_symptom_names)
+        symp_list_name.append(sub_sympt_id)
         if answer == 'yes':
             symp_list_val.append(1)
-            symp_list_name.append(successors[i])
         else:
             symp_list_val.append(0)
-            symp_list_name.append(successors[i])
 
     # all condiitons to compare
     # condition_list is all the conditions reachable via symptom_init
@@ -288,7 +284,13 @@ def evaluate(symptom_init, successors, user_sub_answers):
     condition_val_tuples = sorted(condition_val_tuples, key=lambda x: x[1], reverse=True)
 
     # print(top_cond_candidate, score_top)
-    return condition_val_tuples
+    cond_name_val_tuples = []
+    for cond_val_tuple in condition_val_tuples:
+        cond_id = cond_val_tuple[0]
+        cond_name= get_name_from_id(cond_id, df_cond)
+        cond_name_val_tuples.append([cond_name, cond_val_tuple[1]])
+
+    return cond_name_val_tuples
 
 
 def tbl_to_df_cond_id(cond_id):
