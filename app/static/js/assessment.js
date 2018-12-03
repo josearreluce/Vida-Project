@@ -1,4 +1,9 @@
-// const example_symptoms = ['sympt_1', 'sympt_10', 'sympt_11', 'sympt_12', 'sympt_13', 'sympt_14', 'sympt_15', 'sympt_16', 'sympt_17', 'sympt_18', 'sympt_19', 'sympt_2', 'sympt_20', 'sympt_21', 'sympt_22', 'sympt_23', 'sympt_24', 'sympt_25', 'sympt_26', 'sympt_27', 'sympt_28', 'sympt_29', 'sympt_3', 'sympt_30', 'sympt_31', 'sympt_32', 'sympt_33', 'sympt_34', 'sympt_35', 'sympt_4', 'sympt_5', 'sympt_6', 'sympt_7', 'sympt_8', 'sympt_9'];
+// Scroll the input into view regardless of number of questions and answers
+function scrollToInput() {
+    const input_pos = document.getElementById("symptom-input").offsetTop;
+    const assessment_container = document.getElementsByClassName("symptom-assessment final")[0];
+    assessment_container.scrollTop = input_pos - 10;
+}
 
 /**
  * Turns off the event listener on the symptom input box and sends an ajax request
@@ -24,6 +29,7 @@ function sendSuccessors(answers) {
                 "</p>");
 
             $(condition_elem).insertBefore($("#symptom-input"));
+            scrollToInput();
         },error : (res) => {
             console.log("ERROR");
         }
@@ -65,6 +71,7 @@ function handleSuccessors(successors) {
                 } else {
                     const new_question = "<p class='question'> Do you have " + successors[i] + "?</p>";
                     $(new_question).insertBefore(symptom_input);
+                    scrollToInput();
                 }
                 i += 1;
             }

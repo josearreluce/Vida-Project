@@ -33,6 +33,8 @@
     overflow-y: scroll;
     display: flex;
     flex-wrap: wrap;
+    height: 80vh;
+    overflow-y: scroll;
     transition: all 1s linear;
     width: 30%;
 }
