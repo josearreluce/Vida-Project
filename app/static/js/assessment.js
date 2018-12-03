@@ -98,7 +98,6 @@ function handleSymptomSearch(res) {
         data: res.text
     }).done((res) => {
         handleSuccessors(res.successors);
-        draw();
     }).fail(() => {
         console.log("Failure");
     });
