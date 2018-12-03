@@ -145,12 +145,15 @@ $('#symptom-search').keyup((e) => {
                                 "tenderness",
                                 "cough",
                                 "congestion"];
-    example_symptoms.forEach((symptom) => {
-        const curr_symptom = symptom.toLowerCase();
-        if (curr_symptom.startsWith(query)) {
-            results.push(symptom);
-        }
-    });
+
+    if (query.length > 0) {
+        example_symptoms.forEach((symptom) => {
+            const curr_symptom = symptom.toLowerCase();
+            if (curr_symptom.startsWith(query)) {
+                results.push(symptom);
+            }
+        });
+    }
 
     // Update symptom-results div to contain the matching symptoms
     $('.symptom-results').empty();
