@@ -29,10 +29,10 @@
 }
 
 .symptom-assessment.final {
-    overflow-y: scroll;
     display: flex;
     flex-wrap: wrap;
     height: 80vh;
+    overflow-x: hidden;
     overflow-y: scroll;
     transition: all 1s linear;
     width: 30%;
@@ -125,9 +125,10 @@
 
 /* Chat Box Styles */
 .symptom-box {
-    overflow-y: scroll;
     display: flex;
     flex-wrap: wrap;
+    overflow-x: hidden;
+    overflow-y: scroll;
     width: 30%;
 }
 
