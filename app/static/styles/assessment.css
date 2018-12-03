@@ -29,7 +29,6 @@
 }
 
 .symptom-assessment.final {
-    background-color: #5051DB;
     overflow-y: scroll;
     display: flex;
     flex-wrap: wrap;
@@ -133,9 +132,10 @@
 }
 
 .question {
-    background-color: ghostwhite;
-    border: 2px solid ghostwhite;
+    background-color: #007AFF;
+    border: 2px solid #007AFF;
     border-radius: 100px;
+    color: white;
     margin: 0;
     padding: 0.4em;
     width: 50%;
@@ -156,5 +156,7 @@
 }
 
 .chat-input {
+    border-radius: 50px;
+    margin-top: 1.5em;
     width: 100%;
 }
