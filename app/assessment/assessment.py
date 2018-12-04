@@ -1,7 +1,7 @@
 # get_ipython().run_line_magic('matplotlib', 'inline')
 from pgmpy.factors.discrete import TabularCPD
 from pgmpy.models import BayesianModel
-
+from flask_login import current_user
 from pgmpy.factors.discrete import TabularCPD
 from pgmpy.models import BayesianModel
 import networkx as nx
@@ -87,9 +87,9 @@ def get_all_symptoms():
     temp_id = list(df_related_symptoms['sympt_id'])
     res =[]
     for id1 in temp_id:
-        
+
         name = get_name_from_id(id1, df_related_symptoms)
-        
+
         res.append(name)
     return res
 
@@ -105,13 +105,13 @@ graph_dict = create_all_symptom_graphs(df_cond, df_related_symptoms)
 
 def load_cpds():
     for sympt_id in graph_dict:
-        
+
         G_sympt = graph_dict[sympt_id][0]
         data = pd.DataFrame(np.random.randint(low=0, high=2, size=(103, len(G_sympt.nodes))),
                    columns= G_sympt.nodes)
 
         graph_dict[sympt_id][0].fit(data, estimator=BayesianEstimator, prior_type="BDeu")
-        
+
     return data
 
 load_cpds()
@@ -233,7 +233,8 @@ def select_relevant_symptoms(graph, condition, symptom_init):
 
 # 0 -- no, 1 -- yes
 # what happens when user mystypes symptom
-def start_assessment(symptom_init):
+def start_assessment(symptom_init, user):
+    print('SEX', user.sex)
     symptom_init = get_id_from_name(symptom_init, df_related_symptoms)
     G_sympt = graph_dict[symptom_init][0]
     successors = list(G_sympt.successors(symptom_init))
@@ -246,12 +247,13 @@ def start_assessment(symptom_init):
 
 
 def evaluate(symptom_init, successors, user_sub_answers):
+
     #starts with 'yes' for initial symptom
     symptom_init = get_id_from_name(symptom_init, df_related_symptoms)
     G_sympt = graph_dict[symptom_init][0]
     condition_list = graph_dict[symptom_init][2]
     network_infer = VariableElimination(G_sympt)
-    
+
     symp_list_val = [1]
     symp_list_name = [symptom_init]
     for i,answer in enumerate(user_sub_answers):
