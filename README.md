@@ -2,33 +2,45 @@
 # Authors: Jose Arreluce, Will Darling, Max Demers, Miles Grogger, Andy Ham, Bruno Jacob, Thomas Jacobs, Qi Jin
 # Original repo: "https://github.com/josearreluce/Vida-Project.git"
 
+---------------------------------------------------------------------------------------------------
+
 # Preface
-Vida attempts to solve the problem of online health condition diagnosis. The web
-application begins by first asking the user for their most notable symptoms, then
-continuing to ask further follow-up and clarifying questions about their condition
-and potentially relevant, recent behavior and actions (i.e. starting a new medicine,
-trying new food, etc.). In combination with baseline health information supplied by
-the user (weight, diet, etc.) Vida provides a more specific and accurate diagnosis
-than a quick search on Google or WebMD.
 
-# Course specified entries
+Due to rising healthcare costs and increased access to health condition information through the
+internet, more people than ever are looking to the internet to diagnosis potential health problems.
+However, the quality of these diagnoses is often too ambiguous or severe to be useful. Vida attempts 
+to solve the problem by providing a more in-depth consultation process, and in turn a more accurate
+and reasonable diagnosis, than the current providers (e.g. Google Search and WebMD).
 
-(1) how to compile
+---------------------------------------------------------------------------------------------------
+
+# Installation Guide
+
+Simply run the following terminal commands
 
 $ git clone https://github.com/josearreluce/Vida-Project.git
+$ cd Vida-Project
 $ pip3 install -r requirements.txt
-
----------------------------------------------------------------------------------------------------
-
-(2) how to run your code
-
-From within the Vida-Project directory run:
 $ python3 -m flask run
-Then navigate to the specified port in your browser
+
+Then navigate to http://127.0.0.1:5000/ in your browser to access the web application.
+
+NOTE: We have found the most success running our application in Firefox. Google Chrome has been 
+      particularly difficult.
 
 ---------------------------------------------------------------------------------------------------
 
-(3) how to run the unit test cases
+# Usage Guide
+
+We designed Vida to be intuitive to navigate and use. While a user profile isn't required to start
+an assessment, it's highly recommended. Once an assessment begins, type your most prominent symptom
+into the search bar and select the matching entry. This begins the inquiry process. Note that Vida
+currently only supports 12 starting symptoms (a full list is found in the appendix). Answer the 
+subsequent questions, and at the end Vida will provide a diagnosis.
+
+---------------------------------------------------------------------------------------------------
+
+# Running the Unit Tests
 
 First download a chrome webdriver from http://chromedriver.chromium.org/downloads
 and place the driver into the test directory.
@@ -38,10 +50,111 @@ The UI Tests require downloading this webdriver.
 Then from within the tests directory run:
 $ pytest
 
+NOTE: For further information on running unit tests, refer to the appendix
+
 ---------------------------------------------------------------------------------------------------
 
-(4) please suggest some acceptance tests for the TA to try (i.e., what inputs to use,
-    and what outputs are expected)
+# Poorly Handled Inputs
+
+Vida currently has difficulty handling top level symptoms "Dilated Pupils" and "Diarrhea"
+
+---------------------------------------------------------------------------------------------------
+
+# Implementation Overview
+
+In this final round of development we greatly improved the functionality around user profile 
+information. When adding information, a single error in one field will not erase all changes from
+that session, and there are more stringent checks to prevent users from entering unrealistic data.
+We also added password salting for improved security. Finally, the user's health information is
+properly implemented in the assessment process. At the end of the questionaire, the probabilities
+are filtered based on the user information before a final diagnosis is reached.
+
+---------------------------------------------------------------------------------------------------
+
+# Who did what
+
+Bayesian graph logic: Alex, Andy, Bruno, Qi
+Database: Alex, Miles, Will
+Front end: Jose, Max, Will
+User Functionality: Max, Qi
+
+---------------------------------------------------------------------------------------------------
+
+# Changes from the Design Document
+
+We were not able to implement a user's assessment history, or add time-based variables to the
+assessment process (i.e. how long have you had a cough?). 
+
+---------------------------------------------------------------------------------------------------
+
+# Others
+
+
+---------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
+
+                                          ### Appendix ###
+
+---------------------------------------------------------------------------------------------------
+
+# Supported Conditions
+
+"apendicitis"
+"bronchitis"
+"common cold"
+"gastroenteritis"
+"hangover"
+"hernia"
+"indigestion"
+"pregnant"
+"rabies"
+"sinusitis"
+"strep throat"
+"testicular torsion"
+
+# Supported Top Level Sympotms (these are the only symptoms that begin an assessment)
+
+"abdominal pain"
+"indigestion"
+"diarrhea"
+"change in bowel habits"
+"loss of appetite"
+"nausea"
+"fever"
+"fatigue"
+"itchiness"
+"eye itchiness"
+"vertigo"
+"sore throat"
+"irritability"
+"thirst"
+"mental confusion"
+"loss of muscle function"
+"missed period"
+"light spotting"
+"increased sensitivity"
+"pus"
+"blood in stool"
+"dilated pupils"
+"body ache"
+"malaise"
+"itchy nose"
+"shortness of breath"
+"bulging in groin"
+"changes in urination"
+"inflammation of ear"
+"headache"
+"pain in face"
+"testicular pain"
+"tenderness"
+"cough"
+"congestion"
+
+---------------------------------------------------------------------------------------------------
+
+## Archived notes from iteration 2:
+
+#Suggested Acceptance Testing:
 
 We've expanded the user functionality significantly, so try playing around with the new features.
 Though we've now populated the database with real symptom and condition data to inform the diagnosis
@@ -49,17 +162,7 @@ process, we still had trouble pulling names from the database to the front end. 
 end diagnosis process is using real symptom/condition data, from the user-perspective the data is
 generic. 
 
-
-Archived notes from iteration 1:
-As iteration 1 deals only with the high-level design and process of our application,
-we have yet to populate our database (and thus our graph) with valid symptoms and conditions.
-However, you can still create a username and password, login, and begin the questioning
-process with our placeholder symptoms and conditions.
-
----------------------------------------------------------------------------------------------------
-
-(5) text description of what is implemented. You can refer to the use cases and user stories
-    in your design document.
+# Implementation Overview
 
 We refined our front end design, and expanded the back end. Firstly, users can now submit 
 background health information to help with their diagnosis, and their diagnosis history is stored
@@ -118,31 +221,14 @@ And the top level symptoms (which are used to start the diagnosis process) are:
 "cough"
 "congestion"
 
-
-Archived notes from iteration 1:
-In this iteration we tackled the most basic instance of start_assessment. We also built the
-first draft of our front end, created the framework for our database, and built an early version
-of Vida's Bayesian graph modeling
-
-
----------------------------------------------------------------------------------------------------
-
-(6) who did what: who paired with who; which part is implemented by which pair
+# Who did what:
 
 Bayesian graph logic: Alex, Andy, Bruno
 Database: Alex, Miles, Will
 Front end: Jose, Max, Will
 User: Max, Qi
 
-
-Archived notes from iteration 1:
-Bayesian graph logic: Andy, Bruno, Qi
-Database: Alex, Miles
-Front end: Jose, Max, Will
-
----------------------------------------------------------------------------------------------------
-
-(7) changes: have you made any design changes or unit test changes from earlier milestones?
+# Changes:
 
 We first intended to use one huge graph to calculate cpds, but that ended up taking too long to use. 
 Our solution was to split the big graph up into mini graphs each composed of 1 symptom per graph with
@@ -161,8 +247,31 @@ With this approach we don't have to change the database, and it's quick to start
 also uses a bit of machine learning via the Bayesian estimators, which are currently set to 100 
 random samples, but with more user input and verified conditions, the graph's accuracy improves.
 
+---------------------------------------------------------------------------------------------------
 
-Archived notes from iteration 1:
+## Archived notes from iteration 1:
+
+Suggested Acceptance Testing:
+
+As iteration 1 deals only with the high-level design and process of our application,
+we have yet to populate our database (and thus our graph) with valid symptoms and conditions.
+However, you can still create a username and password, login, and begin the questioning
+process with our placeholder symptoms and conditions.
+
+Implementation Overview:
+
+In this iteration we tackled the most basic instance of start_assessment. We also built the
+first draft of our front end, created the framework for our database, and built an early version
+of Vida's Bayesian graph modeling
+
+Who did what:
+
+Bayesian graph logic: Andy, Bruno, Qi
+Database: Alex, Miles
+Front end: Jose, Max, Will
+
+Changes:
+
 From the front end perspective, we decided against Django and moved to Flask for our framework,
 due to its greater flexibility and lower learning curve. Flask also provides tools for handling
 users that we found effective and easy to use. As a result, we've decided to split our original
@@ -188,12 +297,8 @@ a directed acyclic graph with conditional probability distributions in each node
 the graph node/edge structure is static the conditional probabilities change based on how we 
 traverse the graph in each assessment. This graph is built from the entries in the database.
 
----------------------------------------------------------------------------------------------------
+Others:
 
-(8) others: whatever you want to let the TA know
-
-
-Archived notes from iteration 1:
 We no longer unit test the graph explicitly, since its tested implicitly  by the success or failure
 of the assessment.
 
@@ -206,8 +311,8 @@ recreate the graph to develop our code, our current graph uses a small number of
 symptoms/conditions. For iteration 2 we will work on making the database smaller and the code
 more efficient.
 
-# Iteration 2
-## Iteration 2 Plan
+Iteration 2 Plan:
+
 Much of what we laid out in our original design document will be implemented in Iteration 2. More 
 specifically, we are integrating user information to hone our algorithm and diagnostics, as we 
 outlined in the original document. We will be fully integrating the database with our backend algorithm,
@@ -233,10 +338,12 @@ diagnosis in addition to the original Bayesian model.
 ---------------------------------------------------------------------------------------------------
 
 ## Unit Test Cases
+
 All test cases can be run at once by entering the test directory from your terminal and running "pytest".
 The test cases are in /app/tests
 
-### test_db.py
+# test_db.py
+
 Comments within the code of this program indicate the newest section for iteration 2. The biggest change we made was restructuring how symptoms, sub symptoms, and conditions relate to each other in accordance with the Bayesian Model graph. We now have conditions relate only to sub symptoms, and sub symptoms only relate to a single symptom. We are also adding columns to the conditions table to indicate the age range of people likely to get the conditions, as well as the typical time that symptoms can be expected to last. Again, populate_db.py and generate_sub_symptoms.py are used to fill and format the database tables, but the best way to test these programs is to query the database and make sure the data is stored the way we expect it to be.
 
 Comments in code provide more specifics as to what each tests do, but we are mainly checking to make sure sub symptoms only map to one symptom, that conditional probabilities are correct, that age ranges for conditions are correct, and that times for conditions are correct.
@@ -245,7 +352,8 @@ Please note: we are implementing several changes to the database currently, so i
 
 To run: at commandline run "pytest test_db.py"
 
-### test_assessment.py
+# test_assessment.py
+
 The new test cases within this file are located in the TestAssessmentWithUser class. These test cases will test
 the new functions that are going to be used by the assessment algorithm for the 2nd iteration of the project.
 
@@ -253,7 +361,8 @@ The functions include: apply_user_features(), load_graph(), and load_cpds().
 
 To run: at commandline run "pytest test_assessment.py"
 
-### test_forms.py
+# test_forms.py
+
 New test cases now check for invalid usernames and passwords during sign up within the TestSignUp class. For other
 new tests, we moved a portion of the web form test methods into a superclass (TestWebForms), so that all web form
 tests can add and remove users as necessary. We also added a maximum-login rate attempt test, user profile tests, and
@@ -264,10 +373,11 @@ and insuring that our website is not susceptible to brute-force attacks.
 
 To run: at commandline enter "pytest test_forms.py"
 
-### test_user.py
+# test_user.py
 We re-define the backend user class to have three layers of profile information: account information, basic information, personal information, and health background.
 The account information has the username and password. The basic and personal information have the user's height, weight, etc. The health background class stores information about the user's health condition, for example, whether or not the user smokes. The tests cover getting and setting information in those classes.
 
 The user class interacts with the user schema. We refactor the user information we retrieve from the database as user schema to differentiate the user class. We will convert the user schema to a user class with getters and setters so that the backend assessment algorithm can interact with the data in the class, for example, using user age in the diagnosis.
 
 To run: at commandline enter "pytest test_user.py"
+
