@@ -1,6 +1,6 @@
 from app import app, db
 from flask import render_template, jsonify, redirect
-from flask_login import login_required, login_user, current_user, logout_user
+from flask_login import login_required, login_user, current_user, logout_user, login_manager
 import sqlalchemy as sqlalchemy
 from sqlalchemy.orm import sessionmaker
 from flask import request
@@ -18,7 +18,7 @@ def handle_successors():
     answers = jsonData['answers']
     symptom = users[curr_user]["symptom"]
     successors = users[curr_user]["successors"]
-    conditions = assessment.evaluate(symptom, successors, answers)
+    conditions = assessment.evaluate(symptom, successors, answers, current_user)
     return jsonify({'text':"hello world", 'conditions': conditions})
 
 
@@ -28,7 +28,13 @@ def handle_assessment():
     # print(all_symptoms)
     symptom = request.form.get('data')
     users[curr_user]['symptom'] = symptom
-    successors = assessment.start_assessment(symptom, current_user)
+    if current_user.is_authenticated:
+        successors, sex = assessment.start_assessment(symptom, current_user)
+        print("User sex is: ", sex)
+    else:
+        successors = assessment.start_assessment(symptom)
+    #successors = assessment.start_assessment(symptom, current_user)
+    #print(load_user(current_user.get_id()))
     users[curr_user]['successors'] = successors
     return jsonify({'text': 'Hello World', 'successors': successors})
 
