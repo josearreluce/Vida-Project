@@ -42,7 +42,7 @@ def view_profile():
 
     form.sex.data = int(form.sex.data)
     form.diabetes.data = int(form.diabetes.data)
-
+    form.smoker.data = float(form.smoker.data)
     if form.validate_on_submit():
         user = UserSession.query.get(current_user.username)
         if form.age.data != '':
@@ -53,7 +53,7 @@ def view_profile():
             user.height = form.height.data
         if form.weight.data != '':
             user.weight = form.weight.data
-        if form.smoker.data != 0:
+        if form.smoker.data != 0.0:
             user.smoker = form.smoker.data
         if form.blood_pressure_systolic != '' and form.blood_pressure_diastolic.data != '':
             user.blood_pressure_systolic = form.blood_pressure_systolic.data

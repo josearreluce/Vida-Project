@@ -4,7 +4,7 @@ from app import login
 from sqlalchemy.dialects.postgresql import JSON
 import sqlalchemy as sqlalchemy
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, Float
 from sqlalchemy.ext.declarative import declarative_base
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
@@ -47,7 +47,7 @@ class UserSession(UserMixin, db.Model):
     sex = Column(Integer)
     height = Column(Integer)
     weight = Column(Integer)
-    smoker = Column(Integer)
+    smoker = Column(Float)
     diabetes = Column(Integer)
     blood_pressure_low = Column(Integer)
     blood_pressure_high = Column(Integer)

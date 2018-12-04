@@ -33,12 +33,12 @@
 
                 </div>
                 <div class="personal-info info-container">
-                    <span class="height info">Height: {{ current_user.height }}  (In Inches) </span>
-                    <span class="weight info">Weight: {{ current_user.weight }}  (In Pounds)</span>
+                    <span class="height info">Height: {{ current_user.height }}  (Inches) </span>
+                    <span class="weight info">Weight: {{ current_user.weight }}  (Pounds)</span>
                 </div>
                 <div class="health-info info-container">
-                    <span class="smoker info">Smoker: {{ current_user.smoker }} (In Packs per Day)</span>
-                    <span class="blood-pressure info">Blood Pressure: {{ current_user.blood_pressure_systolic }} {{ current_user.blood_pressure_diastolic }} (mmhg)</span>
+                    <span class="smoker info">Smoker: {{ current_user.smoker }} (Packs per Day)</span>
+                    <span class="blood-pressure info">Blood Pressure: {{ current_user.blood_pressure_systolic }} / {{ current_user.blood_pressure_diastolic }} (mmHg)</span>
                     <span class="diabetes info">Diabetes:
                     {% if current_user.diabetes == 1 %} Type I
                     {% elif current_user.diabetes == 2 %} Type II

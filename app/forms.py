@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField, DecimalField, RadioField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField, FloatField, RadioField
 from wtforms.validators import DataRequired, ValidationError, EqualTo, Length, Regexp, NumberRange, Optional
 from app.models import UserSession
 
@@ -15,19 +15,19 @@ class ProfileForm(FlaskForm):
             validators=[Optional()],
             default=-1)
     height = IntegerField(
-            'Height In Inches',
+            'Height (Inches)',
             validators=[Optional(),NumberRange(min=30, max=110, message="Invalid height: 30-110 (inches)")],
             default='')
     weight = IntegerField(
-            'Weight In Pounds',
+            'Weight (Pounds)',
             validators=[Optional(),NumberRange(min=40, max=1500, message="Invalid weight: 40-1500 (lbs)")],
             default='')
-    smoker = DecimalField(
+    smoker = FloatField(
             'Smoker (Packs per Day)',
             validators=[Optional(),NumberRange(min=0.0, max=4.0, message="Invalid packs smoked: 0.0-4.0 (packs)")],
-            default=0)
+            default=0.0)
     blood_pressure_systolic = IntegerField(
-            'Blood Pressure Systolic (Higher / Low in mmHg)',
+            'Blood Pressure Systolic (Higher / Low mmHg)',
             validators=[Optional(), NumberRange(min=80, max=150, message="Invalid blood pressure: 80-150 (mm Hg)")],
             default='')
     blood_pressure_diastolic = IntegerField(
