@@ -30,6 +30,8 @@ function sendSuccessors(answers) {
             console.log(res.conditions);
             $(condition_elem).insertBefore($("#answer-buttons-container"));
             scrollToInput();
+
+            $("#answer-buttons-container").remove();
         },error : (res) => {
             console.log("ERROR");
         }
