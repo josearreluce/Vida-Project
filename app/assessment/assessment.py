@@ -85,9 +85,7 @@ all_sub_symptoms = list(df_sub_symptom_names['sub_sympt_id'])
 def get_all_symptoms():
 
     temp_id = list(df_related_symptoms['sympt_id'])
-    # print(temp_id)
     res =[]
-    # print("HHHERRRERERRERE")
     for id1 in temp_id:
         
         name = get_name_from_id(id1, df_related_symptoms)
@@ -107,11 +105,13 @@ graph_dict = create_all_symptom_graphs(df_cond, df_related_symptoms)
 
 def load_cpds():
     for sympt_id in graph_dict:
+        
         G_sympt = graph_dict[sympt_id][0]
-        data = pd.DataFrame(np.random.randint(low=0, high=2, size=(100, len(G_sympt.nodes))),
+        data = pd.DataFrame(np.random.randint(low=0, high=2, size=(103, len(G_sympt.nodes))),
                    columns= G_sympt.nodes)
-        G_sympt.fit(data, estimator=BayesianEstimator, prior_type="BDeu")
-    # print("loaded cpds")
+
+        graph_dict[sympt_id][0].fit(data, estimator=BayesianEstimator, prior_type="BDeu")
+        
     return data
 
 load_cpds()
@@ -251,15 +251,17 @@ def evaluate(symptom_init, successors, user_sub_answers):
     G_sympt = graph_dict[symptom_init][0]
     condition_list = graph_dict[symptom_init][2]
     network_infer = VariableElimination(G_sympt)
-
+    
     symp_list_val = [1]
     symp_list_name = [symptom_init]
     for i,answer in enumerate(user_sub_answers):
         sub_sympt_id = get_id_from_name(successors[i], df_sub_symptom_names)
         symp_list_name.append(sub_sympt_id)
-        if answer == 'yes':
+        if answer == True:
+            print("YES: User has ", successors[i])
             symp_list_val.append(1)
         else:
+            print("NO: User does not have ", successors[i])
             symp_list_val.append(0)
 
     # all condiitons to compare
@@ -290,6 +292,8 @@ def evaluate(symptom_init, successors, user_sub_answers):
         cond_name= get_name_from_id(cond_id, df_cond)
         cond_name_val_tuples.append([cond_name, cond_val_tuple[1]])
 
+    print("here are probabilities")
+    print(cond_name_val_tuples)
     return cond_name_val_tuples
 
 
