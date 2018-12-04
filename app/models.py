@@ -56,10 +56,12 @@ class UserSession(UserMixin, db.Model):
         return '<User {}>'.format(self.username)
 
     def set_password(self, password):
-        self.pswd = generate_password_hash(password)
+        salt = app.config['SALT']
+        self.pswd = generate_password_hash(password + salt)
 
     def check_password(self, password):
-        return check_password_hash(self.pswd, password)
+        salt = app.config['SALT']
+        return check_password_hash(self.pswd, password + salt)
 
     def get_id(self):
         return self.username
