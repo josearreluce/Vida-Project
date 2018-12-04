@@ -51,7 +51,7 @@ function handleSuccessors(successors, initial_symptom) {
     var i = 0;
     let answers = [];
 
-    const newElem = "<p class='question'> Do you have " + successors[i] + "?</p>";
+    const newElem = "<p class='question'> Are you experiencing " + successors[i] + "?</p>";
 
     $(newElem).insertBefore(answer_container);
 
