@@ -160,3 +160,15 @@
     margin-top: 1.5em;
     width: 100%;
 }
+
+.answer-buttons {
+    width: 33%;
+    margin: 0;
+    padding: indigo;
+    background-color: #5051DB;
+    color: white;
+}
+
+.answer-buttons:hover {
+    background-color: #383899;
+}

@@ -1,6 +1,6 @@
 // Scroll the input into view regardless of number of questions and answers
 function scrollToInput() {
-    const input_pos = document.getElementById("symptom-input").offsetTop;
+    const input_pos = document.getElementById("yes").offsetTop;
     const assessment_container = document.getElementsByClassName("symptom-assessment final")[0];
     assessment_container.scrollTop = input_pos - 10;
 }
@@ -14,7 +14,7 @@ function scrollToInput() {
  */
 function sendSuccessors(answers) {
     $("#symptom-input").off('keyup');
-
+    console.log(answers);
     const data = {"answers": answers};
     $.ajax({
         type: 'POST',
@@ -41,40 +41,33 @@ function sendSuccessors(answers) {
  * @param successors
  */
 function handleSuccessors(successors) {
-    const symptom_input = $('#symptom-input');
+    const answer_container = $('.button-answers');
 
     var i = 0;
     let answers = [];
 
     const newElem = "<p class='question'> Do you have " + successors[i] + "?</p>";
-    $(newElem).insertBefore(symptom_input);
+
+    $(newElem).insertBefore(answer_container);
+
     i += 1;
 
-    symptom_input.on("keyup", (e) => {
-        const query = symptom_input.val().toLowerCase();
-        if (e.which === 13) {
-            symptom_input.val('');
-            let is_good_answer = false;
-            let answer = '';
-            if (query === "yes" || query === "no") {
-                answer = query;
-                answers.push(query === "yes");
-                is_good_answer = true;
-            }
+    const answer_buttons = $(".answer-buttons");
+    answer_buttons.on("click", (e) => {
+        console.log(e.target.id);
+        const answer = e.target.id;
+        answers.push(answer === 'yes');
+        if (i + 1 > successors.length) {
+            sendSuccessors(answers);
+        } else {
+            const new_answer = `<p class='answer'> ${answer} </p>`;
+            const new_question = `<p class='question'> Are you experiencing ${successors[i]}? </p>`;
 
-            if (is_good_answer) {
-                const new_answer = "<p class='answer'>" + answer + "</p>";
-                $(new_answer).insertBefore(symptom_input);
+            $(new_answer).insertBefore(answer_container);
+            $(new_question).insertBefore(answer_container);
 
-                if (i + 1 > successors.length) {
-                    sendSuccessors(answers);
-                } else {
-                    const new_question = "<p class='question'> Do you have " + successors[i] + "?</p>";
-                    $(new_question).insertBefore(symptom_input);
-                    scrollToInput();
-                }
-                i += 1;
-            }
+            scrollToInput();
+            i += 1;
         }
     });
 }
@@ -99,7 +92,12 @@ function handleSymptomSearch(res) {
     const symptom_box = $('.symptom-assessment__final');
     symptom_box.append("<p class='question'> What is your symptom? </p>");
     symptom_box.append("<p class='answer'>" + res.text + "</p>");
-    symptom_box.append("<input type='text' class='chat-input' id='symptom-input' />");
+
+    symptom_box.append("<div class='button-answers' style='display: flex;'>");
+    const answer_input = $('.button-answers');
+    answer_input.append("<button class='answer-buttons' id='yes'> Yes </button>");
+    answer_input.append("<button class='answer-buttons' id='no'> No </button>");
+    answer_input.append("<button class='answer-buttons' id='skip'> Skip </button>");
 
     $.post('/assessment', {
         data: res.text
