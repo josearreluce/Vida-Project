@@ -34,8 +34,10 @@
     height: 80vh;
     overflow-x: hidden;
     overflow-y: scroll;
+    position: relative;
     transition: all 1s linear;
     width: 30%;
+    z-index: 2;
 }
 
 .symptom-assessment__final {
@@ -52,8 +54,9 @@
 
 .final-assessment .symptom-visualization {
     height: 100vh;
+    position: relative;
     width: 70%;
-    background-color: red;
+    z-index: 1;
 }
 
 /* .symptom-container fieldset */
