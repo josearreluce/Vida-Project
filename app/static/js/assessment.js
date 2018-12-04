@@ -27,8 +27,8 @@ function sendSuccessors(answers) {
                 "<p class='question'> You have " +
                 res.conditions[0][0] +
                 "</p>");
-
-            $(condition_elem).insertBefore($("#symptom-input"));
+            console.log(res.conditions);
+            $(condition_elem).insertBefore($("#answer-buttons-container"));
             scrollToInput();
         },error : (res) => {
             console.log("ERROR");
@@ -41,7 +41,7 @@ function sendSuccessors(answers) {
  * @param successors
  */
 function handleSuccessors(successors) {
-    const answer_container = $('.button-answers');
+    const answer_container = $('#answer-buttons-container');
 
     var i = 0;
     let answers = [];
@@ -54,16 +54,16 @@ function handleSuccessors(successors) {
 
     const answer_buttons = $(".answer-buttons");
     answer_buttons.on("click", (e) => {
-        console.log(e.target.id);
         const answer = e.target.id;
+        const new_answer = `<p class='answer'> ${answer} </p>`;
+
         answers.push(answer === 'yes');
+        $(new_answer).insertBefore(answer_container);
+
         if (i + 1 > successors.length) {
             sendSuccessors(answers);
         } else {
-            const new_answer = `<p class='answer'> ${answer} </p>`;
             const new_question = `<p class='question'> Are you experiencing ${successors[i]}? </p>`;
-
-            $(new_answer).insertBefore(answer_container);
             $(new_question).insertBefore(answer_container);
 
             scrollToInput();
@@ -93,8 +93,8 @@ function handleSymptomSearch(res) {
     symptom_box.append("<p class='question'> What is your symptom? </p>");
     symptom_box.append("<p class='answer'>" + res.text + "</p>");
 
-    symptom_box.append("<div class='button-answers' style='display: flex;'>");
-    const answer_input = $('.button-answers');
+    symptom_box.append("<div id='answer-buttons-container' style='display: flex;'>");
+    const answer_input = $('#answer-buttons-container');
     answer_input.append("<button class='answer-buttons' id='yes'> Yes </button>");
     answer_input.append("<button class='answer-buttons' id='no'> No </button>");
     answer_input.append("<button class='answer-buttons' id='skip'> Skip </button>");
