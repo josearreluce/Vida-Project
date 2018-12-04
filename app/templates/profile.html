@@ -13,7 +13,7 @@
             {% else %}
                 <div class="account-info info-container">
                     {% if form.errors %}
-                    <span style="color: red;">Please fill in the below fields correctly to save your profile information: </span>
+                    <span style="color: red;"> Please Correct Below Fields:</span>
                     <p> {% for error in form.errors %}
                     <span style="color: red;">{{ error }}</span>
                     {% endfor %} </p>
@@ -23,33 +23,48 @@
                 </div>
                 <div class="basic-info info-container">
                     <span class="age info">Age: {{ current_user.age }} </span>
-                    <span class="sex info">Sex: {{ current_user.sex }} </span>
+                    <span class="sex info">Sex:
+                    {% if current_user.sex == 1 %} Male
+                    {% elif current_user.sex == 2 %} Female
+                    {% elif current_user.sex == 0 %} Other
+                    {% else %} None
+                    {% endif %}
+                    </span>
+
                 </div>
                 <div class="personal-info info-container">
-                    <span class="height info">Height: {{ current_user.height }} </span>
-                    <span class="weight info">Weight: {{ current_user.weight }} </span>
+                    <span class="height info">Height: {{ current_user.height }}  (In Inches) </span>
+                    <span class="weight info">Weight: {{ current_user.weight }}  (In Pounds)</span>
                 </div>
                 <div class="health-info info-container">
-                    <span class="smoker info">Smoker: {{ current_user.smoker }}</span>
-                    <span class="blood-pressure info">Blood Pressure: {{ current_user.blood_pressure_systolic }} {{ current_user.blood_pressure_diastolic }}</span>
-                    <span class="diabetes info">Diabetes: {{ current_user.diabetes }}</span>
+                    <span class="smoker info">Smoker: {{ current_user.smoker }} (In Packs per Day)</span>
+                    <span class="blood-pressure info">Blood Pressure: {{ current_user.blood_pressure_systolic }} {{ current_user.blood_pressure_diastolic }} (mmhg)</span>
+                    <span class="diabetes info">Diabetes:
+                    {% if current_user.diabetes == 1 %} Type I
+                    {% elif current_user.diabetes == 2 %} Type II
+                    {% else %} None
+                    {% endif %}
+                    </span>
+
                 </div>
                 <button class="profile-button edit-profile-info">Edit Info</button>
-                <button class="profile-button view-assessments"> View Assessment History </button>
             {% endif %}
         </div>
         <div class="profile-editor">
             <form class="login__form" action="" method="post" novalidate>
                 <div class="login__form-container">
                 <h3> Edit Profile Information </h3>
+                <p>Please fill in all fields with valid information or "NA" to proceed:>
                     <p> {% for error in form.age.errors %}
                     <span style="color: red;">{{ error }}</span>
                     {% endfor %} </p>
                     <p> {{ form.age.label }} {{ form.age(size=2) }}</p>
-                     <p> {% for error in form.sex.errors %}
-                    <span style="color: red;">{{ error }}</span>
-                    {% endfor %} </p>
-                    <p> {{ form.sex.label }} {{ form.sex(size=2) }}</p>
+                    <p> Sex </p>
+                    <p>
+                    {% for option in form.sex %}
+                     {{option}}  {{option.label}}
+                    {% endfor %}
+                    </p>
                      <p> {% for error in form.height.errors %}
                     <span style="color: red;">{{ error }}</span>
                     {% endfor %} </p>
@@ -65,15 +80,21 @@
                      <p> {% for error in form.blood_pressure_systolic.errors %}
                     <span style="color: red;">{{ error }}</span>
                     {% endfor %} </p>
-                    <p> {{ form.blood_pressure_systolic.label }} {{ form.blood_pressure_systolic(size=3) }} </p>
-                     <p> {% for error in form.blood_pressure_diastolic.errors %}
-                    <span style="color: red;">{{ error }}</span>
-                    {% endfor %} </p>
-                    <p> {{ form.blood_pressure_diastolic.label }} {{ form.blood_pressure_diastolic(size=3) }} </p>
-                     <p> {% for error in form.diabetes.errors %}
-                    <span style="color: red;">{{ error }}</span>
-                    {% endfor %} </p>
-                    <p> {{ form.diabetes.label }} {{ form.diabetes(size=3) }} </p>
+                    <p> {% for error in form.blood_pressure_diastolic.errors %}
+                        <span style="color: red;">{{ error }}</span>
+                    {% endfor %}
+                    </p>
+                    <p> {{ form.blood_pressure_systolic.label }} {{ form.blood_pressure_systolic(size=3) }}
+                            /
+                        {{ form.blood_pressure_diastolic.label }} {{ form.blood_pressure_diastolic(size=3) }}
+                    </p>
+                    <p> Diabetes </p>
+                    <p>
+                    {% for option in form.diabetes %}
+                        {{option}}  {{option.label}}
+                    {% endfor %}
+                    </p>
+
                     <p> {{ form.submit() }} </p>
                 </div>
             </form>

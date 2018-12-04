@@ -1,27 +1,48 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField, DecimalField
-from wtforms.validators import DataRequired, ValidationError, EqualTo, Length, Regexp, NumberRange
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField, DecimalField, RadioField
+from wtforms.validators import DataRequired, ValidationError, EqualTo, Length, Regexp, NumberRange, Optional
 from app.models import UserSession
 
+
 class ProfileForm(FlaskForm):
-    age = IntegerField('Age', validators=[DataRequired(), 
-        NumberRange(min=10, max=150, message="Invalid age: 10-150")])
-    sex = IntegerField('Sex', validators=[DataRequired(),
-        NumberRange(min=0, max=2, message="Invalid sex: 0 - intersex, 1 - male, 2 - female")])
-    height = IntegerField('Height', validators=[DataRequired(),
-        NumberRange(min=30, max=110, message="Invalid height: 30-110 (inches)")])
-    weight = IntegerField('Weight', validators=[DataRequired(),
-        NumberRange(min=40, max=1500, message="Invalid weight: 40-1500 (lbs)")])
-    smoker = DecimalField('Smoker', validators=[DataRequired(),
-        NumberRange(min=0.0, max=4.0, message="Invalid packs smoked: 0.0-4.0 (packs)")])
-    blood_pressure_systolic = IntegerField('Blood Pressure Systolic (Higher measurement)',
-        validators=[DataRequired(), NumberRange(min=80, max=150, message="Invalid blood pressure: 80-150 (mm Hg)")])
-    blood_pressure_diastolic = IntegerField('Blood Pressure Diastolic (Lower measurement)',
-        validators=[DataRequired(), NumberRange(min=50, max=100, message="Invalid blood pressure: 50-100 (mm Hg)")])
-    diabetes = IntegerField('Diabetes', validators=[DataRequired(),
-        NumberRange(min=0, max=2, message="Invalid entry: 0 for no diabetes, 1 for type I and 2 for type II diabetes")])
+    age = IntegerField(
+            'Age',
+            validators=[Optional(),NumberRange(min=10, max=150, message="Invalid age: 10-150")],
+            default='')
+    sex = RadioField(
+            'Sex',
+            choices=[(1,' Male '),(2,' Female '), (0,' Other ')],
+            validators=[Optional()],
+            default=-1)
+    height = IntegerField(
+            'Height In Inches',
+            validators=[Optional(),NumberRange(min=30, max=110, message="Invalid height: 30-110 (inches)")],
+            default='')
+    weight = IntegerField(
+            'Weight In Pounds',
+            validators=[Optional(),NumberRange(min=40, max=1500, message="Invalid weight: 40-1500 (lbs)")],
+            default='')
+    smoker = DecimalField(
+            'Smoker (Packs per Day)',
+            validators=[Optional(),NumberRange(min=0.0, max=4.0, message="Invalid packs smoked: 0.0-4.0 (packs)")],
+            default=0)
+    blood_pressure_systolic = IntegerField(
+            'Blood Pressure Systolic (Higher / Low in mmHg)',
+            validators=[Optional(), NumberRange(min=80, max=150, message="Invalid blood pressure: 80-150 (mm Hg)")],
+            default='')
+    blood_pressure_diastolic = IntegerField(
+            '',
+            validators=[Optional(), NumberRange(min=50, max=100, message="Invalid blood pressure: 50-100 (mm Hg)")],
+            default='')
+    diabetes = RadioField(
+            'Diabetes',
+            choices = [(1,' Type I   '),(2,' Type II   '), (0,' None ')],
+            validators=[Optional()],
+            default=-1)
     submit = SubmitField('Save')
     log_errors = [[], 0]
+
+
 
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
@@ -37,7 +58,7 @@ class SignUpForm(FlaskForm):
     #wtforms.validators.Regexp(regex, flags=0, message=u'Invalid input.')
     password = PasswordField(
             'Password',
-            validators=[DataRequired(), Length(min=4, max=50, message='Invalid Password Length!'), 
+            validators=[DataRequired(), Length(min=4, max=50, message='Invalid Password Length!'),
             Regexp('^[A-Za-z0-9]+$', message='Invalid Password: alphanumeric input only')])
     password2 = PasswordField(
             'Repeat Password',
@@ -52,6 +73,7 @@ class SignUpForm(FlaskForm):
     def validate_password(self, password):
         if self.username.data == password.data:
             raise ValidationError('Username Cannot Equal Password!')
+
 
 class LogoutForm(FlaskForm):
     submit = SubmitField('Logout')

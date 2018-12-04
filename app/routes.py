@@ -35,20 +35,28 @@ def handle_assessment():
 @app.route('/profile', methods=['GET', 'POST'])
 def view_profile():
     form = ProfileForm()
-    # all_symptoms = assessment.get_all_symptoms()
-    # print(all_symptoms)
+
+    form.sex.data = int(form.sex.data)
+    form.diabetes.data = int(form.diabetes.data)
 
     if form.validate_on_submit():
         user = UserSession.query.get(current_user.username)
-        user.age = form.age.data
-        user.sex = form.sex.data
-        user.height = form.height.data
-        user.weight = form.weight.data
-        user.smoker = form.smoker.data
-        user.blood_pressure_systolic = form.blood_pressure_systolic.data
-        user.blood_pressure_diastolic = form.blood_pressure_diastolic.data
-        user.diabetes = form.diabetes.data
-        # db.session.add(user)
+        if form.age.data != '':
+            user.age = form.age.data
+        if form.sex.data != '-1':
+            user.sex = form.sex.data
+        if form.height.data != '':
+            user.height = form.height.data
+        if form.weight.data != '':
+            user.weight = form.weight.data
+        if form.smoker.data != 0:
+            user.smoker = form.smoker.data
+        if form.blood_pressure_systolic != '' and form.blood_pressure_diastolic.data != '':
+            user.blood_pressure_systolic = form.blood_pressure_systolic.data
+            user.blood_pressure_diastolic = form.blood_pressure_diastolic.data
+        if form.diabetes.data != -1:
+            user.diabetes = form.diabetes.data
+
         db.session.commit()
         return render_template("profile.html", form=form)
 
