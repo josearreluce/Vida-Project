@@ -246,8 +246,11 @@ def start_assessment(symptom_init, user=None):
     successors_names = []
     for sub_id in successors:
         successors_names.append(get_name_from_id(sub_id, df_sub_symptom_names))
-    print('SEX', user.sex)
-    return successors_names, user.sex
+
+    sex = None
+    if user:
+        sex = user.sex
+    return successors_names, sex
 
 
 def evaluate(symptom_init, successors, user_sub_answers, current_user):
