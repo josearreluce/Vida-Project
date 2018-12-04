@@ -28,7 +28,11 @@ def handle_assessment():
     # print(all_symptoms)
     symptom = request.form.get('data')
     users[curr_user]['symptom'] = symptom
-    successors = assessment.start_assessment(symptom, current_user)
+    if current_user.is_authenticated:
+        successors = assessment.start_assessment(symptom, current_user)
+    else:
+        successors = assessment.start_assessment(symptom)
+
     users[curr_user]['successors'] = successors
     return jsonify({'text': 'Hello World', 'successors': successors})
 
