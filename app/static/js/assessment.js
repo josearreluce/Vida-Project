@@ -29,7 +29,14 @@ function sendSuccessors(answers) {
                 "</p>");
             console.log(res.conditions);
             $(condition_elem).insertBefore($("#answer-buttons-container"));
+
+            const new_assessment = $("<button id='new'> Start New Assessment </button>");
+            $(new_assessment).insertBefore($("#answer-buttons-container"));
             scrollToInput();
+
+            $("#new").on("click", (e) => {
+                window.location.reload();
+            });
 
             $("#answer-buttons-container").remove();
         },error : (res) => {

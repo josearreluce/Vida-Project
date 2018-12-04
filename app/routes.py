@@ -1,12 +1,9 @@
 from app import app, db
 from flask import render_template, jsonify, redirect
 from flask_login import login_required, login_user, current_user, logout_user, login_manager
-import sqlalchemy as sqlalchemy
-from sqlalchemy.orm import sessionmaker
 from flask import request
 from flask import redirect, url_for
-from wtforms.validators import ValidationError
-from app.models import DatabaseConnection, UserSession
+from app.models import UserSession
 from app.forms import LoginForm, SignUpForm, LogoutForm, ProfileForm
 from .assessment import assessment
 
@@ -24,8 +21,6 @@ def handle_successors():
 
 @app.route("/assessment", methods=["POST"])
 def handle_assessment():
-    all_symptoms = assessment.get_all_symptoms()
-    # print(all_symptoms)
     symptom = request.form.get('data')
     users[curr_user]['symptom'] = symptom
     if current_user.is_authenticated:

@@ -175,3 +175,9 @@
 .answer-buttons:hover {
     background-color: #383899;
 }
+
+#new {
+    background-color: #5051DB;
+    color: white;
+    width: 100%;
+}

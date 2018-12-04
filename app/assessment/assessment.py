@@ -1,29 +1,13 @@
-# get_ipython().run_line_magic('matplotlib', 'inline')
-from pgmpy.factors.discrete import TabularCPD
 from pgmpy.models import BayesianModel
-from flask_login import current_user
-from pgmpy.factors.discrete import TabularCPD
-from pgmpy.models import BayesianModel
-import networkx as nx
-import pylab as plt
 from pgmpy.inference import VariableElimination
 from pgmpy.estimators import BayesianEstimator
-import re
 from sqlalchemy import create_engine
 import pandas as pd
 import numpy as np
-import sys
-# sys.path.append('../src')
-# from users import *
-sys.path.append('../../')
-#from app.src.users import *
-from app import models
-from app.models import DatabaseConnection, UserSession
 
 def get_name_from_id(id, df):
     index = df[df.columns[0]][df[df.columns[0]]==id].index[0]
     return df.iloc[index]['name']
-    #return df.at[df[df[df.columns[0]]==id].loc, 'name']
 
 def get_id_from_name(name, df):
     index = df['name'][df['name']==name].index[0]
@@ -49,7 +33,6 @@ def load_graph_sympt_id(df_cond, df_related_symptoms, sympt_id):
 
     # Go through related symptoms table and add edges (symptom -> sub symptom)
     for i, row in df_related_symptoms.iterrows():
-
         symptom_id = str(row[0])
         if (symptom_id == sympt_id):
             for j, col in row.iteritems():
@@ -65,7 +48,6 @@ def load_graph_sympt_id(df_cond, df_related_symptoms, sympt_id):
         for j, col in row.iteritems():
             if col != 0.0:
                 sub_symptom_id = str(j)
-                # print(symptom_id, cond_id)
                 if (sub_symptom_id in sub_symptom_list):
                     G.add_edge(sub_symptom_id, cond_id)
                     condition_list.add(cond_id)
@@ -83,7 +65,6 @@ all_conditions = list(df_cond['cond_id'])
 all_sub_symptoms = list(df_sub_symptom_names['sub_sympt_id'])
 
 def get_all_symptoms():
-
     temp_id = list(df_related_symptoms['sympt_id'])
     res =[]
     for id1 in temp_id:
@@ -105,7 +86,6 @@ graph_dict = create_all_symptom_graphs(df_cond, df_related_symptoms)
 
 def load_cpds():
     for sympt_id in graph_dict:
-
         G_sympt = graph_dict[sympt_id][0]
         data = pd.DataFrame(np.random.randint(low=0, high=2, size=(103, len(G_sympt.nodes))),
                    columns= G_sympt.nodes)
@@ -121,7 +101,6 @@ def load_graph(df_cond, df_related_symptoms):
     G = BayesianModel()
     # Go through conditions table and add edges (sub symptom -> condition)
     for i, row in df_cond.iterrows():
-
         cond_id = str(row[0])
         for j, col in row.iteritems():
             if col != 0.0:
@@ -132,7 +111,6 @@ def load_graph(df_cond, df_related_symptoms):
 
     # Go through related symptoms table and add edges (symptom -> sub symptom)
     for i, row in df_related_symptoms.iterrows():
-
         sympt_id = str(row[0])
         for j, col in row.iteritems():
             sub_symptom_id = str(j)
@@ -157,9 +135,6 @@ def load_total_cpds():
     for i,cpd in enumerate(p):
         total_G.add_cpds(cpd)
 
-
-
-
     # Option 2 of fitting cpds
     for i in range(1, num_sub_symptoms + 1):
         cpd_sub = estimator.estimate_cpd('sub_sympt_' + str(i), prior_type="BDeu")
@@ -168,16 +143,11 @@ def load_total_cpds():
             cpd_symp = estimator.estimate_cpd('sympt_' + str(i), prior_type="BDeu")
             total_G.add_cpds(cpd_symp)
 
-
-    # print("done population symptoms and subsymptoms cpds")
-    # print(total_G.get_cpds())
-
     # this is the time cruncher.
     for i in range(1, num_conditions + 1):
         cpd_cond = estimator.estimate_cpd('cond_' + str(i), prior_type="BDeu")
         total_G.add_cpds(cpd_cond)
 
-#load_total_cpds()
 
 def dbUsertoUser(userschema):
 
@@ -254,7 +224,6 @@ def start_assessment(symptom_init, user=None):
 
 
 def evaluate(symptom_init, successors, user_sub_answers, current_user):
-    stuff = extract_from_user(current_user)
     #starts with 'yes' for initial symptom
     symptom_init = get_id_from_name(symptom_init, df_related_symptoms)
     G_sympt = graph_dict[symptom_init][0]
@@ -284,7 +253,6 @@ def evaluate(symptom_init, successors, user_sub_answers, current_user):
     # create evidence dict
     # e.g. {symptom:yes}
     evidencee = {}
-    cond_scores_list = []
     for k in range(llen):
         evidencee.update({symp_list_name[k]:symp_list_val[k]})
     len_rev_cond = len(relev_conds)
@@ -333,24 +301,6 @@ def extract_from_user(user):
     sex_age = sex_age + sex + age
     return sex_age
 
-
-# condition_val_tuples = sorted(condition_val_tuples, key=lambda x: x[1], reverse=True)
-#
-# account_info = AccountInfo("bbjacob", "bru123321")
-# basic_info = BasicInfo(22, 0)  # sex 1-male, 2-female
-# personal_info = PersonalInfo(185, 81)  # cm, kg
-# health_back = HealthBackground(0, 0, 0)  # 0-no, 1-yes, 2-not responded
-# user = User(account_info, basic_info, personal_info, health_back)
-# #
-#
-# info = tbl_to_df_cond_id("cond_1")
-#
-# cond_info = extract_from_cond(info)
-#
-# user_info = extract_from_user(user)
-# print(user_info)
-# print(cond_info)
-# print(info.age_max[0])
 #sex, age, time
 def check_cvts(condition_val_tuples):  #The only requirement is that they need to be non-negative
     for condition_tuple in condition_val_tuples:
@@ -391,26 +341,6 @@ def apply_personal_features(user, condition_val_tuples, time_first_symptom):
     new_cond_val_tuples = sorted(new_cond_val_tuples, key=lambda x: x[1], reverse=True)
     return new_cond_val_tuples
 
-#condition_val_tuples = [['cond_1', 0.47752808988764045], ['cond_2', 0.40588235294117647]]
-#new_cond_val_tuples = apply_personal_features(user, condition_val_tuples, 10)
-# new_cond_val_tuples = apply_personal_features(user, condition_val_tuples, 10)
-'''
-print("cvt1")
-print(new_cond_val_tuples)
-
-cvt2 = [['cond_3', 0.95], ['cond_10', 0.05]]
-ncvt2 = apply_personal_features(user, cvt2, 10)
-print("cvt2")
-print(ncvt2)
-
-cvt3 = [['cond_5', 0.5], ['cond_7', 0.3], ['cond_10', 0.2]]
-ncvt3 = apply_personal_features(user, cvt3, 10)
-print("cvt3")
-print(ncvt3)
-'''
-
-
-
 
 def followup(initial_evaluate, symptom_init):
 
@@ -441,37 +371,3 @@ def followup2(rel_symptoms, successors_list, user_sub_answers, cond_id):
     average = sum(cond_id_values) / (len(cond_id_values) * 1.0)
 
     return [cond_id, average]
-
-
-'''
-# Testing Examples
-x = start_assessment("sympt_1")
-res = evaluate("sympt_1", x, [1,0,1,1,0,0,1,1])
-print(res)
-
-x3 = start_assessment("sympt_27")
-res3 = evaluate("sympt_27", x3, [0])
-print(res3)
-
-x4 = start_assessment("sympt_8")
-res4 = evaluate("sympt_8", x4, [0, 0, 1, 1])
-print(res4)
-
-x2 = start_assessment("sympt_12")
-res2 = evaluate("sympt_12", x2, [1,1])
-print(res2)
-
-rel_symptoms, successors_list = followup(res2, "sympt_12")
-print(rel_symptoms)
-print(successors_list)
-
-fake_user_sub = []
-for s_list in successors_list:
-    new = []
-    for sub in s_list:
-        new.append(np.random.randint(low=0, high=2))
-    fake_user_sub.append(new)
-
-fup2 = followup2(rel_symptoms, successors_list, fake_user_sub, res2[0][0])
-print(fup2)
-'''
