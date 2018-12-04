@@ -24,7 +24,7 @@ function sendSuccessors(answers) {
         data : JSON.stringify(data),
         success : (res) => {
             const condition_elem = $(
-                "<p class='question'> You have " +
+                "<p class='question'> You may have " +
                 res.conditions[0][0] +
                 "</p>");
             console.log(res.conditions);
@@ -39,9 +39,14 @@ function sendSuccessors(answers) {
 /**
  *
  * @param successors
+ * @param initial_symptom
  */
-function handleSuccessors(successors) {
+function handleSuccessors(successors, initial_symptom) {
     const answer_container = $('#answer-buttons-container');
+    const init_index = successors.indexOf(initial_symptom);
+    if (init_index > -1) {
+        successors.splice(init_index, 1);
+    }
 
     var i = 0;
     let answers = [];
@@ -57,7 +62,9 @@ function handleSuccessors(successors) {
         const answer = e.target.id;
         const new_answer = `<p class='answer'> ${answer} </p>`;
 
-        answers.push(answer === 'yes');
+        let final_answer = answer !== 'skip' ? answer === 'yes' : answer;
+        answers.push(final_answer);
+
         $(new_answer).insertBefore(answer_container);
 
         if (i + 1 > successors.length) {
@@ -99,10 +106,11 @@ function handleSymptomSearch(res) {
     answer_input.append("<button class='answer-buttons' id='no'> No </button>");
     answer_input.append("<button class='answer-buttons' id='skip'> Skip </button>");
 
+    const initial_symptom = res.text;
     $.post('/assessment', {
-        data: res.text
+        data: initial_symptom
     }).done((res) => {
-        handleSuccessors(res.successors);
+        handleSuccessors(res.successors, initial_symptom);
     }).fail(() => {
         console.log("Failure");
     });

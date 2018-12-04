@@ -257,6 +257,9 @@ def evaluate(symptom_init, successors, user_sub_answers):
     symp_list_val = [1]
     symp_list_name = [symptom_init]
     for i,answer in enumerate(user_sub_answers):
+        if answer == 'skip':
+            continue
+
         sub_sympt_id = get_id_from_name(successors[i], df_sub_symptom_names)
         symp_list_name.append(sub_sympt_id)
         if answer == True:
