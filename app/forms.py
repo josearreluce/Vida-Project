@@ -27,7 +27,7 @@ class ProfileForm(FlaskForm):
             validators=[Optional(),NumberRange(min=0.0, max=4.0, message="Invalid packs smoked: 0.0-4.0 (packs)")],
             default=0.0)
     blood_pressure_systolic = IntegerField(
-            'Blood Pressure Systolic (Higher / Low mmHg)',
+            'Blood Pressure (High / Low mmHg)',
             validators=[Optional(), NumberRange(min=80, max=150, message="Invalid blood pressure: 80-150 (mm Hg)")],
             default='')
     blood_pressure_diastolic = IntegerField(
