@@ -18,7 +18,7 @@ def handle_successors():
     answers = jsonData['answers']
     symptom = users[curr_user]["symptom"]
     successors = users[curr_user]["successors"]
-    conditions = assessment.evaluate(symptom, successors, answers)
+    conditions = assessment.evaluate(symptom, successors, answers, current_user)
     return jsonify({'text':"hello world", 'conditions': conditions})
 
 
@@ -30,6 +30,7 @@ def handle_assessment():
     users[curr_user]['symptom'] = symptom
     if current_user.is_authenticated:
         successors = assessment.start_assessment(symptom, current_user)
+        sex_age = assessment.extract_from_user(current_user)
     else:
         successors = assessment.start_assessment(symptom)
 
