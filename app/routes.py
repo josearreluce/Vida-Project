@@ -33,8 +33,6 @@ def handle_assessment():
         print("User sex is: ", sex)
     else:
         successors = assessment.start_assessment(symptom)
-    #successors = assessment.start_assessment(symptom, current_user)
-    #print(load_user(current_user.get_id()))
     users[curr_user]['successors'] = successors
     return jsonify({'text': 'Hello World', 'successors': successors})
 

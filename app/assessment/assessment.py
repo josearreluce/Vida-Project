@@ -233,11 +233,11 @@ def select_relevant_symptoms(graph, condition, symptom_init):
 
 # 0 -- no, 1 -- yes
 # what happens when user mystypes symptom
-def start_assessment(symptom_init, user):
+def start_assessment(symptom_init, user=None):
     if user:
         print('SEX', user.sex)
     else:
-        print("No User")
+        print('No user')
 
     symptom_init = get_id_from_name(symptom_init, df_related_symptoms)
     G_sympt = graph_dict[symptom_init][0]
