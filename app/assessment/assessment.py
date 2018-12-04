@@ -16,7 +16,7 @@ import sys
 # sys.path.append('../src')
 # from users import *
 sys.path.append('../../')
-from app.src.users import *
+#from app.src.users import *
 from app import models
 from app.models import DatabaseConnection, UserSession
 
@@ -247,11 +247,14 @@ def start_assessment(symptom_init, user=None):
     for sub_id in successors:
         successors_names.append(get_name_from_id(sub_id, df_sub_symptom_names))
 
-    return successors_names
+    sex = None
+    if user:
+        sex = user.sex
+    return successors_names, sex
 
 
-def evaluate(symptom_init, successors, user_sub_answers):
-
+def evaluate(symptom_init, successors, user_sub_answers, current_user):
+    stuff = extract_from_user(current_user)
     #starts with 'yes' for initial symptom
     symptom_init = get_id_from_name(symptom_init, df_related_symptoms)
     G_sympt = graph_dict[symptom_init][0]
@@ -261,6 +264,9 @@ def evaluate(symptom_init, successors, user_sub_answers):
     symp_list_val = [1]
     symp_list_name = [symptom_init]
     for i,answer in enumerate(user_sub_answers):
+        if answer == 'skip':
+            continue
+
         sub_sympt_id = get_id_from_name(successors[i], df_sub_symptom_names)
         symp_list_name.append(sub_sympt_id)
         if answer == True:
@@ -322,26 +328,26 @@ def extract_from_cond(info):
 
 def extract_from_user(user):
     sex_age = []
-    sex = [user.basic_info.sex]
-    age = [user.basic_info.age]
+    sex = [user.sex]
+    age = [user.age]
     sex_age = sex_age + sex + age
     return sex_age
 
 
 # condition_val_tuples = sorted(condition_val_tuples, key=lambda x: x[1], reverse=True)
-
-account_info = AccountInfo("bbjacob", "bru123321")
-basic_info = BasicInfo(22, 0)  # sex 1-male, 2-female
-personal_info = PersonalInfo(185, 81)  # cm, kg
-health_back = HealthBackground(0, 0, 0)  # 0-no, 1-yes, 2-not responded
-user = User(account_info, basic_info, personal_info, health_back)
-
-
-info = tbl_to_df_cond_id("cond_1")
-
-cond_info = extract_from_cond(info)
-
-user_info = extract_from_user(user)
+#
+# account_info = AccountInfo("bbjacob", "bru123321")
+# basic_info = BasicInfo(22, 0)  # sex 1-male, 2-female
+# personal_info = PersonalInfo(185, 81)  # cm, kg
+# health_back = HealthBackground(0, 0, 0)  # 0-no, 1-yes, 2-not responded
+# user = User(account_info, basic_info, personal_info, health_back)
+# #
+#
+# info = tbl_to_df_cond_id("cond_1")
+#
+# cond_info = extract_from_cond(info)
+#
+# user_info = extract_from_user(user)
 # print(user_info)
 # print(cond_info)
 # print(info.age_max[0])
@@ -385,8 +391,8 @@ def apply_personal_features(user, condition_val_tuples, time_first_symptom):
     new_cond_val_tuples = sorted(new_cond_val_tuples, key=lambda x: x[1], reverse=True)
     return new_cond_val_tuples
 
-condition_val_tuples = [['cond_1', 0.47752808988764045], ['cond_2', 0.40588235294117647]]
-new_cond_val_tuples = apply_personal_features(user, condition_val_tuples, 10)
+#condition_val_tuples = [['cond_1', 0.47752808988764045], ['cond_2', 0.40588235294117647]]
+#new_cond_val_tuples = apply_personal_features(user, condition_val_tuples, 10)
 # new_cond_val_tuples = apply_personal_features(user, condition_val_tuples, 10)
 '''
 print("cvt1")
