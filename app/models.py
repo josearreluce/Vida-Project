@@ -36,7 +36,6 @@ class DatabaseConnection():
             raise Exception('DatabaseConnection was not created properly')
         self.close()
 
-Base = declarative_base()
 
 class UserSession(UserMixin, db.Model):
     __tablename__ = 'users'

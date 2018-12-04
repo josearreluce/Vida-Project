@@ -4,7 +4,7 @@ sys.path.append('../../')
 
 from app import models
 from app import app, db
-
+from flask_login import current_user
 
 class TestWebForms(unittest.TestCase):
 
@@ -28,11 +28,11 @@ class TestWebForms(unittest.TestCase):
 
         self.profile_dict = dict(
                 age=18,
-                sex='male',
+                sex=0,
                 weight=190,
                 height=65,
                 smoker=0.0,
-                diabetes='None')
+                diabetes=0)
 
     """
     Helpers to ensure user info is in the database prior to testing webform
@@ -207,11 +207,6 @@ class TestProfile(TestWebForms):
         response = self._make_post(self.profile_page, self.profile_dict)
         self.assertIn("Invalid age: 10-150", str(response.data))
 
-        # Invalid Sex
-        self.profile_dict.update(age=22, sex=10)
-        response = self._make_post(self.profile_page, self.profile_dict)
-        self.assertIn("Invalid sex: 0 - intersex, 1 - male, 2 - female", str(response.data))
-
         # Invalid weight
         self.profile_dict.update(sex=1,weight=-1)
         response = self._make_post(self.profile_page, self.profile_dict)
@@ -227,14 +222,20 @@ class TestProfile(TestWebForms):
         response = self._make_post(self.profile_page, self.profile_dict)
         self.assertIn("Invalid packs smoked: 0.0-4.0 (packs)", str(response.data))
 
-        # Invalid diabetes info
-        self.profile_dict.update(smoker=0.5, diabetes=10)
-        response = self._make_post(self.profile_page, self.profile_dict)
-        self.assertIn("Invalid entry: 0 for no diabetes, 1 for type I and 2 for type II diabetes", str(response.data))
-
         self.profile_dict.update(diabetes=2)
 
     def test_valid_profile(self):
+        # Login Profile to ensure changes can be made
+        if not self._test_user_in_db():
+            self._add_test_user()
+
+        self.app.get(self.login_page,follow_redirects=True)
+        response = self._make_post(self.login_page, self.user_dict)
+
+        # Ensure no errors were thrown
+        self.assertNotIn("Invalid Username or Password", str(response.data))
+        print(current_user)
+
         self.app.get(self.profile_page, follow_redirects=True)
 
         response = self._make_post(self.profile_page, self.profile_dict)

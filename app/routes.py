@@ -96,7 +96,7 @@ def login():
 
             form.log_errors[1] = 0
             login_user(check_user, remember=form.remember_me.data)
-
+            print('routes:', current_user)
         return redirect('/assessment')
 
     return render_template('login.html', title='Log In', form=form)
