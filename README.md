@@ -61,9 +61,6 @@ NOTE: Please consult the appendix for a thorough guide on tests.
 Top level symptoms "Dilated Pupils" and "Diarrhea" are not handled as well as other symptoms.
 
 ---------------------------------------------------------------------------------------------------
-
-# Others
-
 # Implementation Overview
 
 In this final round of development we greatly improved the functionality around user profile
@@ -73,7 +70,6 @@ We also added password salting for improved security. Finally, the user's health
 properly implemented in the assessment process. At the end of the questionaire, the probabilities
 are filtered based on the user information before a final diagnosis is reached.
 
-See below for archived notes.
 ---------------------------------------------------------------------------------------------------
 
 # Appendix 
