@@ -135,7 +135,7 @@ All test cases can be run at once by entering the test directory from your termi
 The test cases are in /app/tests
 
 ** To disable pgmpy warnings, add --disable-pytest-warnings flag when running any tests **
-# test_db.py
+## test_db.py
 
 Comments within the code of this program indicate the newest section for iteration 2. The biggest change we made was restructuring how symptoms, sub symptoms, and conditions relate to each other in accordance with the Bayesian Model graph. We now have conditions relate only to sub symptoms, and sub symptoms only relate to a single symptom. We are also adding columns to the conditions table to indicate the age range of people likely to get the conditions, as well as the typical time that symptoms can be expected to last. Again, populate_db.py and generate_sub_symptoms.py are used to fill and format the database tables, but the best way to test these programs is to query the database and make sure the data is stored the way we expect it to be.
 
@@ -145,7 +145,7 @@ Please note: we are implementing several changes to the database currently, so i
 
 To run: at commandline run "pytest test_db.py -p no:warnings"
 
-# test_assessment.py
+## test_assessment.py
 
 The new test cases within this file are located in the TestAssessmentWithUser class. These test cases will test
 the new functions that are going to be used by the assessment algorithm for the 2nd iteration of the project.
@@ -154,7 +154,7 @@ The functions include: apply_user_features(), load_graph(), and load_cpds().
 
 To run: at commandline run "pytest test_assessment.py -p no:warnings"
 
-# test_forms.py
+## test_forms.py
 
 New test cases now check for invalid usernames and passwords during sign up within the TestSignUp class. For other
 new tests, we moved a portion of the web form test methods into a superclass (TestWebForms), so that all web form
@@ -168,7 +168,7 @@ and insuring that our website is not susceptible to brute-force attacks.
 
 To run: at commandline enter "pytest test_forms.py -p no:warnings"
 
-# test_user.py
+## test_user.py
 We re-define the backend user class to have three layers of profile information: account information, basic information, personal information, and health background.
 The account information has the username and password. The basic and personal information have the user's height, weight, etc. The health background class stores information about the user's health condition, for example, whether or not the user smokes. The tests cover getting and setting information in those classes.
 
