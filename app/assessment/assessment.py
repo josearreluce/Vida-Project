@@ -256,7 +256,7 @@ def extract_from_user(user):
 #sex, age, time
 def check_cvts(condition_val_tuples):  #The only requirement is that they need to be non-negative
     for condition_tuple in condition_val_tuples:
-        if condition_tuple[1] < 0:
+        if condition_tuple[1] <= 0:
             return False
 
 
