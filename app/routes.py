@@ -1,12 +1,9 @@
 from app import app, db
 from flask import render_template, jsonify, redirect
-from flask_login import login_required, login_user, current_user, logout_user
-import sqlalchemy as sqlalchemy
-from sqlalchemy.orm import sessionmaker
+from flask_login import login_required, login_user, current_user, logout_user, login_manager
 from flask import request
 from flask import redirect, url_for
-from wtforms.validators import ValidationError
-from app.models import DatabaseConnection, UserSession
+from app.models import UserSession
 from app.forms import LoginForm, SignUpForm, LogoutForm, ProfileForm
 from .assessment import assessment
 
@@ -18,22 +15,19 @@ def handle_successors():
     answers = jsonData['answers']
     symptom = users[curr_user]["symptom"]
     successors = users[curr_user]["successors"]
-    conditions = assessment.evaluate(symptom, successors, answers, current_user)
+    if current_user.is_authenticated:
+        print("User is Authenticated")
+        conditions = assessment.evaluate(symptom, successors, answers, current_user)
+    else:
+        conditions = assessment.evaluate(symptom, successors, answers)
     return jsonify({'text':"hello world", 'conditions': conditions})
 
 
 @app.route("/assessment", methods=["POST"])
 def handle_assessment():
-    all_symptoms = assessment.get_all_symptoms()
-    # print(all_symptoms)
     symptom = request.form.get('data')
     users[curr_user]['symptom'] = symptom
-    if current_user.is_authenticated:
-        successors = assessment.start_assessment(symptom, current_user)
-        sex_age = assessment.extract_from_user(current_user)
-    else:
-        successors = assessment.start_assessment(symptom)
-
+    successors = assessment.start_assessment(symptom)
     users[curr_user]['successors'] = successors
     return jsonify({'text': 'Hello World', 'successors': successors})
 
@@ -102,7 +96,7 @@ def login():
 
             form.log_errors[1] = 0
             login_user(check_user, remember=form.remember_me.data)
-
+            print('routes:', current_user)
         return redirect('/assessment')
 
     return render_template('login.html', title='Log In', form=form)

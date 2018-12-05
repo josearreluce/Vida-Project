@@ -34,14 +34,15 @@
     height: 80vh;
     overflow-x: hidden;
     overflow-y: scroll;
+    position: relative;
     transition: all 1s linear;
     width: 30%;
+    z-index: 2;
 }
 
 .symptom-assessment__final {
     display: flex;
     flex-direction: column;
-    flex-wrap: wrap;
     width: 100%;
 }
 
@@ -53,8 +54,9 @@
 
 .final-assessment .symptom-visualization {
     height: 100vh;
+    position: relative;
     width: 70%;
-    background-color: red;
+    z-index: 1;
 }
 
 /* .symptom-container fieldset */
@@ -159,5 +161,23 @@
 .chat-input {
     border-radius: 50px;
     margin-top: 1.5em;
+    width: 100%;
+}
+
+.answer-buttons {
+    width: 33%;
+    margin: 0;
+    padding: indigo;
+    background-color: #5051DB;
+    color: white;
+}
+
+.answer-buttons:hover {
+    background-color: #383899;
+}
+
+#new {
+    background-color: #5051DB;
+    color: white;
     width: 100%;
 }
