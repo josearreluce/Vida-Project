@@ -27,7 +27,7 @@ $ python3 -m flask run
 Navigate to http://127.0.0.1:5000/ in your browser to access the web application.
 
 NOTE: Please run our application in Firefox.
-(Our application 
+(Our application is supported across platforms, but please use Firefox or Safari for best results.)
 
 ---------------------------------------------------------------------------------------------------
 
