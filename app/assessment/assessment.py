@@ -296,7 +296,10 @@ def apply_personal_features(user, condition_val_tuples, time_first_symptom):
         if time < cond_info_sex_age_time[3] or time > cond_info_sex_age_time[4]:
             condition_tuple[1] = condition_tuple[1] * 1.2
         array_new.append(condition_tuple[1])
-        array_normed = [i/sum(array_new) for i in array_new]
+        array_normed = 0
+        if sum(array_new) != 0:
+            array_normed = [i/sum(array_new) for i in array_new]
+
     # print("HERE_3")
     for i in range(len(new_cond_val_tuples)):
         new_cond_val_tuples[i][1] = array_normed[i]
