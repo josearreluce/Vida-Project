@@ -1,5 +1,5 @@
 # Vida-Project
-# Authors: Jose Arreluce, Will Darling, Max Demers, Miles Grogger, Andy Ham, Bruno Jacob, Thomas Jacobs, Qi Jin
+# Authors: Jose Arreluce, Alex Bai, Will Darling, Max Demers, Miles Grogger, Andy Ham, Bruno Jacob, Qi Jin
 # Original repo: "https://github.com/josearreluce/Vida-Project.git"
 
 ---------------------------------------------------------------------------------------------------
@@ -91,11 +91,10 @@ assessment process (i.e. how long have you had a cough?).
 
 # Others
 
-
+See below for archived notes.
 ---------------------------------------------------------------------------------------------------
----------------------------------------------------------------------------------------------------
 
-                                          ### Appendix ###
+# Appendix 
 
 ---------------------------------------------------------------------------------------------------
 
