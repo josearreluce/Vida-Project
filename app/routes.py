@@ -16,7 +16,6 @@ def handle_successors():
     symptom = users[curr_user]["symptom"]
     successors = users[curr_user]["successors"]
     if current_user.is_authenticated:
-        print("User is Authenticated")
         conditions = assessment.evaluate(symptom, successors, answers, current_user)
     else:
         conditions = assessment.evaluate(symptom, successors, answers)
@@ -96,7 +95,6 @@ def login():
 
             form.log_errors[1] = 0
             login_user(check_user, remember=form.remember_me.data)
-            print('routes:', current_user)
         return redirect('/assessment')
 
     return render_template('login.html', title='Log In', form=form)
