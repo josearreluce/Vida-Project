@@ -8,7 +8,7 @@
 
 Due to rising healthcare costs and increased access to health condition information through the
 internet, more people than ever are looking to the internet to diagnosis potential health problems.
-However, the quality of these diagnoses is often too ambiguous or severe to be useful. Vida attempts 
+However, the quality of these diagnoses is often too ambiguous or severe to be useful. Vida attempts
 to solve the problem by providing a more in-depth consultation process, and in turn a more accurate
 and reasonable diagnosis, than the current providers (e.g. Google Search and WebMD).
 
@@ -25,7 +25,7 @@ $ python3 -m flask run
 
 Then navigate to http://127.0.0.1:5000/ in your browser to access the web application.
 
-NOTE: We have found the most success running our application in Firefox. Google Chrome has been 
+NOTE: We have found the most success running our application in Firefox. Google Chrome has been
       particularly difficult.
 
 ---------------------------------------------------------------------------------------------------
@@ -35,7 +35,7 @@ NOTE: We have found the most success running our application in Firefox. Google 
 We designed Vida to be intuitive to navigate and use. While a user profile isn't required to start
 an assessment, it's highly recommended. Once an assessment begins, type your most prominent symptom
 into the search bar and select the matching entry. This begins the inquiry process. Note that Vida
-currently only supports 12 starting symptoms (a full list is found in the appendix). Answer the 
+currently only supports 12 starting symptoms (a full list is found in the appendix). Answer the
 subsequent questions, and at the end Vida will provide a diagnosis.
 
 ---------------------------------------------------------------------------------------------------
@@ -62,7 +62,7 @@ Vida currently has difficulty handling top level symptoms "Dilated Pupils" and "
 
 # Implementation Overview
 
-In this final round of development we greatly improved the functionality around user profile 
+In this final round of development we greatly improved the functionality around user profile
 information. When adding information, a single error in one field will not erase all changes from
 that session, and there are more stringent checks to prevent users from entering unrealistic data.
 We also added password salting for improved security. Finally, the user's health information is
@@ -83,7 +83,7 @@ User Functionality: Max, Qi
 # Changes from the Design Document
 
 We were not able to implement a user's assessment history, or add time-based variables to the
-assessment process (i.e. how long have you had a cough?). 
+assessment process (i.e. how long have you had a cough?).
 
 ---------------------------------------------------------------------------------------------------
 
@@ -160,11 +160,11 @@ We've expanded the user functionality significantly, so try playing around with 
 Though we've now populated the database with real symptom and condition data to inform the diagnosis
 process, we still had trouble pulling names from the database to the front end. So while the back
 end diagnosis process is using real symptom/condition data, from the user-perspective the data is
-generic. 
+generic.
 
 # Implementation Overview
 
-We refined our front end design, and expanded the back end. Firstly, users can now submit 
+We refined our front end design, and expanded the back end. Firstly, users can now submit
 background health information to help with their diagnosis, and their diagnosis history is stored
 with their account. We also implemented proper user sessions, password hashing, and password
 strength requirements. The database is now fully populated with real symptoms and conditions that
@@ -230,21 +230,21 @@ User: Max, Qi
 
 # Changes:
 
-We first intended to use one huge graph to calculate cpds, but that ended up taking too long to use. 
+We first intended to use one huge graph to calculate cpds, but that ended up taking too long to use.
 Our solution was to split the big graph up into mini graphs each composed of 1 symptom per graph with
-all the relevant sub symptoms and conditions related to it. These smaller graphs calculate the cpds 
-much faster, and are stored in a global dictionary called "graph_dict". Each entry is of the format 
-{sympt_id : [Graph, sub_symptoms, conditions]}. When a user enters their initial symptom, we choose 
+all the relevant sub symptoms and conditions related to it. These smaller graphs calculate the cpds
+much faster, and are stored in a global dictionary called "graph_dict". Each entry is of the format
+{sympt_id : [Graph, sub_symptoms, conditions]}. When a user enters their initial symptom, we choose
 the appropriate graph through this global dict, and evaluate as we have before.
 
-We also added functions followup() and followup2(), which ask follow up questions depending on the 
+We also added functions followup() and followup2(), which ask follow up questions depending on the
 initial evaluate. From the highest probability condition chosen from the initial evaluate, the user's
-presented with its related symptoms, and subsequent sub-symptoms. Unfortunately because we don't use 
+presented with its related symptoms, and subsequent sub-symptoms. Unfortunately because we don't use
 the total graph, we can't use the big comprehensive cpd to compute the new probability. So instead
 we take the averages of the probabilities of that specific condition across all symptoms asked.
 
-With this approach we don't have to change the database, and it's quick to start up and load. It 
-also uses a bit of machine learning via the Bayesian estimators, which are currently set to 100 
+With this approach we don't have to change the database, and it's quick to start up and load. It
+also uses a bit of machine learning via the Bayesian estimators, which are currently set to 100
 random samples, but with more user input and verified conditions, the graph's accuracy improves.
 
 ---------------------------------------------------------------------------------------------------
@@ -290,11 +290,11 @@ to make them into classes as we had originally intended. Instead, we store this 
 the database, and pull it when creating our graph.
 
 This leads to our next major design change. In our original plan we had the idea to use a graph of
-connected symptoms and conditions, and the probabilities of their relations to come up with an 
+connected symptoms and conditions, and the probabilities of their relations to come up with an
 accurate diagnosis. But we didn't realize the true complexity and challenge of this problem. So in
-order to create a mathematically robust and correct solution we decided to use a Bayesian graph: 
-a directed acyclic graph with conditional probability distributions in each node. So even though 
-the graph node/edge structure is static the conditional probabilities change based on how we 
+order to create a mathematically robust and correct solution we decided to use a Bayesian graph:
+a directed acyclic graph with conditional probability distributions in each node. So even though
+the graph node/edge structure is static the conditional probabilities change based on how we
 traverse the graph in each assessment. This graph is built from the entries in the database.
 
 Others:
@@ -313,26 +313,26 @@ more efficient.
 
 Iteration 2 Plan:
 
-Much of what we laid out in our original design document will be implemented in Iteration 2. More 
-specifically, we are integrating user information to hone our algorithm and diagnostics, as we 
+Much of what we laid out in our original design document will be implemented in Iteration 2. More
+specifically, we are integrating user information to hone our algorithm and diagnostics, as we
 outlined in the original document. We will be fully integrating the database with our backend algorithm,
-which will now run on 12 conditions and 100+ symptoms/sub symptoms. While this is not implementing the 
-web scraping approach that we had discussed at the very beginning, we believe that focusing on the 
-algorithm over taking the time to web scrape was a better use of time resources. We believe that 
+which will now run on 12 conditions and 100+ symptoms/sub symptoms. While this is not implementing the
+web scraping approach that we had discussed at the very beginning, we believe that focusing on the
+algorithm over taking the time to web scrape was a better use of time resources. We believe that
 the set of conditions and symptoms/sub symptoms is comprehensive enough to demonstrate the complexity
 of our algorithm, and allows for a more fully formed web app to be implemented at the end of iteration 2.
 
-We will be restructuring the database to capture relationships between symptoms and sub symptoms in order 
-to be able to integrate it with the updated algorithm seemlessly. Each subsymptom will only relate to a 
+We will be restructuring the database to capture relationships between symptoms and sub symptoms in order
+to be able to integrate it with the updated algorithm seemlessly. Each subsymptom will only relate to a
 single symptom. Since we do not have large amounts of medical data to reference, or user data, we will be
- setting naive conditional probabilities for each symptom/subsymptom relationship (where the likelihood 
+ setting naive conditional probabilities for each symptom/subsymptom relationship (where the likelihood
  of a symptom to have one of its subsymptoms is 1/(number of sub symptoms)).
 
-In this iteration we will also be implementing a profile viewer and assessment history viewer into the 
-User Interface. This is entirely in line with our original goals outlined in the design document. In 
+In this iteration we will also be implementing a profile viewer and assessment history viewer into the
+User Interface. This is entirely in line with our original goals outlined in the design document. In
 addition to this, we will be adding a logout function so that users can log out, and restrictions for usernames/passwords.
 
-In this iteration, our backend algorithm will also use data from a User's profile to refine it's 
+In this iteration, our backend algorithm will also use data from a User's profile to refine it's
 diagnosis in addition to the original Bayesian model.
 
 ---------------------------------------------------------------------------------------------------
@@ -370,6 +370,8 @@ logout tests in TestLogin, TestProfile, and TestLogout, respectively.
 
 These tests cover aspects for assuring valid user profile information  is entered, usernames and passwords are standardized,
 and insuring that our website is not susceptible to brute-force attacks.
+
+** Valid Edit Profile Testing is now done by using the UI to visual input data to maintain User Session context**
 
 To run: at commandline enter "pytest test_forms.py"
 
