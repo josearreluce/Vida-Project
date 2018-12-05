@@ -1,6 +1,6 @@
 # Vida-Project
 # Authors: Jose Arreluce, Alex Bai, Will Darling, Max Demers, Miles Grogger, Andy Ham, Bruno Jacob, Qi Jin
-# Original repo: "https://github.com/josearreluce/Vida-Project.git"
+## Original repo: "https://github.com/josearreluce/Vida-Project.git"
 
 ---------------------------------------------------------------------------------------------------
 
@@ -74,7 +74,7 @@ are filtered based on the user information before a final diagnosis is reached.
 
 # Appendix 
 
-# Supported Conditions
+## Supported Conditions
 
 "apendicitis"
 "bronchitis"
@@ -89,7 +89,7 @@ are filtered based on the user information before a final diagnosis is reached.
 "strep throat"
 "testicular torsion"
 
-# Supported Top Level Symptoms (these are the only symptoms that begin an assessment)
+## Supported Top Level Symptoms (these are the only symptoms that begin an assessment)
 
 "abdominal pain"
 "indigestion"
