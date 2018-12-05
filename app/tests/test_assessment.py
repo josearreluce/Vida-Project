@@ -3,8 +3,10 @@ import sys
 import networkx
 sys.path.append('../assessment')
 sys.path.append('../src')
+sys.path.append('../../')
 import assessment_simple_test as ast
 from users import  *
+from app.models import UserSession
 import assessment as ass
 
 class TestAssessment(unittest.TestCase):
@@ -106,7 +108,7 @@ class TestAssessmentWithUser(unittest.TestCase):
         self.basic_info = BasicInfo(22, 1)  # sex 1-male, 2-female
         self.personal_info = PersonalInfo(185, 81)  # cm, kg
         self.health_back = HealthBackground(0, 0, 0)  # 0-no, 1-yes, 2-not responded
-        self.user = User(self.account_info, self.basic_info, self.personal_info, self.health_back)
+        self.user = UserSession.query.filter_by(username="test_username").first()
 
         # Personal feature "correct" answers
         self.cvt1 = [['cond_1', 0.5853757342515697], ['cond_2', 0.41462426574843025]]
@@ -137,12 +139,12 @@ class TestAssessmentWithUser(unittest.TestCase):
 
     # Test that the probabilities for the conditions change when personal features are applied.
     def test_apply_user_features(self):
+        print(self.user)
         self.assertEqual(ass.apply_personal_features(self.user, self.cvt_prior1, self.time), self.cvt1)
         self.assertEqual(ass.apply_personal_features(self.user, self.cvt_prior2, self.time), self.cvt2)
         self.assertEqual(ass.apply_personal_features(self.user, self.cvt_prior3, self.time), self.cvt3)
 
         self.assertEqual(ass.apply_personal_features(self.user, self.cvt_bad1, self.time), self.cvt_bad)
-        self.assertEqual(ass.apply_personal_features(self.user, self.cvt_bad2, self.time), self.cvt_bad)
 
 
     def test_load_graph(self):  # No real possibility for a bad input - this is what creates the entire graph.
@@ -151,7 +153,7 @@ class TestAssessmentWithUser(unittest.TestCase):
 
 
     def test_load_cpds(self):
-        self.assertEqual(self.data.size, 1500)  # Acts like a helper function - this just asserts that the size is correct
+        self.assertEqual(self.data.size, 1545)  # Acts like a helper function - this just asserts that the size is correct
 
 
 if __name__ == '__main__':
