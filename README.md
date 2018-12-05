@@ -62,6 +62,8 @@ Top level symptoms "Dilated Pupils" and "Diarrhea" are not handled as well as ot
 
 ---------------------------------------------------------------------------------------------------
 
+# Others
+
 # Implementation Overview
 
 In this final round of development we greatly improved the functionality around user profile
@@ -70,19 +72,6 @@ that session, and there are more stringent checks to prevent users from entering
 We also added password salting for improved security. Finally, the user's health information is
 properly implemented in the assessment process. At the end of the questionaire, the probabilities
 are filtered based on the user information before a final diagnosis is reached.
-
----------------------------------------------------------------------------------------------------
-
-# Who did what
-
-Bayesian graph logic: Alex, Andy, Bruno, Qi
-Database: Alex, Miles, Will
-Front end: Jose, Max, Will
-User Functionality: Max, Qi
-
----------------------------------------------------------------------------------------------------
-
-# Others
 
 See below for archived notes.
 ---------------------------------------------------------------------------------------------------
