@@ -1,6 +1,15 @@
+const example_symptoms =   ["abdominal pain", "indigestion", "diarrhea", "change in bowel habits", "loss of appetite",
+    "nausea", "fever", "fatigue", "itchiness", "eye itchiness", "vertigo", "sore throat", "irritability", "thirst",
+    "mental confusion", "loss of muscle function", "missed period", "light spotting", "increased sensitivity",
+    "pus", "blood in stool", "dilated pupils", "body ache", "malaise", "itchy nose", "shortness of breath",
+    "bulging in groin", "changes in urination", "inflammation of ear", "headache", "pain in face", "testicular pain",
+    "tenderness", "cough", "congestion"];
+
+
+
 // Scroll the input into view regardless of number of questions and answers
-function scrollToInput() {
-    const input_pos = document.getElementById("yes").offsetTop;
+function scrollToInput(id) {
+    const input_pos = document.getElementById(id).offsetTop;
     const assessment_container = document.getElementsByClassName("symptom-assessment final")[0];
     assessment_container.scrollTop = input_pos - 10;
 }
@@ -14,8 +23,14 @@ function scrollToInput() {
  */
 function sendSuccessors(answers) {
     $("#symptom-input").off('keyup');
-    console.log(answers);
     const data = {"answers": answers};
+
+    const answerButtons = $("#answer-buttons-container");
+    const loader = $("<div id='loader'></div>");
+    loader.insertBefore(answerButtons);
+    answerButtons.remove();
+
+
     $.ajax({
         type: 'POST',
         contentType: 'application/json',
@@ -23,23 +38,19 @@ function sendSuccessors(answers) {
         dataType : 'json',
         data : JSON.stringify(data),
         success : (res) => {
-            const condition_elem = $(
-                "<p class='question'> You may have " +
-                res.conditions[0][0] +
-                "</p>");
-            console.log(res.conditions);
-            $(condition_elem).insertBefore($("#answer-buttons-container"));
+            const condition_elem = $(`<p class='question'> You may have ${res.conditions[0][0]} </p>`);
+            $(condition_elem).insertBefore(loader);
 
             const new_assessment = $("<button id='new'> Start New Assessment </button>");
-            $(new_assessment).insertBefore($("#answer-buttons-container"));
-            scrollToInput();
+            new_assessment.insertBefore(loader);
+            scrollToInput("loader");
 
-            $("#new").on("click", (e) => {
+            $("#new").on("click", () => {
                 window.location.reload();
             });
-
-            $("#answer-buttons-container").remove();
-        },error : (res) => {
+            console.log(loader);
+            loader.remove();
+        },error : () => {
             console.log("ERROR");
         }
     });
@@ -82,7 +93,7 @@ function handleSuccessors(successors, initial_symptom) {
             const new_question = `<p class='question'> Are you experiencing ${successors[i]}? </p>`;
             $(new_question).insertBefore(answer_container);
 
-            scrollToInput();
+            scrollToInput("yes");
             i += 1;
         }
     });
@@ -131,42 +142,6 @@ $('#symptom-search').keyup((e) => {
 
     // Get all symptoms that match/begin with input query
     let results = [];
-    const example_symptoms =   ["abdominal pain",
-                                "indigestion",
-                                "diarrhea",
-                                "change in bowel habits",
-                                "loss of appetite",
-                                "nausea",
-                                "fever",
-                                "fatigue",
-                                "itchiness",
-                                "eye itchiness",
-                                "vertigo",
-                                "sore throat",
-                                "irritability",
-                                "thirst",
-                                "mental confusion",
-                                "loss of muscle function",
-                                "missed period",
-                                "light spotting",
-                                "increased sensitivity",
-                                "pus",
-                                "blood in stool",
-                                "dilated pupils",
-                                "body ache",
-                                "malaise",
-                                "itchy nose",
-                                "shortness of breath",
-                                "bulging in groin",
-                                "changes in urination",
-                                "inflammation of ear",
-                                "headache",
-                                "pain in face",
-                                "testicular pain",
-                                "tenderness",
-                                "cough",
-                                "congestion"];
-
     if (query.length > 0) {
         example_symptoms.forEach((symptom) => {
             const curr_symptom = symptom.toLowerCase();

@@ -41,6 +41,7 @@
 }
 
 .symptom-assessment__final {
+    background-color: ghostwhite;
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -180,4 +181,18 @@
     background-color: #5051DB;
     color: white;
     width: 100%;
+}
+
+#loader {
+    border: 6px solid darkgray; /* Light grey */
+    border-top: 6px solid darkred; /* Blue */
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 3s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
