@@ -276,16 +276,11 @@ def apply_personal_features(user, condition_val_tuples, time_first_symptom):
     new_cond_val_tuples = condition_val_tuples
     user_info = extract_from_user(user)
     u_sex = user_info[0]
-    # print("SEX__", u_sex)
+
     u_age = user_info[1]
     time = time_first_symptom
-    # print("HERE_1")
-    # print("condition val tuples", condition_val_tuples)
 
     for condition_tuple in new_cond_val_tuples:
-        # print("HERE_2")
-        # print("conditon_t",condition_tuple)
-        # print("new_cond_tuples", new_cond_val_tuples)
         cond_id = condition_tuple[0]
         info = tbl_to_df_cond_id(cond_id)
         cond_info_sex_age_time = extract_from_cond(info)
@@ -300,10 +295,8 @@ def apply_personal_features(user, condition_val_tuples, time_first_symptom):
         if sum(array_new) != 0:
             array_normed = [i/sum(array_new) for i in array_new]
 
-    # print("HERE_3")
     for i in range(len(new_cond_val_tuples)):
         new_cond_val_tuples[i][1] = array_normed[i]
-    # print("HERE_4")
     new_cond_val_tuples = sorted(new_cond_val_tuples, key=lambda x: x[1], reverse=True)
     return new_cond_val_tuples
 
@@ -312,8 +305,6 @@ def apply_personal_features(user, condition_val_tuples, time_first_symptom):
 def evaluate(symptom_init, successors, user_sub_answers, user=None):
     if user is not None:
         sex_age = extract_from_user(user)
-        print("Sex_Age_Ino____________")
-        print(sex_age)
 
     #starts with 'yes' for initial symptom
     symptom_init = get_id_from_name(symptom_init, df_related_symptoms)
@@ -326,52 +317,44 @@ def evaluate(symptom_init, successors, user_sub_answers, user=None):
     for i,answer in enumerate(user_sub_answers):
         sub_sympt_id = get_id_from_name(successors[i], df_sub_symptom_names)
         symp_list_name.append(sub_sympt_id)
-        if answer == True:
-            print("YES: User has ", successors[i])
+        if answer:
             symp_list_val.append(1)
         else:
-            print("NO: User does not have ", successors[i])
             symp_list_val.append(0)
 
-    # all condiitons to compare
+    # all conditions to compare
     # condition_list is all the conditions reachable via symptom_init
     relev_conds = select_relevant_cond(symptom_init, condition_list)
     llen = len(symp_list_val)
 
     # create evidence dict
     # e.g. {symptom:yes}
-    evidencee = {}
-    cond_scores_list = []
+    evidence = {}
     for k in range(llen):
-        evidencee.update({symp_list_name[k]:symp_list_val[k]})
+        evidence.update({symp_list_name[k]:symp_list_val[k]})
     len_rev_cond = len(relev_conds)
     condition_val_tuples = []
     for j in range(len_rev_cond):
         cond_prob = network_infer.query(variables = [relev_conds[j]],
-                                    evidence = evidencee)
+                                    evidence = evidence)
         val_yes = cond_prob[relev_conds[j]].values[1]
         condition_val_tuples.append([relev_conds[j], val_yes])
 
     condition_val_tuples = sorted(condition_val_tuples, key=lambda x: x[1], reverse=True)
 
-    # print(top_cond_candidate, score_top)
     cond_name_val_tuples = []
     for cond_val_tuple in condition_val_tuples:
         cond_id = cond_val_tuple[0]
         cond_name= get_name_from_id(cond_id, df_cond)
         cond_name_val_tuples.append([cond_name, cond_val_tuple[1]])
 
-    print("here are probabilities")
-    print(cond_name_val_tuples)
     if user is not None:
         new_cond_val_tuples = apply_personal_features(user, condition_val_tuples, 4)
-        print("here are the UPDTAED using personal information probabilities")
         new_cond_name_val_tuples = []
         for new_cond_val_tuple in new_cond_val_tuples:
             new_cond_id = new_cond_val_tuple[0]
             new_cond_name= get_name_from_id(new_cond_id, df_cond)
             new_cond_name_val_tuples.append([new_cond_name, new_cond_val_tuple[1]])
-        print(new_cond_name_val_tuples)
         return new_cond_name_val_tuples
 
 
