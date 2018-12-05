@@ -48,7 +48,7 @@ and place the driver into the test directory.
 The UI Tests require downloading this webdriver.
 
 Then from within the tests directory run:
-$ pytest
+$ pytest -p no:warnings
 
 NOTE: For further information on running unit tests, refer to the appendix
 
@@ -350,7 +350,7 @@ Comments in code provide more specifics as to what each tests do, but we are mai
 
 Please note: we are implementing several changes to the database currently, so if tests from iteration 1 are now failing because of this, that is only temporary and will be changed once the database has its final form.
 
-To run: at commandline run "pytest test_db.py"
+To run: at commandline run "pytest test_db.py -p no:warnings"
 
 # test_assessment.py
 
@@ -359,7 +359,7 @@ the new functions that are going to be used by the assessment algorithm for the 
 
 The functions include: apply_user_features(), load_graph(), and load_cpds().
 
-To run: at commandline run "pytest test_assessment.py"
+To run: at commandline run "pytest test_assessment.py -p no:warnings"
 
 # test_forms.py
 
@@ -373,7 +373,7 @@ and insuring that our website is not susceptible to brute-force attacks.
 
 ** Valid Edit Profile Testing is now done by using the UI to visual input data to maintain User Session context**
 
-To run: at commandline enter "pytest test_forms.py"
+To run: at commandline enter "pytest test_forms.py -p no:warnings"
 
 # test_user.py
 We re-define the backend user class to have three layers of profile information: account information, basic information, personal information, and health background.
@@ -381,5 +381,5 @@ The account information has the username and password. The basic and personal in
 
 The user class interacts with the user schema. We refactor the user information we retrieve from the database as user schema to differentiate the user class. We will convert the user schema to a user class with getters and setters so that the backend assessment algorithm can interact with the data in the class, for example, using user age in the diagnosis.
 
-To run: at commandline enter "pytest test_user.py"
+To run: at commandline enter "pytest test_user.py -p no:warnings"
 
