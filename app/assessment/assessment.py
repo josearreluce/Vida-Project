@@ -5,6 +5,9 @@ from sqlalchemy import create_engine
 import pandas as pd
 import numpy as np
 
+
+
+
 def get_name_from_id(id, df):
     index = df[df.columns[0]][df[df.columns[0]]==id].index[0]
     return df.iloc[index]['name']
@@ -54,7 +57,11 @@ def load_graph_sympt_id(df_cond, df_related_symptoms, sympt_id):
     condition_list = list(condition_list)
     return G, sub_symptom_list, condition_list
 
+
+
 G_sympt_1, sympt_1_sub_list, condition_list = load_graph_sympt_id(df_cond, df_related_symptoms, "sympt_1")
+
+
 
 num_conditions = df_cond.shape[0]
 num_symptoms = df_related_symptoms.shape[0]
@@ -63,6 +70,8 @@ num_sub_symptoms = df_sub_symptom_names.shape[0]
 all_symptoms = list(df_related_symptoms['sympt_id'])
 all_conditions = list(df_cond['cond_id'])
 all_sub_symptoms = list(df_sub_symptom_names['sub_sympt_id'])
+
+
 
 def get_all_symptoms():
     temp_id = list(df_related_symptoms['sympt_id'])
@@ -74,6 +83,7 @@ def get_all_symptoms():
         res.append(name)
     return res
 
+
 def create_all_symptom_graphs(df_cond, df_related_symptoms):
     d = {} # symptom_id: [Graph, subsymptoms, conditions]
     for sympt_id in all_symptoms:
@@ -82,6 +92,7 @@ def create_all_symptom_graphs(df_cond, df_related_symptoms):
     return d
 
 graph_dict = create_all_symptom_graphs(df_cond, df_related_symptoms)
+
 
 
 def load_cpds():
@@ -95,6 +106,8 @@ def load_cpds():
     return data
 
 load_cpds()
+
+
 
 # Makes giant graph for all nodes
 def load_graph(df_cond, df_related_symptoms):
@@ -120,6 +133,7 @@ def load_graph(df_cond, df_related_symptoms):
     return G
 
 total_G = load_graph(df_cond, df_related_symptoms)
+
 
 
 # Compute and load all cpds for total graph. Takes a long time
@@ -148,7 +162,6 @@ def load_total_cpds():
         cpd_cond = estimator.estimate_cpd('cond_' + str(i), prior_type="BDeu")
         total_G.add_cpds(cpd_cond)
 
-
 def dbUsertoUser(userschema):
 
     # Account Info
@@ -166,7 +179,8 @@ def dbUsertoUser(userschema):
 
     return User(acc_info, basic_info, personal_info, health_background)
 
-# network_infer = VariableElimination(G_sympt_1)
+
+
 # given symptom and all possible condiitons, outputs list of
 # conditions with some degree of connection to this symptom
 def select_relevant_cond(symptom, list_cond):
@@ -179,6 +193,7 @@ def select_relevant_cond(symptom, list_cond):
         if list_cond[i] in trail_list:
             relevant_cond.append(list_cond[i])
     return relevant_cond
+
 
 
 #given condition, find all related symptoms
@@ -201,14 +216,8 @@ def select_relevant_symptoms(graph, condition, symptom_init):
 
 
 
-# 0 -- no, 1 -- yes
-# what happens when user mystypes symptom
-def start_assessment(symptom_init, user=None):
-    if user:
-        print('SEX', user.sex)
-    else:
-        print('No user')
-
+#returns successors for inital symptom
+def start_assessment(symptom_init):
     symptom_init = get_id_from_name(symptom_init, df_related_symptoms)
     G_sympt = graph_dict[symptom_init][0]
     successors = list(G_sympt.successors(symptom_init))
@@ -217,13 +226,92 @@ def start_assessment(symptom_init, user=None):
     for sub_id in successors:
         successors_names.append(get_name_from_id(sub_id, df_sub_symptom_names))
 
-    sex = None
-    if user:
-        sex = user.sex
-    return successors_names, sex
+    return successors_names
+
+def tbl_to_df_cond_id(cond_id):
+    engine = create_engine("postgresql://pv_admin:CMSC22001@ec2-13-59-75-157.us-east-2.compute.amazonaws.com:5432/pv_db")
+    info = pd.read_sql("select * from conditions where cond_id = '" + cond_id + "'", engine)
+    return info
+
+#given panda dataframe of condition extracts informtion of condition
+def extract_from_cond(info):
+    sex_age_time = []
+    sex = [info.sex[0]]
+    age_max = info.age_max[0]
+    age_min = info.age_min[0]
+    time_min = info.time_min[0]
+    time_max = info.time_max[0]
+    age = [age_min, age_max]
+    time = [time_min, time_max]
+    sex_age_time = sex_age_time + sex + age + time
+    return sex_age_time
+
+#given user extracts user information (sex and age)
+def extract_from_user(user):
+    sex_age = []
+    sex = [user.sex]
+    age = [user.age]
+    sex_age = sex_age + sex + age
+    return sex_age
+
+#sex, age, time
+def check_cvts(condition_val_tuples):  #The only requirement is that they need to be non-negative
+    for condition_tuple in condition_val_tuples:
+        if condition_tuple[1] < 0:
+            return False
 
 
-def evaluate(symptom_init, successors, user_sub_answers, current_user):
+#given user, condition val tuples, and time variable applies personal feature to 
+#the condition val tuples and returns new condition val tuples
+def apply_personal_features(user, condition_val_tuples, time_first_symptom):
+    print("Entering apply personal features __________")
+    if time_first_symptom < 0:
+        return 0  # Impossible.
+
+    if check_cvts(condition_val_tuples) is False:  # Non-negative required
+        return 0
+
+    array_new = []  # an array for normalization
+
+    new_cond_val_tuples = condition_val_tuples
+    user_info = extract_from_user(user)
+    u_sex = user_info[0]
+    # print("SEX__", u_sex)
+    u_age = user_info[1]
+    time = time_first_symptom
+    # print("HERE_1")
+    # print("condition val tuples", condition_val_tuples)
+
+    for condition_tuple in new_cond_val_tuples:
+        # print("HERE_2")
+        # print("conditon_t",condition_tuple)
+        # print("new_cond_tuples", new_cond_val_tuples)
+        cond_id = condition_tuple[0]
+        info = tbl_to_df_cond_id(cond_id)
+        cond_info_sex_age_time = extract_from_cond(info)
+        if u_sex != cond_info_sex_age_time[0] and cond_info_sex_age_time[0] != 0:
+            condition_tuple[1] = 0.1
+        if u_age < cond_info_sex_age_time[1] or u_age > cond_info_sex_age_time[2]:
+            condition_tuple[1] = condition_tuple[1] * 0.8
+        if time < cond_info_sex_age_time[3] or time > cond_info_sex_age_time[4]:
+            condition_tuple[1] = condition_tuple[1] * 1.2
+        array_new.append(condition_tuple[1])
+        array_normed = [i/sum(array_new) for i in array_new]
+    # print("HERE_3")
+    for i in range(len(new_cond_val_tuples)):
+        new_cond_val_tuples[i][1] = array_normed[i]
+    # print("HERE_4")
+    new_cond_val_tuples = sorted(new_cond_val_tuples, key=lambda x: x[1], reverse=True)
+    return new_cond_val_tuples
+
+#evaluates user answers and returns list of top conditions and probabilities
+#taking into account user information
+def evaluate(symptom_init, successors, user_sub_answers, user=None):
+    if user is not None:
+        sex_age = extract_from_user(user)
+        print("Sex_Age_Ino____________")
+        print(sex_age)
+
     #starts with 'yes' for initial symptom
     symptom_init = get_id_from_name(symptom_init, df_related_symptoms)
     G_sympt = graph_dict[symptom_init][0]
@@ -233,9 +321,6 @@ def evaluate(symptom_init, successors, user_sub_answers, current_user):
     symp_list_val = [1]
     symp_list_name = [symptom_init]
     for i,answer in enumerate(user_sub_answers):
-        if answer == 'skip':
-            continue
-
         sub_sympt_id = get_id_from_name(successors[i], df_sub_symptom_names)
         symp_list_name.append(sub_sympt_id)
         if answer == True:
@@ -253,6 +338,7 @@ def evaluate(symptom_init, successors, user_sub_answers, current_user):
     # create evidence dict
     # e.g. {symptom:yes}
     evidencee = {}
+    cond_scores_list = []
     for k in range(llen):
         evidencee.update({symp_list_name[k]:symp_list_val[k]})
     len_rev_cond = len(relev_conds)
@@ -274,73 +360,19 @@ def evaluate(symptom_init, successors, user_sub_answers, current_user):
 
     print("here are probabilities")
     print(cond_name_val_tuples)
+    if user is not None:
+        new_cond_val_tuples = apply_personal_features(user, condition_val_tuples, 4)
+        print("here are the UPDTAED using personal information probabilities")
+        new_cond_name_val_tuples = []
+        for new_cond_val_tuple in new_cond_val_tuples:
+            new_cond_id = new_cond_val_tuple[0]
+            new_cond_name= get_name_from_id(new_cond_id, df_cond)
+            new_cond_name_val_tuples.append([new_cond_name, new_cond_val_tuple[1]])
+        print(new_cond_name_val_tuples)
+        return new_cond_name_val_tuples
+
+
     return cond_name_val_tuples
-
-
-def tbl_to_df_cond_id(cond_id):
-    engine = create_engine("postgresql://pv_admin:CMSC22001@ec2-13-59-75-157.us-east-2.compute.amazonaws.com:5432/pv_db")
-    info = pd.read_sql("select * from conditions where cond_id = '" + cond_id + "'", engine)
-    return info
-
-def extract_from_cond(info):
-    sex_age_time = []
-    sex = [info.sex[0]]
-    age_max = info.age_max[0]
-    age_min = info.age_min[0]
-    time_min = info.time_min[0]
-    time_max = info.time_max[0]
-    age = [age_min, age_max]
-    time = [time_min, time_max]
-    sex_age_time = sex_age_time + sex + age + time
-    return sex_age_time
-
-def extract_from_user(user):
-    sex_age = []
-    sex = [user.sex]
-    age = [user.age]
-    sex_age = sex_age + sex + age
-    return sex_age
-
-#sex, age, time
-def check_cvts(condition_val_tuples):  #The only requirement is that they need to be non-negative
-    for condition_tuple in condition_val_tuples:
-        if condition_tuple[1] < 0:
-            return False
-
-
-def apply_personal_features(user, condition_val_tuples, time_first_symptom):
-    if time_first_symptom < 0:
-        return 0  # Impossible.
-
-    if check_cvts(condition_val_tuples) is False:  # Non-negative required
-        return 0
-
-    array_new = []  # an array for normalization
-
-    new_cond_val_tuples = condition_val_tuples
-    user_info = extract_from_user(user)
-    u_sex = user_info[0]
-    u_age = user_info[1]
-    time = time_first_symptom
-    for condition_tuple in new_cond_val_tuples:
-        cond_id = condition_tuple[0]
-        info = tbl_to_df_cond_id(cond_id)
-        cond_info_sex_age_time = extract_from_cond(info)
-        if u_sex != cond_info_sex_age_time[0] and cond_info_sex_age_time[0] != 0:
-            condition_tuple[1] = 0.1
-        if u_age < cond_info_sex_age_time[1] or u_age > cond_info_sex_age_time[2]:
-            condition_tuple[1] = condition_tuple[1] * 0.8
-        if time < cond_info_sex_age_time[3] or time > cond_info_sex_age_time[4]:
-            condition_tuple[1] = condition_tuple[1] * 1.2
-        array_new.append(condition_tuple[1])
-        array_normed = [i/sum(array_new) for i in array_new]
-
-    for i in range(len(new_cond_val_tuples)):
-        new_cond_val_tuples[i][1] = array_normed[i]
-
-    new_cond_val_tuples = sorted(new_cond_val_tuples, key=lambda x: x[1], reverse=True)
-    return new_cond_val_tuples
-
 
 def followup(initial_evaluate, symptom_init):
 
@@ -353,6 +385,7 @@ def followup(initial_evaluate, symptom_init):
         successors_list.append(successors)
 
     return rel_symptoms, successors_list
+
 
 # list of symptoms, list of successors, list of user_sub_answers. (1D, 2D, 2D)
 # returns updated probabilty on the top probabilistic condition in the initial evaluate
