@@ -28,6 +28,8 @@ function sendSuccessors(answers) {
     const answerButtons = $("#answer-buttons-container");
     const loader = $("<div id='loader'></div>");
     loader.insertBefore(answerButtons);
+    scrollToInput("loader");
+
     answerButtons.remove();
 
 

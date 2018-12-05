@@ -118,7 +118,6 @@ def load_graph(df_cond, df_related_symptoms):
         for j, col in row.iteritems():
             if col != 0.0:
                 sub_symptom_id = str(j)
-                # print(symptom_id, cond_id)
                 if (sub_symptom_id[:8] == 'sub_symp'):
                     G.add_edge(sub_symptom_id, cond_id)
 
@@ -303,9 +302,6 @@ def apply_personal_features(user, condition_val_tuples, time_first_symptom):
 #evaluates user answers and returns list of top conditions and probabilities
 #taking into account user information
 def evaluate(symptom_init, successors, user_sub_answers, user=None):
-    if user is not None:
-        sex_age = extract_from_user(user)
-
     #starts with 'yes' for initial symptom
     symptom_init = get_id_from_name(symptom_init, df_related_symptoms)
     G_sympt = graph_dict[symptom_init][0]
