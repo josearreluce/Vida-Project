@@ -74,8 +74,6 @@ are filtered based on the user information before a final diagnosis is reached.
 
 # Appendix 
 
----------------------------------------------------------------------------------------------------
-
 # Supported Conditions
 
 "apendicitis"
@@ -91,7 +89,7 @@ are filtered based on the user information before a final diagnosis is reached.
 "strep throat"
 "testicular torsion"
 
-# Supported Top Level Sympotms (these are the only symptoms that begin an assessment)
+# Supported Top Level Symptoms (these are the only symptoms that begin an assessment)
 
 "abdominal pain"
 "indigestion"
