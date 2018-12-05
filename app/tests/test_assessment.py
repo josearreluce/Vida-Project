@@ -109,12 +109,20 @@ class TestAssessmentWithUser(unittest.TestCase):
         self.personal_info = PersonalInfo(185, 81)  # cm, kg
         self.health_back = HealthBackground(0, 0, 0)  # 0-no, 1-yes, 2-not responded
         self.user = UserSession.query.filter_by(username="test_username").first()
+        
+        self.account_info2 = AccountInfo("bbjacob", "bru123321")
+        self.basic_info2 = BasicInfo(50, 2)
+        self.personal_info2 = PersonalInfo(185, 80)
+        self.health_back2 = HealthBackground(0, 0, 0)
+        self.user2 = User(self.account_info2, self.basic_info2, self.personal_info2, self.health_back2)
 
         # Personal feature "correct" answers
         self.cvt1 = [['cond_1', 0.5853757342515697], ['cond_2', 0.41462426574843025]]
         self.cvt2 = [['cond_3', 0.9405940594059405], ['cond_10', 0.0594059405940594]]
         self.cvt3 = [['cond_5', 0.5], ['cond_7', 0.3], ['cond_10', 0.2]]
         self.cvt_bad = 0
+        
+        self.cvt_change = [['cond_1', 0.5754345210934583], ['cond_2', 0.4245654789065417]]
 
         # Conditions, Symptoms, and Subsymptoms
 
@@ -145,6 +153,10 @@ class TestAssessmentWithUser(unittest.TestCase):
         self.assertEqual(ass.apply_personal_features(self.user, self.cvt_prior3, self.time), self.cvt3)
 
         self.assertEqual(ass.apply_personal_features(self.user, self.cvt_bad1, self.time), self.cvt_bad)
+        self.assertEqual(ass.apply_personal_features(self.user, self.cvt_bad2, self.time), self.cvt_bad)
+
+        self.assertEqual(ass.apply_personal_features(self.user2, self.cvt_prior1, self.time), self.cvt_change)
+        self.assertNotEqual(ass.apply_personal_features(self.user2, self.cvt_prior1, self.time), self.cvt1)
 
 
     def test_load_graph(self):  # No real possibility for a bad input - this is what creates the entire graph.
