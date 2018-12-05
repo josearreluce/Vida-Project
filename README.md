@@ -18,10 +18,12 @@ and reasonable diagnosis, than the current providers (e.g. Google Search and Web
 
 Simply run the following terminal commands
 
+```
 $ git clone https://github.com/josearreluce/Vida-Project.git
 $ cd Vida-Project
 $ pip3 install -r requirements.txt
 $ python3 -m flask run
+```
 
 Then navigate to http://127.0.0.1:5000/ in your browser to access the web application.
 
