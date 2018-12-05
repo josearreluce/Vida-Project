@@ -6,17 +6,16 @@
 
 # Preface
 
-Due to rising healthcare costs and increased access to health condition information through the
-internet, more people than ever are looking to the internet to diagnosis potential health problems.
-However, the quality of these diagnoses is often too ambiguous or severe to be useful. Vida attempts
-to solve the problem by providing a more in-depth consultation process, and in turn a more accurate
-and reasonable diagnosis, than the current providers (e.g. Google Search and WebMD).
+The internet has become a diagnosis tool for potential health issues for people experiencing symtoms.
+However, the user is faced with an overwhelming amount of diagnoses, some ambiguous, some severe, and none
+of them personalized. <br/>
+Vida attempts to solve these problems by providing a personalized and intuitive symptom assessment experience, using user health information for an accurate diagnosis.
 
 ---------------------------------------------------------------------------------------------------
 
 # Installation Guide
 
-Simply run the following terminal commands
+Please run the below setup in your terminal. Dependencies can be readily installed on Linux and Mac terminals/
 
 ```
 $ git clone https://github.com/josearreluce/Vida-Project.git
@@ -25,40 +24,41 @@ $ pip3 install -r requirements.txt
 $ python3 -m flask run
 ```
 
-Then navigate to http://127.0.0.1:5000/ in your browser to access the web application.
+Navigate to http://127.0.0.1:5000/ in your browser to access the web application.
 
-NOTE: We have found the most success running our application in Firefox. Google Chrome has been
-      particularly difficult.
+NOTE: Please run our application in Firefox.
+(Our application 
 
 ---------------------------------------------------------------------------------------------------
 
-# Usage Guide
+# Tutorial
 
-We designed Vida to be intuitive to navigate and use. While a user profile isn't required to start
-an assessment, it's highly recommended. Once an assessment begins, type your most prominent symptom
-into the search bar and select the matching entry. This begins the inquiry process. Note that Vida
-currently only supports 12 starting symptoms (a full list is found in the appendix). Answer the
-subsequent questions, and at the end Vida will provide a diagnosis.
+We designed Vida to be intuitive to navigate and use. <br/>
+We recommend that the user sign-up and create a profile. While this isn't required to start an assessment, it's highly recommended for a more personalized and accurate diagnosis. Access your profile by clicking on "Profile" and "Edit info" to add in your health background. <br/>
+Begin an assessment by going to "Begin Assessment". Enter the most prominent symptom you are experiencing
+in the search bar and select the matching entry. You will be asked a series of follow-up questions for Vida to better understand your symptoms and provide you with a diagnosis. <br/>
+Vida currently supports 12 starting symptoms (please see a full list in the appendix).
 
 ---------------------------------------------------------------------------------------------------
 
 # Running the Unit Tests
 
-First download a chrome webdriver from http://chromedriver.chromium.org/downloads
-and place the driver into the test directory.
+The UI Tests require an additional dependency. <br/>
+Download a chrome webdriver from http://chromedriver.chromium.org/downloads
+and place the driver into the test directory. <br/>
 
-The UI Tests require downloading this webdriver.
-
-Then from within the tests directory run:
+Then run the following from the /tests directory
+```
 $ pytest -p no:warnings
+```
 
-NOTE: For further information on running unit tests, refer to the appendix
+NOTE: Please consult the appendix for a thorough guide on tests.
 
 ---------------------------------------------------------------------------------------------------
 
 # Poorly Handled Inputs
 
-Vida currently has difficulty handling top level symptoms "Dilated Pupils" and "Diarrhea"
+Top level symptoms "Dilated Pupils" and "Diarrhea" are not handled as well as other symptoms.
 
 ---------------------------------------------------------------------------------------------------
 
@@ -79,13 +79,6 @@ Bayesian graph logic: Alex, Andy, Bruno, Qi
 Database: Alex, Miles, Will
 Front end: Jose, Max, Will
 User Functionality: Max, Qi
-
----------------------------------------------------------------------------------------------------
-
-# Changes from the Design Document
-
-We were not able to implement a user's assessment history, or add time-based variables to the
-assessment process (i.e. how long have you had a cough?).
 
 ---------------------------------------------------------------------------------------------------
 
