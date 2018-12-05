@@ -114,15 +114,15 @@ class TestAssessmentWithUser(unittest.TestCase):
         self.basic_info2 = BasicInfo(50, 2)
         self.personal_info2 = PersonalInfo(185, 80)
         self.health_back2 = HealthBackground(0, 0, 0)
-        self.user2 = User(self.account_info2, self.basic_info2, self.personal_info2, self.health_back2)
+        self.user2 = UserSession.query.filter_by(username="test_username").first()
 
         # Personal feature "correct" answers
         self.cvt1 = [['cond_1', 0.5853757342515697], ['cond_2', 0.41462426574843025]]
         self.cvt2 = [['cond_3', 0.9405940594059405], ['cond_10', 0.0594059405940594]]
         self.cvt3 = [['cond_5', 0.5], ['cond_7', 0.3], ['cond_10', 0.2]]
         self.cvt_bad = 0
-        
-        self.cvt_change = [['cond_1', 0.5754345210934583], ['cond_2', 0.4245654789065417]]
+
+        self.cvt_change = [['cond_1', 0.6288304623753399], ['cond_2', 0.37116953762466004]]
 
         # Conditions, Symptoms, and Subsymptoms
 
