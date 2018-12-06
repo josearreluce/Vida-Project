@@ -15,8 +15,7 @@ Vida attempts to solve these problems by providing a personalized and intuitive 
 
 # Installation Guide
 
-## Please follow set-up instructions on Linux or Mac
-## or use CSIL computers to install and run our app.
+## Please follow set-up instructions on Linux or Mac <br/> or use CSIL computers to install and run our app.
 
 Please run the below setup in your terminal. Dependencies can be readily installed on Linux and Mac terminals/
 
