@@ -15,6 +15,8 @@ Vida attempts to solve these problems by providing a personalized and intuitive 
 
 # Installation Guide
 
+# Please follow set-up instructions on Linux or Mac. Project Vida has been tested on CSIL computers, so please use CSIL computers to install and run our app.
+
 Please run the below setup in your terminal. Dependencies can be readily installed on Linux and Mac terminals/
 
 ```
@@ -28,6 +30,8 @@ Navigate to http://127.0.0.1:5000/ in your browser to access the web application
 
 NOTE: Please run our application in Firefox.
 (Our application is supported across platforms, but please use Firefox or Safari for best results.)
+
+* Please do not use Windows due to compatibility issues with Flask.
 
 ---------------------------------------------------------------------------------------------------
 
