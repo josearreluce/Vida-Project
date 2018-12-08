@@ -64,6 +64,16 @@ NOTE: Please consult the appendix for a thorough guide on tests.
 
 Top level symptoms "Dilated Pupils" and "Diarrhea" are not handled as well as other symptoms.
 
+Some symptoms inherently do not have sub-symptoms in our database. These include "diarrhea", 
+"missed period", "light spotting", "pus", "blood in stool", "dilated pupils", "malaise", "itchy nose"
+"shortness of breath", "bulging in groin", and "inflammation of ear". These do not have sub symptoms
+because no other symptoms in our database fell under their purview. They are not sub symptoms because 
+they did not fall under any other symptom in our database. However, given the nature of the graph we
+used, a "dummy" variable had to be created in order to maintain the three level approach of symptom,
+subsymptom, condition. If you input one of these symptoms, you will be asked if you have an 
+"undefined" sub symptom. This is a known bug, and in future iterations would have been handled by
+requesting the user to input another symptom, while storing the information from their first input.
+
 ---------------------------------------------------------------------------------------------------
 # Implementation Overview
 
